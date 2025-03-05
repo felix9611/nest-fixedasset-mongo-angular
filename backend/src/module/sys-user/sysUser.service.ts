@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { SysUser } from './sysUser.schame'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { CreateUserDto, CreateUserRequestDto } from './sysUser.dto'
+import { CreateUserDto, CreateUserRequestDto, ListUserRequestDto } from './sysUser.dto'
 import { createUserKey } from './constants'
 import { hashPassword, salt } from 'src/tool/password-tools'
 
@@ -136,6 +136,36 @@ export class SysUserService {
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
       deptId: answer?.deptId
+    }
+  }
+
+  async findOneUserAllData(username: string) {
+    return await this.sysUserModel.findOne({ username })
+  }
+
+  async listUser(request: ListUserRequestDto) {
+    const { page, limit, username, roleIds, deptIds } = request
+
+    const skip = (page - 1) * limit
+
+    const filters = {
+      ...username ? { name: { $regex: username, $options: 'i' } } : {},
+      ...roleIds ? { roleIds: { $in: roleIds} } : {},
+      ...deptIds ? { deptId: { $in: deptIds} } : {},
+    }
+
+    const users = await this.sysUserModel.find(filters).skip(skip)
+    .limit(limit)
+    .exec()
+
+    const total = await this.sysUserModel.countDocuments()
+
+    return {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      data: users,
     }
   }
 

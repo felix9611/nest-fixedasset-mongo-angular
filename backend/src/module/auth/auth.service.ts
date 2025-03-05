@@ -14,7 +14,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<{ accessToken: string }> {
-    const user = await this.usersService.findOneUser(username)
+    const user = await this.usersService.findOneUserAllData(username)
 
     const passwordString = hashPassword(password, salt)
 

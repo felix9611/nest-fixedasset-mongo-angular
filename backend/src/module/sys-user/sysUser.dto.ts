@@ -11,3 +11,11 @@ export interface CreateUserRequestDto {
     key: string
     userData: CreateUserDto
 }
+
+export interface ListUserRequestDto {
+    page: number,
+    limit: number,
+    deptIds?: number[],
+    roleIds?: number[],
+    username?: string
+}
