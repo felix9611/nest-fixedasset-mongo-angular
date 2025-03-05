@@ -1,0 +1,25 @@
+<div class="grid md:grid-cols-5 lg:grid-cols-5 py-4 bg-[#8de0ff] sticky top-0 z-50 drop-shadow-md">
+    <div class="px-[10rem] text-center md:col-span-4 lg:col-span-4 grid lg:grid-cols-4 gap-3">
+        <div *ngFor="let menu of menuLists;">
+            <div *ngIf="menu.icon === false">
+                <a 
+                    class="hover:text-[#FF8900] font-bold text-[1.2rem]" 
+                    [routerLink]="menu.path" 
+                    routerLinkActive="active" 
+                    ariaCurrentWhenActive="page"
+                >{{menu.name}}</a>
+                
+    
+            </div>
+        </div>
+    </div>
+    <div class="text-center md:col-span-1">
+        <div mat-icon-button>
+            <a routerLink="carts" >
+                <mat-icon aria-label="Example icon-button with a heart icon">shopping_cart</mat-icon>
+                <span class="bg-black text-white font-bold px-[0.4rem] py-[0.2rem] rounded-[6rem] text-[0.6rem]">{{ cartsTotal }}</span>
+            </a>
+        </div>
+    </div>
+</div>
+
