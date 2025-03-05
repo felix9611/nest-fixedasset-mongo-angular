@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { SysUserService } from './sysUser.service'
-import { CreateUserRequestDto, CreateUserDto } from './sysUser.dto'
+import { CreateUserRequestDto, CreateUserDto, ListUserRequestDto } from './sysUser.dto'
 import { AuthGuard } from '../auth/AuthGuard'
+import { request } from 'http';
 
 @Controller('sys/user')
 export class SysUserController {
@@ -27,5 +28,15 @@ export class SysUserController {
     @Delete('invalidate-user/:id')
     async invalidateUser(@Param('id') id: string) {
         return await this.userService.invalidateUser(id)
+    }
+
+    @Get(':id')
+    async getUserInfoById(@Param('id') id: string) {
+        return await this.userService.getUserInfo(id)
+    }
+
+    @Post('list')
+    async listPage(@Body() requestBody: ListUserRequestDto) {
+        return await this.userService.listUser(requestBody)
     }
 }
