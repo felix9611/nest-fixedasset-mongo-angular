@@ -1,7 +1,21 @@
-<div class="relative w-full">
-    <div class="fixed max-w-[500px] bg-[#373737] absolute top-0 left-0 p-4">
+<div class="relative w-full h-full">
+    <div class="fixed max-w-[500px] bg-[#373737] absolute top-0 left-0 p-4 h-full">
         <div class="px-[2rem] text-left text-center font-bold text-[1rem] text-white">
-            333
+            <div *ngFor="let item of menuLists; let i = index">
+                <div class="py-3">
+                    <a (click)="item.childrens ? toggleSubMenu(i) : null" ><!--href="{{ item.path }}"-->
+                        {{ item.label }}
+                    </a>
+                    <!-- Submenu -->
+                    <div *ngIf="item.childrens && item.isOpen">
+                        <div *ngFor="let child of item.childrens" class="px-[1rem]">
+                            <div class="py-3">
+                                <a>{{ child.label }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

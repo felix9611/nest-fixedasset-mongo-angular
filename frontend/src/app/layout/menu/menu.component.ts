@@ -23,26 +23,53 @@ export class MenuComponent implements OnInit{
         )
     }
 
+    toggleSubMenu(index: number) {
+        this.menuLists[index].isOpen = !this.menuLists[index].isOpen;
+    }
+
     menuLists = [
         {
             path: '',
-            name: 'Home',
-            icon: false,
+            label: 'Home',
+            icon: ''
         },
         {
-            path: 'product-list',
-            name: 'Products',
-            icon: false,
+            label: 'System Management',
+            icon: '',
+            isOpen: false,
+            childrens: [
+                {
+                    label: 'User',
+                    icon: ''
+                },
+                {
+                    label: 'Role',
+                    icon: ''
+                },
+                {
+                    label: 'Menu',
+                    icon: ''
+                },
+                {
+                    label: 'Department',
+                    icon: ''
+                }
+            ]
         },
         {
-            path: 'store',
-            name: 'Store',
-            icon: false,
-        },
-        {
-            name: 'shopping_cart',
-            icon: true,
-
+            label: 'Base Management',
+            icon: '',
+            isOpen: false,
+            childrens: [
+                {
+                    label: 'Asset Type',
+                    icon: ''
+                },
+                {
+                    label: 'Location',
+                    icon: ''
+                }
+            ]
         }
     ]
 }
