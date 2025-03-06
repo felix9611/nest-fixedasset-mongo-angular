@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,4 +7,13 @@ import { RouterOutlet } from '@angular/router';
     templateUrl: './content.component.html',
     styleUrls: ['./content.component.scss']
 })
-export class ContentComponent {}
+export class ContentComponent {
+    isMenuExpanded: boolean = window.innerWidth > 500; // Expand only on large screens
+    screenWidth: number = window.innerWidth;
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.screenWidth = window.innerWidth;
+        this.isMenuExpanded = this.screenWidth > 500
+    }
+}

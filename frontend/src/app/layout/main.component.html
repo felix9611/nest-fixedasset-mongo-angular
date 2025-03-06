@@ -1,7 +1,7 @@
-<app-header></app-header>
-<app-menu></app-menu>
-<div class="p-8">
-    <app-content></app-content>
+<div class="flex h-screen">
+    <app-header></app-header>
+    <div class="flex sm:flex-row flex-col">
+        <app-menu class="m:w-56  lg:w-64"></app-menu>  <!-- Sidebar width -->
+        <app-content class="sm:w-50 lg:flex-grow"></app-content>  <!-- Content area takes remaining space -->
+    </div>
 </div>
-
-

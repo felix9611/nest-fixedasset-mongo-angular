@@ -1,3 +1,25 @@
-<div>
-    on999
+<div class="bg-white">
+    <div>
+        <div>
+            <table mat-table [dataSource]="dataLists" class="mat-elevation-z8">
+                <ng-container matColumnDef="typeCode">
+                    <th mat-header-cell *matHeaderCellDef>Type Code </th>
+                    <td mat-cell *matCellDef="let element" class="hover:font-bold"> {{element.typeCode}} </td>
+                </ng-container>
+                <ng-container matColumnDef="typeName">
+                    <th mat-header-cell *matHeaderCellDef>Type Name</th>
+                    <td mat-cell *matCellDef="let element" class="hover:font-bold"> {{element.typeName}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr 
+                    class="hover:font-bold"
+                    (click)="editDialg(row)"
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns;"
+                ></tr>
+            </table>
+            <mat-paginator [pageSize]="searchForm.limit" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+        </div> 
+    </div>
 </div>

@@ -117,6 +117,13 @@
     ora "5.4.1"
     rxjs "7.8.1"
 
+"@angular/animations@^19.2.1":
+  version "19.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-19.2.1.tgz#d826cfc64b2841eecfe1f8b6d0d11c5e1ace7d1a"
+  integrity sha512-I67XYXBic9bM+yfce6Dqa950TsrEWB6uwSB2l6eIg3Byp48yJxQYbyjvjDbMXPieU2Bzo8FYVSD+lc8cF4+L6A==
+  dependencies:
+    tslib "^2.3.0"
+
 "@angular/build@19.2.0":
   version "19.2.0"
   resolved "https://registry.yarnpkg.com/@angular/build/-/build-19.2.0.tgz#fe7de14d2bfbe1474f712ed8ab03e3b1c010f6f7"
@@ -151,10 +158,10 @@
   optionalDependencies:
     lmdb "3.2.6"
 
-"@angular/cdk@^19.2.0":
-  version "19.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-19.2.1.tgz#e9c4b3dbb880dd1f0e28de01c405e431222610f6"
-  integrity sha512-j7dg18PJIbyeU4DTko3vIK3M2OuUv3H0ZViNddOaLlGN5X93cq4QCGcNhcGm3x3r5rUr/AaexYu+KHMyN8PwmA==
+"@angular/cdk@^19.0.0", "@angular/cdk@^19.2.2":
+  version "19.2.2"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-19.2.2.tgz#862d7559eba7eb7e81ce27a05aebf9dd21a5c3ac"
+  integrity sha512-YLiydMiTSf7s/LKaLgNeWawspulqdo/47zcjs1sEkHOcmyN1yR2Q0zQdgSbtsvuNikaR4NMNgTybNTDnULl64A==
   dependencies:
     tslib "^2.3.0"
   optionalDependencies:
@@ -225,10 +232,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/material@^19.2.0":
-  version "19.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-19.2.1.tgz#a3e7f7da73677cc9c661b23a13829b5eb50a8a56"
-  integrity sha512-hA+HVIJn/y72vXv/X1JRbrL/tynW95wYMQF2fV3lIeeAmmFKkkzextBaE9rTaiW6pVN6LXoRvLJl2Vyi9jIHzw==
+"@angular/material@^19.2.2":
+  version "19.2.2"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-19.2.2.tgz#85ff3adc0a7c16cf2fa80767f452de230439b862"
+  integrity sha512-ChaxmiQkdtYJZCuTzh/LuOofg3/TLKDM/NtmlPrOA8GCEGX5oHQiu9NgJmdwi8LmGJL0lvFS1ftfVSjBTgHlxA==
   dependencies:
     tslib "^2.3.0"
 
@@ -1716,6 +1723,28 @@
     "@napi-rs/nice-win32-arm64-msvc" "1.0.1"
     "@napi-rs/nice-win32-ia32-msvc" "1.0.1"
     "@napi-rs/nice-win32-x64-msvc" "1.0.1"
+
+"@nebular/eva-icons@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@nebular/eva-icons/-/eva-icons-15.0.0.tgz#3d02212dd0cfad7ef60f88089faa0fde5f06d150"
+  integrity sha512-A7RqycolulQqvQWAnPFqENifeqdU0Qr6fmsgn52/c0fDswAu9lfKStu3yj/sVzl+1qftlqxRYzGFNyB0tDXhsw==
+  dependencies:
+    tslib "^2.3.0"
+
+"@nebular/theme@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@nebular/theme/-/theme-15.0.0.tgz#32acce5aca9490fa9839cc1baf722d65dea5730d"
+  integrity sha512-OcjiBOr/L8bcDr9HuzeYJ0TG51wMo8Dila7XbsyD5yqDPLv2IzRIFjte7Fnpw7Woom91x72muPzX9jNniy0CCA==
+  dependencies:
+    tslib "^2.3.0"
+
+"@ng-nest/ui@^19.0.0":
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-nest/ui/-/ui-19.0.0.tgz#ce737eec4e8826e3ee4859c6b96b00ed6af1b8be"
+  integrity sha512-ikXQ16EZj0qTJxiXefTUMuDx/omBV0VdQVZ6cT86YGVIfUB6kx3Y1gX6uP0FTpbbEB3mnJJTFE9D+xrPoVq1qQ==
+  dependencies:
+    "@angular/cdk" "^19.0.0"
+    tslib "^2.3.0"
 
 "@ngrx/core@^1.2.0":
   version "1.2.0"
@@ -3636,6 +3665,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
+
+eva-icons@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/eva-icons/-/eva-icons-1.1.3.tgz#d4a88a93e92250c769703eb90920752ab0f72c0a"
+  integrity sha512-QBSEWNbEx1H0numXP1qgxKVCZHonRaky5ft4pGzQBcO4cy7mEja6TuJ8rc7BqX2pmkvetVQWKDH+DK/8y7GTag==
 
 eventemitter3@^4.0.0:
   version "4.0.7"

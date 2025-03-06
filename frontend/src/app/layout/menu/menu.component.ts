@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
 
@@ -15,19 +15,30 @@ import { CartsStoreService } from '../../state/CartsStoreService'
 export class MenuComponent implements OnInit{
     constructor(private cartService: CartsStoreService) {}
 
-    cartsTotal: number = 0
+    isMenuExpanded: boolean = window.innerWidth > 640; // Expand only on large screens
+    screenWidth: number = window.innerWidth;
+
+    copyRights: any = {
+        name: 'Felix',
+        year: new Date().getFullYear()
+    }
+
 
     ngOnInit() {
-        this.cartService.carts$.subscribe(
-            data => this.cartsTotal = data.list.length
-        )
     }
+
+    @HostListener('window:resize', ['$event'])
+     onResize(event: any) {
+        this.screenWidth = window.innerWidth;
+        this.isMenuExpanded = this.screenWidth > 640
+    }
+
 
     toggleSubMenu(index: number) {
-        this.menuLists[index].isOpen = !this.menuLists[index].isOpen;
+        this.menuItems[index].isOpen = !this.menuItems[index].isOpen;
     }
 
-    menuLists = [
+    menuItems: any[] = [
         {
             path: '',
             label: 'Home',

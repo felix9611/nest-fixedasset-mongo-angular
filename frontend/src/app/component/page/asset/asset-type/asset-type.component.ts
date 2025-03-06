@@ -4,24 +4,27 @@ import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/rou
 import { NglModule } from 'ng-lightning'
 import { FormsModule } from '@angular/forms'
 import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
-
+import { MatTableModule } from '@angular/material/table'
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
+import { XTableColumn, XTableComponent } from '@ng-nest/ui/table'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NglModule, FormsModule],
+    imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NglModule, FormsModule, MatTableModule, MatPaginatorModule, XTableComponent],
     templateUrl: './asset-type.component.html',
-    styleUrl: './asset-type.component.scss',
+    styleUrl: './asset-type.component.css',
 })
 export class AssetTypeComponent {
     constructor() {}
 
+    displayedColumns: string[] = ['typeCode', 'typeName']
     searchForm: any = {
         page: 1,
         limit: 20
     }
 
-    dataLists: any = []
+    dataLists: any[] = []
     totals: number = 0
 
     ngOnInit() {
@@ -32,5 +35,9 @@ export class AssetTypeComponent {
         const res = await postApiWithAuth('/asset/type/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.totals
+    }
+
+    async editDialg(row: any) {
+
     }
 }
