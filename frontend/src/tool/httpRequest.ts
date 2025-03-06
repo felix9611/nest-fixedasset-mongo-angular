@@ -7,7 +7,10 @@ const accessToken = localStorage.getItem('token') || ''
 
 const requestHeaders: HeadersInit = new Headers()
 requestHeaders.set('Content-Type', contentType)
-requestHeaders.set('authorization', accessToken)
+if (accessToken) {
+    requestHeaders.set('authorization', accessToken)
+}
+
 
 export const postApi = async (url: string, data: any) => {
     const finalUrl = `${environment.apiUrl}${url}`
