@@ -21,12 +21,16 @@ export class AssetTypeComponent {
         limit: 20
     }
 
+    dataLists: any = []
+    totals: number = 0
+
     ngOnInit() {
         this.loadAssetTypeLists()
     }
 
     async loadAssetTypeLists() {
         const res = await postApiWithAuth('/asset/type/list', this.searchForm)
-       console.log(res)
+        this.dataLists = res.lists
+        this.totals = res.totals
     }
 }
