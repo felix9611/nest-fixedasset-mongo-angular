@@ -26,9 +26,7 @@ export class AppComponent implements OnInit{
 
   async checkAuth() {
     const checkpoint = await this.userStoreService.isAuthenticated()
-    if (checkpoint) {
-      this.router.navigate(['/'])
-    } else {
+    if (!checkpoint) {
       this.router.navigate(['/login'])
     }
   }
