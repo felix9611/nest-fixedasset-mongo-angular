@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
+import { Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
 import { CommonModule } from '@angular/common'
 import { FooterComponent } from './component/footer/footer.component'
 import { NglModule } from 'ng-lightning'
+import { UserStoreService } from '../state/user.service'
 
 @Component({
   selector: 'app-root',
@@ -11,11 +12,24 @@ import { NglModule } from 'ng-lightning'
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
-  constructor() {}
+  constructor(
+    private userStoreService: UserStoreService,
+    private router: Router
+  ) {}
 
   title = 'felix-store-app';
 
   ngOnInit(): void {
+    this.checkAuth()
     // this.promotionStoreService.loadPromotionData()
+  }
+
+  async checkAuth() {
+    const checkpoint = await this.userStoreService.isAuthenticated()
+    if (checkpoint) {
+      this.router.navigate(['/'])
+    } else {
+      this.router.navigate(['/login'])
+    }
   }
 }
