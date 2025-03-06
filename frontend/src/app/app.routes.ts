@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router'
 import { LoginComponent } from './component/page/login/login.component'
 import { MainComponent } from './layout/main.component'
+import { AuthGuard } from '../state/AuthGuard'
 
 export const routes: Routes = [
-    { path: '', component: MainComponent },
+    { path: '', component: MainComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
    // { path: 'home', component: HomeComponent },
    // { path: 'product-list', component: ProductListComponent },

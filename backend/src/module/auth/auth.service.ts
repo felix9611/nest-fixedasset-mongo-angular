@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { SysUserService } from '../sys-user/sysUser.service'
 import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from 'src/tool/password-tools'
+import { jwtConstants } from './constants'
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<{ accessToken: string }> {
+    console.log(username)
     const user = await this.usersService.findOneUserAllData(username)
 
     const passwordString = hashPassword(password, salt)
@@ -25,6 +27,25 @@ export class AuthService {
     return {
       accessToken: await this.jwtService.signAsync(payload),
     }
+  }
+
+  async verifyToken(token: string) {
+    const [type, tokenString] = token.split(' ') ?? []
+    if (type === 'Bearer') {
+      try {
+        const decoded = this.jwtService.verify(tokenString)
+        return {
+          status: true
+        }
+      } catch (error) {
+        throw new Error('Invalid or expired token')
+      }
+    } else {
+      return {
+        msg: 'Invalid token!'
+      }
+    }
+    
   }
   
 }

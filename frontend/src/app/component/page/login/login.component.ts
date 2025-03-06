@@ -1,9 +1,12 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
+import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { NglModule } from 'ng-lightning'
 import { FormsModule } from '@angular/forms'
-import { postApi } from '../../../tool/http/httpRequest'
+import { UserStoreService } from '../../../../state/user.service'
+import { HttpService } from '../../../../tool/HttpService'
+import { callPostApi } from '../../../../tool/call-http'
+import { postApi } from '../../../../tool/httpRequest-public'
 
 
 @Component({
@@ -14,6 +17,12 @@ import { postApi } from '../../../tool/http/httpRequest'
     styleUrl: './login.component.scss',
 })
 export class LoginComponent {
+    constructor(
+        private userStoreService: UserStoreService, 
+        private router: Router,
+        private httpService: HttpService
+    ) {}
+
     loginForm: any = {
         username: '',
         password: ''
@@ -25,8 +34,13 @@ export class LoginComponent {
 
     async login() {
 
-       const res = await postApi('/auth/login', this.loginForm)
-       console.log(res)
+        const res = await postApi('/auth/login', this.loginForm)
+        this.userStoreService.setAccessToken(res.accessToken)
+        const checkpoint = await this.userStoreService.isAuthenticated()
+        if (checkpoint) {
+            this.router.navigate(['/'])
+        }
+       
     }
 
     cleanForm() {

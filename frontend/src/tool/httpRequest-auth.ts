@@ -1,8 +1,16 @@
-import { environment } from "../../../environments/environment.development"
+import { environment } from "../environments/environment.development"
+
 
 const contentType = 'application/json;charset=UTF-8'
 
 export const postApi = async (url: string, data: any) => {
+    const requestHeaders = new Headers()
+    requestHeaders.append('Content-Type', contentType)
+    if (localStorage.getItem('accessToken')) {
+        const accessToken = localStorage.getItem('accessToken')
+        requestHeaders.append('Content-Type', accessToken || '')
+    }
+
     const finalUrl = `${environment.apiUrl}${url}`
     const rawResponse = await fetch(finalUrl, {
         method: 'POST',
@@ -15,13 +23,19 @@ export const postApi = async (url: string, data: any) => {
     return content
 }
 
-export const getApi = async (url: string) => {
+export const getApiWithAuth = async (url: string) => {
     const finalUrl = `${environment.apiUrl}${url}`
+
+    const requestHeaders = new Headers()
+    requestHeaders.append('Content-Type', contentType)
+    if (localStorage.getItem('accessToken')) {
+        const accessToken = localStorage.getItem('accessToken')
+        requestHeaders.append('Authorization', accessToken || '')
+    }
+
     const rawResponse = await fetch(finalUrl, {
         method: 'GET',
-        headers: {
-            'Content-Type': contentType
-        }
+        headers: requestHeaders
     })
     const content: any = await rawResponse.json()
     return content
