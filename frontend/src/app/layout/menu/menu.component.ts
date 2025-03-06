@@ -62,14 +62,60 @@ export class MenuComponent implements OnInit{
             isOpen: false,
             childrens: [
                 {
+                    label: 'Tax Information',
+                    icon: ''
+                },
+                {
+                    label: 'Action Log',
+                    icon: ''
+                },
+                {
+                    label: 'Vendor',
+                    icon: ''
+                }
+            ]
+        },
+        {
+            label: 'Asset Managemnt',
+            icon: '',
+            childrens: [
+                {
                     label: 'Asset Type',
                     icon: ''
                 },
                 {
-                    label: 'Location',
+                    label: 'Asset List',
+                    icon: ''
+                },
+                {
+                    label: 'Create Asset',
+                    icon: ''
+                },
+                {
+                    label: 'Stock Take',
+                    icon: ''
+                },
+                {
+                    label: 'Asset List Report',
+                    icon: ''
+                },
+                {
+                    label: 'Stock Take Report',
+                    icon: ''
+                },
+                {
+                    label: 'Inventory Record',
+                    icon: ''
+                },
+                {
+                    label: 'Repair Record',
                     icon: ''
                 }
             ]
+        },
+        {
+            label: 'Dashboard',
+            icon: ''
         }
     ]
 }
