@@ -3,7 +3,7 @@ import { environment } from "../environments/environment.development"
 
 const contentType = 'application/json;charset=UTF-8'
 
-export const postApi = async (url: string, data: any) => {
+export const postApiWithAuth = async (url: string, data: any) => {
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
     if (localStorage.getItem('accessToken')) {
@@ -41,27 +41,40 @@ export const getApiWithAuth = async (url: string) => {
     return content
 }
 
-export const deleteApi = async (url: string, data: any) => {
+export const deleteApiWithAuth = async (url: string, data: any) => {
     const finalUrl = `${environment.apiUrl}${url}`
-    return new Promise((resolve, rejects) => {
-        fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': contentType
-            }
-        })
+
+    const requestHeaders = new Headers()
+    requestHeaders.append('Content-Type', contentType)
+    if (localStorage.getItem('accessToken')) {
+        const accessToken = localStorage.getItem('accessToken')
+        requestHeaders.append('Authorization', accessToken || '')
+    }
+
+    const rawResponse = await fetch(finalUrl, {
+        method: 'DELETE',
+        headers: requestHeaders
     })
+    const content: any = await rawResponse.json()
+    return content
 }
 
-export const putApi = async (url: string, data: any) => {
+export const putApiWithAuth = async (url: string, data: any) => {
+    const requestHeaders = new Headers()
+    requestHeaders.append('Content-Type', contentType)
+    if (localStorage.getItem('accessToken')) {
+        const accessToken = localStorage.getItem('accessToken')
+        requestHeaders.append('Content-Type', accessToken || '')
+    }
+
     const finalUrl = `${environment.apiUrl}${url}`
-    return new Promise((resolve, rejects) => {
-        fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': contentType
-            },
-            body: JSON.stringify(data)
-        })
+    const rawResponse = await fetch(finalUrl, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': contentType
+        },
+        body: JSON.stringify(data)
     })
+    const content: any = await rawResponse.json()
+    return content
 }
