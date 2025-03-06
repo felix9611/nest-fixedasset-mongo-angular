@@ -8,15 +8,13 @@ export const postApiWithAuth = async (url: string, data: any) => {
     requestHeaders.append('Content-Type', contentType)
     if (localStorage.getItem('accessToken')) {
         const accessToken = localStorage.getItem('accessToken')
-        requestHeaders.append('Content-Type', accessToken || '')
+        requestHeaders.append('Authorization', accessToken || '')
     }
 
     const finalUrl = `${environment.apiUrl}${url}`
     const rawResponse = await fetch(finalUrl, {
         method: 'POST',
-        headers: {
-            'Content-Type': contentType
-        },
+        headers: requestHeaders,
         body: JSON.stringify(data)
     })
     const content: any = await rawResponse.json()

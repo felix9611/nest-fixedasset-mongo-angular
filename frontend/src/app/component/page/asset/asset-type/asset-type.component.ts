@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { NglModule } from 'ng-lightning'
 import { FormsModule } from '@angular/forms'
-import { HttpService } from '../../../../../tool/HttpService'
+import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 
 
 @Component({
@@ -14,7 +14,19 @@ import { HttpService } from '../../../../../tool/HttpService'
     styleUrl: './asset-type.component.scss',
 })
 export class AssetTypeComponent {
-    constructor(
-        private httpService: HttpService
-    ) {}
+    constructor() {}
+
+    searchForm: any = {
+        page: 1,
+        limit: 20
+    }
+
+    ngOnInit() {
+        this.loadAssetTypeLists()
+    }
+
+    async loadAssetTypeLists() {
+        const res = await postApiWithAuth('/asset/type/list', this.searchForm)
+       console.log(res)
+    }
 }
