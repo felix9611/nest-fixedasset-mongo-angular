@@ -7,12 +7,14 @@ import { ActionRecordMoudule} from './module/action-record/actionRecord.module'
 import { SysUserMoudule } from './module/sys-user/sysUser.module'
 import { AuthModule } from './module/auth/auth.module'
 import { SysRoleMoudule } from './module/sys-role/role.module'
+import { DepartmentMoudule } from './module/department/department.module'
 
 @Module({
   imports: [
     AuthModule, 
     SysRoleMoudule,
     SysUserMoudule,
+    DepartmentMoudule,
     AssetTypeMoudule,
     ActionRecordMoudule,
     MongooseModule.forRoot('mongodb://localhost/fixedasset')
