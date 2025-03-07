@@ -25,7 +25,7 @@ export class SysUser extends BaseSchema {
     lastLogin?: Date
 
     @Prop({ type: SchemaTypes.Array })
-    roles?: number[]
+    roles?: string[]
 }
 
 export const SysUserSchema = SchemaFactory.createForClass(SysUser)

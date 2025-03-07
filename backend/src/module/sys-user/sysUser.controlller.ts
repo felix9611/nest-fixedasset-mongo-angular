@@ -39,4 +39,5 @@ export class SysUserController {
     async listPage(@Body() requestBody: ListUserRequestDto) {
         return await this.userService.listUser(requestBody)
     }
+
 }
