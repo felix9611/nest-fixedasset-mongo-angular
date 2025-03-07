@@ -45,7 +45,7 @@
             </span>
             
           </a>
-          <span *ngIf="item.childrens">{{ activeParent === item ? '▲' : '▼' }}</span>
+          <span *ngIf="item.childrens" class="flex justify-self-end items-center">{{ activeParent === item ? '▲' : '▼' }}</span>
           
     </div>
 
