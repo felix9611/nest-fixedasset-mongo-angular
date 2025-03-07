@@ -23,6 +23,7 @@ export class UserStoreService {
     private initialState: UserInfo = { 
         username: '',
         accessToken: '',
+        avatarBase64: '',
         deptId: 0,
         roleIds: [] 
     }
@@ -62,11 +63,13 @@ export class UserStoreService {
     setUser(info: UserInfo): void {
         this.userSubject.next(info)
     }
+    
 
     logout(): void {
         this.userSubject.next({ 
             username: '',
             accessToken: '',
+            avatarBase64: '',
             deptId: 0,
             roleIds: [] 
         })
@@ -77,6 +80,11 @@ export class UserStoreService {
 
     toLoginPage() {
         this.router.navigate(['/login'])
+    }
+
+    async loadUserInfo() {
+        const data = await getApiWithAuth('/auth/user-profile')
+        this.setUser(data)
     }
 
     async verifyToken(): Promise<boolean> {

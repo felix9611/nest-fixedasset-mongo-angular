@@ -1,11 +1,17 @@
 <header class="fixed top-0 left-0 w-full bg-white">
-    <nav class="p-1">
-        <div class="text-center py-3 text-[1.2rem]">
-            Fixed Asset System 
+    <nav [class]="isMenuExpanded ? 'py-[1rem]' : 'py-[1.9rem]'">
+        <div class="text-center text-[1.15rem]">
+            <div *ngIf="isMenuExpanded">Fixed Asset System </div>
         </div>
-        <div class="fixed absolute top-0 right-0 py-5 px-[3rem]">
-            <div>
-                <a>
+        <div class="fixed absolute top-0 right-0 grid grid-cols-2 gap-5">
+            <div class="py-[0.4rem]">
+                <div class="flex items-center justify-center gap-5">
+                    <div *ngIf="isMenuExpanded" class="font-bold flex items-center">{{ userInfo.username }}</div>
+                    <img [src]="userInfo.avatarBase64" class="border-1 max-h-[3rem] max-w-[3rem] rounded-full" />
+                </div>
+            </div>
+            <div class="py-1 flex items-center">
+                <a class="flex items-center justify-center gap-5">
                     <mat-icon aria-hidden="false" fontIcon="logout"></mat-icon>
                 </a>
             </div>

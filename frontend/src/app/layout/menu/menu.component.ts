@@ -14,25 +14,27 @@ import { TooltipModule } from 'primeng/tooltip'
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit{
-    constructor(private cartService: CartsStoreService) {}
+    constructor() {}
 
-    isMenuExpanded: boolean = window.innerWidth > 640; // Expand only on large screens
-    screenWidth: number = window.innerWidth;
+    isMenuExpanded: boolean = window.innerWidth > 640 // Expand only on large screens
+    screenWidth: number = window.innerWidth
 
     copyRights: any = {
         name: 'Felix',
         year: new Date().getFullYear()
     }
 
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.screenWidth = window.innerWidth;
+        this.isMenuExpanded = this.screenWidth > 640
+    }
+
 
     ngOnInit() {
     }
 
-    @HostListener('window:resize', ['$event'])
-     onResize(event: any) {
-        this.screenWidth = window.innerWidth;
-        this.isMenuExpanded = this.screenWidth > 640
-    }
+    
 
 
     toggleSubMenu(index: number) {

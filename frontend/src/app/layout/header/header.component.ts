@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
 
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { CartsStoreService } from '../../state/CartsStoreService'
+import { UserStoreService } from '../../../state/user.service'
+import { UserInfo } from '../../../state/interface'
 
 @Component({
   selector: 'app-header',
@@ -13,14 +15,29 @@ import { CartsStoreService } from '../../state/CartsStoreService'
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit{
-    constructor(private cartService: CartsStoreService) {}
+    constructor(private userService: UserStoreService) {}
 
-    cartsTotal: number = 0
+    isMenuExpanded: boolean = window.innerWidth > 700 // Expand only on large screens
+    screenWidth: number = window.innerWidth
+    
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.screenWidth = window.innerWidth;
+        this.isMenuExpanded = this.screenWidth > 700
+    }
+
+    userInfo: UserInfo = { 
+        username: '',
+        accessToken: '',
+        avatarBase64: '',
+        deptId: 0,
+        roleIds: [] 
+    }
 
     ngOnInit() {
-        this.cartService.carts$.subscribe(
-            data => this.cartsTotal = data.list.length
-        )
+        const data = this.userService.user$.subscribe(user => {
+            this.userInfo = user
+        })
     }
 
     menuLists = [
