@@ -40,6 +40,10 @@ export class HeaderComponent implements OnInit{
         })
     }
 
+    logout() {
+        this.userService.logout()
+    }
+
     menuLists = [
         {
             path: '',

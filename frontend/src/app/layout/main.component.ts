@@ -3,6 +3,7 @@ import { ContentComponent } from './content/content.component'
 import { MenuComponent } from './menu/menu.component'
 import { RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
 import { HeaderComponent } from './header/header.component'
+import { UserStoreService } from '../../state/user.service'
 
 @Component({
     imports: [ContentComponent, MenuComponent, HeaderComponent, RouterOutlet, RouterLinkActive, RouterModule],
@@ -12,9 +13,13 @@ import { HeaderComponent } from './header/header.component'
     encapsulation: ViewEncapsulation.None
 })
 export class MainComponent {
+    constructor(private userStoreService: UserStoreService) {
+        this.userStoreService.loadUserInfo()
+    }
     isCollapsed = false;
 
     toggleSidebar() {
         this.isCollapsed = !this.isCollapsed;
     }
+
 }
