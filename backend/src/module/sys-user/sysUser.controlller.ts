@@ -9,6 +9,7 @@ export class SysUserController {
     constructor(private readonly userService: SysUserService) {}
 
     @Post('create-user')
+    @UseGuards(AuthGuard)
     async createUser(@Body() createUserRequest: CreateUserRequestDto) {
         return await this.userService.createUser(createUserRequest);
     }
@@ -26,16 +27,19 @@ export class SysUserController {
     }
 
     @Delete('invalidate-user/:id')
+    @UseGuards(AuthGuard)
     async invalidateUser(@Param('id') id: string) {
         return await this.userService.invalidateUser(id)
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard)
     async getUserInfoById(@Param('id') id: string) {
         return await this.userService.getUserInfo(id)
     }
 
     @Post('list')
+    @UseGuards(AuthGuard)
     async listPage(@Body() requestBody: ListUserRequestDto) {
         return await this.userService.listUser(requestBody)
     }

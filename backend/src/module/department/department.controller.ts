@@ -8,21 +8,25 @@ export class DepartmentController {
     constructor(private deptService: DepartmentService){}
 
     @Post('create')
+    @UseGuards(AuthGuard)
     async create(@Body() createData: CreateDeptDto) {
         return await this.deptService.create(createData)
     }
 
     @Post('update')
+    @UseGuards(AuthGuard)
     async update(@Body() updateDto: UpdateDeptDto) {
         return await this.deptService.update(updateDto)
     }
 
     @Get('one/:id')
+    @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
         return await this.deptService.getOneById(id)
     }
 
     @Delete('delete/:id')
+    @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
         return await this.deptService.invalidateDepartment(id)
     }

@@ -8,21 +8,25 @@ export class SysRoleController {
     constructor(private sysRoleService: SysRoleService){}
 
     @Post('create')
+    @UseGuards(AuthGuard)
     async create(@Body() createData: CreateSysRoleDto) {
         return await this.sysRoleService.create(createData)
     }
 
     @Post('update')
+    @UseGuards(AuthGuard)
     async update(@Body() updateDto: UpdateSysRoleDto) {
         return await this.sysRoleService.update(updateDto)
     }
 
     @Get('one/:id')
+    @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
         return await this.sysRoleService.getOneById(id)
     }
 
     @Delete('delete/:id')
+    @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
         return await this.sysRoleService.invalidateRole(id)
     }
