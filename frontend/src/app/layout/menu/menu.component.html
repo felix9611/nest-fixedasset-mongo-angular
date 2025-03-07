@@ -1,36 +1,3 @@
-<!--<div class="h-screen fixed top-0 left-0 bg-gray-900 text-white shadow-lg transition-all duration-300 lg:w-60 md:w-50 sm:w-30 w-16 overflow-y-scroll">
-  <ul class="mt-12 space-y-2 text-white">
-    <li 
-        *ngFor="let item of menuItems; let i = index" class="relative group text-white">
-      <a class="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer"
-         (click)="item.childrens ? toggleSubMenu(i) : null"
-         [routerLink]="item.path">
-          <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
-          <span class="ml-3 transition-opacity duration-300 text-white"
-              [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
-          {{ item.label }}
-        </span>
-      </a>
-
-      Submenu --><!---
-      <ul *ngIf="item.childrens" [ngClass]="{'hidden': !item.isOpen}" class="pl-6">
-        <li 
-          (click)="setActive(child)"
-          [ngClass]="{'bg-blue-500': activeItem === item, '': activeItem !== item}"
-          *ngFor="let child of item.childrens">
-          <a class="flex items-center lg:px-5 py-2 text-gray-300 hover:bg-gray-700 text-white"
-             [routerLink]="child.path">
-              <mat-icon cl aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
-              <span class="ml-3 transition-opacity duration-300 text-white"
-                  [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
-              {{ child.label }}
-            </span>
-          </a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>-->
 <ul class="h-screen fixed top-0 left-0 bg-gray-900 text-white shadow-lg transition-all duration-300 lg:w-60 md:w-50 sm:w-30 w-16 overflow-y-scroll">
   <li *ngFor="let item of menuItems">
     <!-- Parent Menu Item -->
