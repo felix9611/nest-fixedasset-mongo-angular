@@ -51,6 +51,43 @@ export class AssetTypeService {
         }
     }
 
+    async getOneById(_id: string) {
+        const data = await this.assetTypeModel.findOne({ _id, status: 1})
+
+        if (data) {
+            return data
+        } else {
+            return {
+                msg: 'This role has been invalidated! Please contact admin!'
+            }
+        }
+    }
+
+    async voidOne(_id: string) {
+        const checkData = await this.assetTypeModel.findOne({ _id })
+
+        if (checkData?.status === 0) {
+            return {
+                msg: 'This role has been invalidated! Please contact admin!'
+            }
+        } else {
+            const res = await this.assetTypeModel.updateOne({ _id}, {
+                status: 0,
+                updateAt: new Date()
+            })
+        
+            if (res.modifiedCount === 1) {
+                return {
+                  msg: 'Invalidate successfully!'
+                }
+            } else {
+                return {
+                  msg: 'Ooops! Something went wrong! Please try again!'
+                }
+            }
+        }
+    }
+
 
     async findCheckData(typeCode: string, typeName: string) {
         return await this.assetTypeModel.findOne({

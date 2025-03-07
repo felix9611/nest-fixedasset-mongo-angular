@@ -94,7 +94,7 @@ export class SysRoleService {
         }
     }
 
-    async listUser(request: ListRoleRequestDto) {
+    async listPageRole(request: ListRoleRequestDto) {
         const { page, limit, name } = request
 
         const skip = (page - 1) * limit
