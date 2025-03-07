@@ -7,11 +7,11 @@ import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { MatTableModule } from '@angular/material/table'
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
 import { XTableColumn, XTableComponent } from '@ng-nest/ui/table'
-
+import { NzTableModule } from 'ng-zorro-antd/table'
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NglModule, FormsModule, MatTableModule, MatPaginatorModule, XTableComponent],
+    imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NglModule, FormsModule, MatTableModule, MatPaginatorModule, XTableComponent, NzTableModule],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
 })

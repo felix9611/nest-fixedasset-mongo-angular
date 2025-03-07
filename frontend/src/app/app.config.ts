@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core'
+import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core'
 import { provideRouter } from '@angular/router'
 
 import { routes } from './app.routes'
@@ -7,7 +7,14 @@ import { provideStore, StoreModule } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools'
 import Aura from '@primeng/themes/aura';
 import { providePrimeNG } from 'primeng/config'
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+import { FormsModule } from '@angular/forms';
+import { provideHttpClient } from '@angular/common/http'
+
+registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,7 +26,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura
       }
-    })
+    }), provideNzI18n(en_US), importProvidersFrom(FormsModule), provideAnimationsAsync(), provideHttpClient()
    // StoreModule.forRoot({
    //   promotion: promotionStateoReducer
    // }) as any

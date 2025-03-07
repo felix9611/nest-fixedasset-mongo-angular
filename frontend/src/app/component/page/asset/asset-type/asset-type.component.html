@@ -1,4 +1,4 @@
-<div class="bg-white">
+<div class="bg-white px-[5rem]">
     <div>
         <div>
             <table mat-table [dataSource]="dataLists" class="mat-elevation-z8">
@@ -20,6 +20,24 @@
             </table>
             <mat-paginator [pageSize]="searchForm.limit" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
+            <nz-table
+                [nzData]="dataLists"
+                #dataTable
+                class="px-[3rem]"
+            >
+                <thead>
+                    <tr>
+                        <th>Type Code</th>
+                        <th>Type Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of dataTable.data">
+                        <td>{{data.typeCode}}</td>
+                        <td>{{data.typeName}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
         </div> 
     </div>
 </div>

@@ -7,7 +7,8 @@
             <div class="py-[0.4rem]">
                 <div class="flex items-center justify-center gap-5">
                     <div class="font-bold flex items-center">{{ userInfo.username }}</div>
-                    <img [src]="userInfo.avatarBase64" class="border-1 max-h-[3rem] max-w-[3rem] rounded-full" />
+                    <div *ngIf="!userInfo.avatarBase64" class="border-1 w-[3rem] h-[3rem] rounded-full"></div>
+                    <img *ngIf="userInfo.avatarBase64" [src]="userInfo.avatarBase64" class="border-1 max-h-[3rem] max-w-[3rem] rounded-full" />
                 </div>
             </div>
             <div class="py-1 flex items-center">

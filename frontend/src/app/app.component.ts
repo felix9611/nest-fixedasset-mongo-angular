@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core'
 import { Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
 import { CommonModule } from '@angular/common'
-import { FooterComponent } from './component/footer/footer.component'
 import { NglModule } from 'ng-lightning'
 import { UserStoreService } from '../state/user.service'
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, RouterModule, FooterComponent, NglModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, RouterModule, NglModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

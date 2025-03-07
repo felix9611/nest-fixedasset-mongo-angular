@@ -34,12 +34,29 @@ export class MenuComponent implements OnInit{
     ngOnInit() {
     }
 
+    activeParent: any = null
+    activeChild: any = null
+    expandedMenus: any[] = []
+
+
+    toggleMenu(item: any) {
+        if (this.expandedMenus.includes(item)) {
+          this.expandedMenus = this.expandedMenus.filter(menu => menu !== item) // Collapse menu
+          if (this.activeParent === item) {
+            this.activeParent = null
+          }
+        } else {
+          this.expandedMenus.push(item) // Expand menu
+          this.activeParent = item
+        }
+      }
     
-
-
-    toggleSubMenu(index: number) {
-        this.menuItems[index].isOpen = !this.menuItems[index].isOpen;
+    setActiveChild(child: any, parent: any) {
+        this.activeParent = parent
+        this.activeChild = child
     }
+
+
 
     menuItems: any[] = [
         {
