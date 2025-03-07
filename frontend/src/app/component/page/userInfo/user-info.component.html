@@ -1,0 +1,27 @@
+<div class="bg-white p-[1rem]">
+    <form nz-form>
+        <nz-form-item>
+            <img [src]="userInfo.avatarBase64" width="20%" height="20%"/>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label class="font-bold" nzFor="email">Usernane</nz-form-label>
+            <nz-form-control [nzSpan]="14">
+                {{ userInfo.username }}
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label class="font-bold" nzFor="email">E-mail</nz-form-label>
+            <nz-form-control [nzSpan]="14">
+                {{ userInfo.email }}
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label class="font-bold" nzFor="email">Roles</nz-form-label>
+            <div *ngFor="let role of userInfo.roleLists" class="flex gap-2">
+                <div class="border-1 border-[#21b700] rounded-lg p-1 text-[#21b700] bg-[#bfffb1]">
+                    {{ role.name }}
+                </div>
+            </div>
+        </nz-form-item>
+    </form>
+</div>
