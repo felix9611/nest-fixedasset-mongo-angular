@@ -6,13 +6,15 @@ import { AssetTypeMoudule } from './module/asset-type/assetType.module'
 import { ActionRecordMoudule} from './module/action-record/actionRecord.module'
 import { SysUserMoudule } from './module/sys-user/sysUser.module'
 import { AuthModule } from './module/auth/auth.module'
+import { SysRoleMoudule } from './module/sys-role/role.module'
 
 @Module({
   imports: [
+    AuthModule, 
+    SysRoleMoudule,
+    SysUserMoudule,
     AssetTypeMoudule,
     ActionRecordMoudule,
-    SysUserMoudule,
-    AuthModule, 
     MongooseModule.forRoot('mongodb://localhost/fixedasset')
   ],
   controllers: [AppController],

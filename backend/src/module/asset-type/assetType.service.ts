@@ -88,7 +88,7 @@ export class AssetTypeService {
             .skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.assetTypeModel.countDocuments()
+        const total = await this.assetTypeModel.find(filters).countDocuments()
 
         return {
             total,
