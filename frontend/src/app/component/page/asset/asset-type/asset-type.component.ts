@@ -8,6 +8,9 @@ import { MatTableModule } from '@angular/material/table'
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator'
 import { XTableColumn, XTableComponent } from '@ng-nest/ui/table'
 import { NzTableModule } from 'ng-zorro-antd/table'
+import moment from 'moment'
+
+
 @Component({
     // selector: 'app-footer',
     standalone: true,
@@ -39,5 +42,10 @@ export class AssetTypeComponent {
 
     async editDialg(row: any) {
 
+    }
+
+
+    dateFormat(data: string) {
+        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
 }

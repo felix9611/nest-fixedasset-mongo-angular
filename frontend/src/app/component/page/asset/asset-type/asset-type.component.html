@@ -9,13 +9,15 @@
                         <th>Type Code</th>
                         <th>Type Name</th>
                         <th>Created At</th>
+                        <th>Updated At</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of dataTable.data">
                         <td>{{data.typeCode}}</td>
                         <td>{{data.typeName}}</td>
-                        <td>{{data.createdAt}}</td>
+                        <td>{{  dateFormat(data.createdAt)  }}</td>
+                        <td>{{  dateFormat(data.updatedAt)  }}</td>
                     </tr>
                 </tbody>
         </nz-table>
