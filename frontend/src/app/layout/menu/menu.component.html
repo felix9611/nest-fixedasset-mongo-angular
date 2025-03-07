@@ -14,7 +14,7 @@
       <!-- Submenu -->
       <ul *ngIf="item.childrens" [ngClass]="{'hidden': !item.isOpen}" class="pl-6">
         <li *ngFor="let child of item.childrens">
-          <a class="flex items-center px-5 py-2 text-gray-300 hover:bg-gray-700"
+          <a class="flex items-center lg:px-5 py-2 text-gray-300 hover:bg-gray-700"
              [routerLink]="child.path">
               <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
               <span class="ml-3 transition-opacity duration-300"

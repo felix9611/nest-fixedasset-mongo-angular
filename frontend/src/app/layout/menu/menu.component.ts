@@ -5,10 +5,11 @@ import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angul
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { CartsStoreService } from '../../state/CartsStoreService'
+import { TooltipModule } from 'primeng/tooltip'
 
 @Component({
   selector: 'app-menu',
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, RouterModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, RouterModule, MatIconModule, MatButtonModule, TooltipModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
@@ -92,7 +93,8 @@ export class MenuComponent implements OnInit{
             childrens: [
                 {
                     label: 'Asset Type',
-                    icon: ''
+                    icon: '',
+                    path: 'asset-type'
                 },
                 {
                     label: 'Asset List',

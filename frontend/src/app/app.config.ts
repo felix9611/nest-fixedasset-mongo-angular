@@ -5,14 +5,24 @@ import { routes } from './app.routes'
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser'
 import { provideStore, StoreModule } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools'
+import Aura from '@primeng/themes/aura';
+import { providePrimeNG } from 'primeng/config'
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes), 
-    provideClientHydration(withEventReplay())
+    provideClientHydration(withEventReplay()),
+    provideAnimationsAsync(),
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    })
    // StoreModule.forRoot({
    //   promotion: promotionStateoReducer
    // }) as any
   ]
 };
+
