@@ -42,16 +42,16 @@ export class MenuComponent implements OnInit{
         {
             path: '',
             label: 'Home',
-            icon: ''
+            icon: 'home'
         },
         {
             label: 'System Management',
-            icon: '',
+            icon: 'settings',
             isOpen: false,
             childrens: [
                 {
                     label: 'User',
-                    icon: ''
+                    icon: 'account-circle'
                 },
                 {
                     label: 'Role',
@@ -63,13 +63,13 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Department',
-                    icon: ''
+                    icon: 'team_dashboard'
                 }
             ]
         },
         {
             label: 'Base Management',
-            icon: '',
+            icon: 'dock_to_bottom',
             isOpen: false,
             childrens: [
                 {
@@ -88,7 +88,7 @@ export class MenuComponent implements OnInit{
         },
         {
             label: 'Asset Managemnt',
-            icon: '',
+            icon: 'save',
             childrens: [
                 {
                     label: 'Asset Type',
@@ -126,7 +126,7 @@ export class MenuComponent implements OnInit{
         },
         {
             label: 'Dashboard',
-            icon: ''
+            icon: 'dashboard'
         }
     ]
 }

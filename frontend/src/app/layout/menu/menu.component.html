@@ -4,8 +4,8 @@
       <a class="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer"
          (click)="item.childrens ? toggleSubMenu(i) : null"
          [routerLink]="item.path">
-        <span class="text-lg">{{ item.icon }}</span>
-        <span class="ml-3 transition-opacity duration-300"
+          <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
+          <span class="ml-3 transition-opacity duration-300"
               [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
           {{ item.label }}
         </span>
@@ -14,10 +14,10 @@
       <!-- Submenu -->
       <ul *ngIf="item.childrens" [ngClass]="{'hidden': !item.isOpen}" class="pl-6">
         <li *ngFor="let child of item.childrens">
-          <a class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700"
+          <a class="flex items-center px-5 py-2 text-gray-300 hover:bg-gray-700"
              [routerLink]="child.path">
-            <span class="text-lg">{{ child.icon }}</span>
-            <span class="ml-3 transition-opacity duration-300"
+              <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
+              <span class="ml-3 transition-opacity duration-300"
                   [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
               {{ child.label }}
             </span>
