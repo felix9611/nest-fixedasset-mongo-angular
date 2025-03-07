@@ -4,9 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as bodyParser from 'body-parser'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule,  {
-    logger: ['error', 'warn'],
-  })
+  const app = await NestFactory.create(AppModule)
   app.enableCors({
     origin: '*',  // ✅ Allow all origins (or specify frontend URL)
     methods: 'GET,POST',

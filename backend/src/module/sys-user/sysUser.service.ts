@@ -6,12 +6,17 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserDto, CreateUserRequestDto, ListUserRequestDto } from './sysUser.dto'
 import { createUserKey } from './constants'
 import { hashPassword, salt } from 'src/tool/password-tools'
+import { SysRole } from '../sys-role/role.schame'
+import { SysRoleService } from '../sys-role/role.service'
 
 export type User = any
 
 @Injectable()
 export class SysUserService {
-  constructor(@InjectModel(SysUser.name) private sysUserModel: Model<SysUser>) {}
+  constructor(
+    @InjectModel(SysUser.name) private sysUserModel: Model<SysUser>,
+    private sysRoleService: SysRoleService
+  ) {}
 
   async createUser(createUserRequest: CreateUserRequestDto) {
     const { key, userData } = createUserRequest
@@ -78,7 +83,7 @@ export class SysUserService {
 
       if (res.modifiedCount === 1) {
         return {
-          msg: 'Update successfully!'
+          msg: 'Invalidate successfully!'
         }
       } else {
         return {
@@ -113,7 +118,9 @@ export class SysUserService {
   }
 
   async getUserInfo(_id: string) {
-    const answer = await this.sysUserModel.findOne({ _id})
+    const answer: any = await this.sysUserModel.findOne({ _id})
+
+    const roleLists = await this.sysRoleService.getRolelistsByIds(answer.roles)
     return {
       _id: answer?._id,
       username: answer?.username,
@@ -121,13 +128,16 @@ export class SysUserService {
       avatarBase64: answer?.avatarBase64,
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
-      deptId: answer?.deptId
+      deptId: answer?.deptId,
+      roleLists
     }
 
   }
 
   async findOneUser(username: string) {
-    const answer = await this.sysUserModel.findOne({ username })
+    const answer: any = await this.sysUserModel.findOne({ username })
+
+    const roleLists: any = await this.sysRoleService.getRolelistsByIds(answer.roles)
     return {
       _id: answer?._id,
       username: answer?.username,
@@ -135,7 +145,8 @@ export class SysUserService {
       avatarBase64: answer?.avatarBase64,
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
-      deptId: answer?.deptId
+      deptId: answer?.deptId,
+      roleLists
     }
   }
 

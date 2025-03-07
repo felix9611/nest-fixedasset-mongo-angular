@@ -19,11 +19,14 @@ export class UserStoreService {
     router = inject(Router)
     private accessToken: string = ''
     private initialState: UserInfo = { 
+        _id: '',
         username: '',
         accessToken: '',
         avatarBase64: '',
         deptId: 0,
-        roleIds: [] 
+        roleIds: [],
+        roleLists: [],
+        email: '', 
     }
     private tokenSubject = new BehaviorSubject<string>(this.accessToken)
     private userSubject = new BehaviorSubject<UserInfo>(this.initialState)
@@ -65,11 +68,15 @@ export class UserStoreService {
 
     logout(): void {
         this.userSubject.next({ 
+            _id: '',
             username: '',
             accessToken: '',
             avatarBase64: '',
             deptId: 0,
-            roleIds: [] 
+            roleIds: [],
+            roleLists: [],
+            email: '',
+
         })
         localStorage.clear()
         this.tokenSubject.next('')

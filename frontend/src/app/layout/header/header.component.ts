@@ -27,15 +27,18 @@ export class HeaderComponent implements OnInit{
     }
 
     userInfo: UserInfo = { 
+        _id: '',
         username: '',
         accessToken: '',
         avatarBase64: '',
         deptId: 0,
-        roleIds: [] 
+        roleIds: [],
+        roleLists: [],
+        email: '', 
     }
 
     ngOnInit() {
-        const data = this.userService.user$.subscribe(user => {
+        this.userService.user$.subscribe(user => {
             this.userInfo = user
         })
     }

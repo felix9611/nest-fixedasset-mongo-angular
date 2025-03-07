@@ -5,9 +5,9 @@ import { SysRoleService } from './role.service'
 import { SysRoleController } from './role.controller'
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: SysRole.name, schema: SysRoleSchema }])],
+    imports: [MongooseModule.forFeature([{ name: SysRole.name, schema: SysRoleSchema }]), SysRole],
     controllers: [SysRoleController],
     providers: [SysRoleService],
-    exports: [SysRoleService],
+    exports: [SysRoleService, SysRole],
 })
 export class SysRoleMoudule {}

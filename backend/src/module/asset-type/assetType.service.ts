@@ -71,7 +71,7 @@ export class AssetTypeService {
 
         const filters = {
             ...name? {
-                Or: [
+                $or: [
                     {
                         typeCode: { $regex: name, $options: 'i' }
                     },
