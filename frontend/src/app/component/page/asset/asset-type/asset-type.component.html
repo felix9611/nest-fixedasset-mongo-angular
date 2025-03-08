@@ -33,10 +33,14 @@
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
                             <div class="flex gap-3">
-                                <div (click)="getOneData(data._id)" class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                <div 
+                                    (click)="getOneData(data._id)" 
+                                    class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
                                     Edit
                                 </div>
-                                <div class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
+                                <div 
+                                    (click)="handleRomeve(data._id)"
+                                    class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
                                     Delete
                                 </div>
                             </div>
@@ -84,6 +88,17 @@
                 </form>
             </ng-container>
            
+        </nz-modal>
+
+        <nz-modal
+            [(nzVisible)]="removeDialog" 
+            nzTitle="Confirm Delete"
+            (nzOnCancel)="closeRemoveDialog()"
+            (nzOnOk)="handleRemove()"
+        >
+            <ng-container *nzModalContent>
+                Are you sure to confirm delete this asset type?
+            </ng-container>
         </nz-modal>
     </div>
 </div>

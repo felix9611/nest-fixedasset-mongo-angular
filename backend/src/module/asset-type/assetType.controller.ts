@@ -36,7 +36,7 @@ export class AssetTypeController {
     return this.assetTypeService.listAssetTypeBySearch(req)
   }
 
-  @Delete('remove/:id')
+  @Get('remove/:id')
   @UseGuards(AuthGuard)
   async remove(@Param('id') id: string) {
     return this.assetTypeService.voidOne(id)

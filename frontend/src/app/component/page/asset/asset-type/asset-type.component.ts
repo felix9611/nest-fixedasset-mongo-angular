@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
-import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzButtonModule } from 'ng-zorro-antd/button'
-import { NzModalModule } from 'ng-zorro-antd/modal'
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
@@ -21,7 +21,10 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
     styleUrl: './asset-type.component.css',
 })
 export class AssetTypeComponent {
-    constructor(private message: NzMessageService) {}
+    constructor(
+        private message: NzMessageService,
+        private modalService: NzModalService
+    ) {}
 
     searchForm: any = {
         page: 1,
@@ -40,6 +43,8 @@ export class AssetTypeComponent {
     dataLists: any[] = []
     totals: number = 0
     editFormDialog: boolean = false
+    removeDialog: boolean = false
+    handleRemoveId: string = ''
 
     ngOnInit() {
         this.loadAssetTypeLists()
@@ -82,6 +87,28 @@ export class AssetTypeComponent {
 
     closeDialog() {
         this.editFormDialog = false
+    }
+
+    handleRomeve(id: string) {
+        this.handleRemoveId = id
+        this.removeDialog = true
+    }
+
+    closeRemoveDialog() {
+        this.removeDialog = false
+    }
+
+    handleRemove() {
+        const url = `/asset/type/remove/${this.handleRemoveId}`
+
+        const res: any = getApiWithAuth(url)
+
+        if (res.msg) {
+            this.message.info(res.msg)
+        }
+
+        this.closeRemoveDialog()
+        this.loadAssetTypeLists()
     }
 
 

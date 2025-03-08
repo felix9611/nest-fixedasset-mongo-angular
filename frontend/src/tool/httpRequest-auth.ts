@@ -39,7 +39,7 @@ export const getApiWithAuth = async (url: string) => {
     return content
 }
 
-export const deleteApiWithAuth = async (url: string, data: any) => {
+export const deleteApiWithAuth = async (url: string) => {
     const finalUrl = `${environment.apiUrl}${url}`
 
     const requestHeaders = new Headers()
