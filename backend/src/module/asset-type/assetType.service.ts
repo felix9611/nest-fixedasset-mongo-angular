@@ -3,10 +3,14 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AssetType } from './assetType.schame'
 import { AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto } from './assetType.dto'
+import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
 export class AssetTypeService {
-    constructor(@InjectModel(AssetType.name) private assetTypeModel: Model<AssetType>) {}
+    constructor(
+        @InjectModel(AssetType.name) private assetTypeModel: Model<AssetType>,
+        private actionRecordService: ActionRecordService
+    ) {}
     
     async create(createDto: AssetTypeUpdateDto) {
 
@@ -16,6 +20,16 @@ export class AssetTypeService {
         
 
         if (checkData) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Asset Type',
+                actionMethod: 'POST',
+                actionFrom: 'Asset Type',
+                actionData: createDto,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This type already exist!'
             }
@@ -25,6 +39,16 @@ export class AssetTypeService {
                 createdAt: new Date(),
                 status: 1
             }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Asset Type',
+                actionMethod: 'POST',
+                actionFrom: 'Asset Type',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             const created = new this.assetTypeModel(finalData)
             return await created.save()
         }
@@ -41,11 +65,30 @@ export class AssetTypeService {
                 updatedAt: new Date()
             }
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Asset Type',
+                actionMethod: 'POST',
+                actionFrom: 'Asset Type',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             return await this.assetTypeModel.updateOne(
                 { _id }, 
                 finalData
             )
         } else {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Asset Type',
+                actionMethod: 'POST',
+                actionFrom: 'Asset Type',
+                actionData: updateDto,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This asset type not exist!'
             }
@@ -70,6 +113,18 @@ export class AssetTypeService {
         const checkData = await this.assetTypeModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Asset Type',
+                actionMethod: 'GET',
+                actionFrom: 'Asset Type',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This asset type has been invalidated! Please contact admin!'
             }
@@ -77,6 +132,19 @@ export class AssetTypeService {
             const res = await this.assetTypeModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
+            })
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Asset Type',
+                actionMethod: 'GET',
+                actionFrom: 'Asset Type',
+                actionData: {
+                    _id,
+                    status: 0,
+                updateAt: new Date()
+                },
+                actionSuccess: 'Success',
+                createdAt: new Date()
             })
         
             if (res.modifiedCount === 1) {
