@@ -8,9 +8,12 @@ import { AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto } from '
 export class AssetTypeService {
     constructor(@InjectModel(AssetType.name) private assetTypeModel: Model<AssetType>) {}
     
-    async create(createDto: AssetTypeCreateDto) {
+    async create(createDto: AssetTypeUpdateDto) {
 
-        const checkData = await this.findCheckData(createDto.typeCode, createDto.typeName)
+        const { _id, ..._createData } = createDto
+
+        const checkData = await this.findCheckData(_createData.typeCode, _createData.typeName)
+        
 
         if (checkData) {
             return {
@@ -18,7 +21,7 @@ export class AssetTypeService {
             }
         } else {
             const finalData = {
-                ...createDto,
+                ..._createData,
                 createdAt: new Date(),
                 status: 1
             }
@@ -30,7 +33,7 @@ export class AssetTypeService {
     async update(updateDto: AssetTypeUpdateDto) {
         const { _id, ..._updateDto } = updateDto
 
-        const checkData = await this.findCheckData(_updateDto.typeCode, _updateDto.typeName)
+        const checkData = await this.assetTypeModel.findOne({ _id, status: 1 })
 
         if (checkData) {
             const finalData = {
@@ -44,7 +47,7 @@ export class AssetTypeService {
             )
         } else {
             return {
-                msg: 'This type already exist!'
+                msg: 'This asset type not exist!'
             }
             
 
@@ -58,7 +61,7 @@ export class AssetTypeService {
             return data
         } else {
             return {
-                msg: 'This role has been invalidated! Please contact admin!'
+                msg: 'This asset type has been invalidated! Please contact admin!'
             }
         }
     }

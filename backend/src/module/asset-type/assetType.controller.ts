@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { AssetTypeService } from './assetType.service'
-import { AssetTypeCreateDto, AssetTypeListSearchDto } from './assetType.dto'
+import { AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto } from './assetType.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 
 @Controller('asset/type')
@@ -9,14 +9,14 @@ export class AssetTypeController {
 
   @Post('create')
   @UseGuards(AuthGuard)
-  async create(@Body() createData: AssetTypeCreateDto) {
-    return this.assetTypeService.create(createData);
+  async create(@Body() createData: AssetTypeUpdateDto) {
+    return this.assetTypeService.create(createData)
   }
 
   @Post('update')
   @UseGuards(AuthGuard)
-  async update(@Body() createData: AssetTypeCreateDto) {
-    return this.assetTypeService.create(createData);
+  async update(@Body() createData: AssetTypeUpdateDto) {
+    return this.assetTypeService.update(createData)
   }
 
   @Get('one/:id')

@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
-import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzModalModule } from 'ng-zorro-antd/modal'
@@ -10,22 +10,22 @@ import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
 import { AssetTypeForm } from './interface'
-
-
+import { NzMessageService } from 'ng-zorro-antd/message'
+import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule],
+    imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
 })
 export class AssetTypeComponent {
-    constructor() {}
+    constructor(private message: NzMessageService) {}
 
     searchForm: any = {
         page: 1,
-        limit: 20
+        limit: 10
     }
 
     editForm: AssetTypeForm = {
@@ -34,6 +34,8 @@ export class AssetTypeComponent {
         typeName: '',
         remark: ''
     }
+
+    okText: string = 'Create'
 
     dataLists: any[] = []
     totals: number = 0
@@ -44,17 +46,34 @@ export class AssetTypeComponent {
     }
 
     async submitForm() {
+        const url = this.editForm._id === '' ? '/asset/type/create' : `/asset/type/update`
 
+        const res = await postApiWithAuth(url, {
+            
+            ...this.editForm,
+            ...this.editForm._id ? { _id: this.editForm._id} : {},
+        })
+
+        if (res.msg) {
+            this.message.error(res.msg)
+        } else if (res.matchedCount === 1 || !res.msg) {
+            this.message.success('Save successful!')
+            this.closeDialog()
+            this.loadAssetTypeLists()
+
+            this.editForm = {
+                _id: '',
+                typeCode: '',
+                typeName: '',
+                remark: ''
+            }
+        }
     }
 
     async loadAssetTypeLists() {
         const res = await postApiWithAuth('/asset/type/list', this.searchForm)
         this.dataLists = res.lists
-        this.totals = res.totals
-    }
-
-    async editDialg(row: any) {
-
+        this.totals = res.total
     }
 
     showDialog() {
@@ -69,4 +88,12 @@ export class AssetTypeComponent {
     dateFormat(data: string) {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
+
+    async getOneData(id:string) {
+        const res = await getApiWithAuth(`/asset/type/one/${id}`)
+        this.editForm = res
+        this.okText = 'Update'
+        this.showDialog()
+    }
+
 }

@@ -9,7 +9,7 @@ export class BaseSchema {
     createdAt: Date
 
     @Prop({ type: SchemaTypes.Date, default: Date.now})
-    updateAt?: Date
+    updatedAt?: Date
 
     @Prop({ type: SchemaTypes.Number, default: 1})
     status: number

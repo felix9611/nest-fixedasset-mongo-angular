@@ -1,5 +1,5 @@
 export interface AssetTypeForm {
-    _id: string,
+    _id?: string,
     typeCode: string,
     typeName: string
     remark: string
