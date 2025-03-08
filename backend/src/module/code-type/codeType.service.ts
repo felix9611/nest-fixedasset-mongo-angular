@@ -3,10 +3,14 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CodeType } from './codeType.schame'
 import { Model } from 'mongoose'
 import { CreateCodeTypeDto, ListCodeTypeRequestDto, UpdateCodeTypeDto } from './codeType.dto'
+import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
 export class CodeTypeService {
-    constructor(@InjectModel(CodeType.name) private codeTypeModel: Model<CodeType>) {}
+    constructor(
+        @InjectModel(CodeType.name) private codeTypeModel: Model<CodeType>,
+        private actionRecordService: ActionRecordService
+    ) {}
 
     async findAll(): Promise<CodeType[]> {
         return this.codeTypeModel.find({
@@ -20,6 +24,16 @@ export class CodeTypeService {
         const checkData = await this.codeTypeModel.findOne({ valueCode, valueName, type, status: 1})
 
         if (checkData) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Code Type',
+                actionMethod: 'POST',
+                actionFrom: 'Code Type',
+                actionData: createData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This code type already exist!'
             }
@@ -32,6 +46,15 @@ export class CodeTypeService {
                 createdAt: new Date()
             }
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Code Type',
+                actionMethod: 'POST',
+                actionFrom: 'Code Type',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             const create = new this.codeTypeModel(finalData)
             return await create.save()
         }
@@ -42,17 +65,38 @@ export class CodeTypeService {
 
         const checkData = await this.codeTypeModel.findOne({ _id })
 
-        if (checkData?.status === 0) {
-            return {
-                msg: 'This code type has been invalidated! Please contact admin!'
-            }
-        } else {
+        if (checkData?.status === 1) {
+
             const finalData = {
                 ...data,
                 updatedAt: new Date()
             }
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Code Type',
+                actionMethod: 'POST',
+                actionFrom: 'Code Type',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             return await this.codeTypeModel.updateOne({ _id}, finalData)
+            
+        } else {
+  
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Code Type',
+                actionMethod: 'POST',
+                actionFrom: 'Code Type',
+                actionData: updateData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                msg: 'This code type has been invalidated! Please contact admin!'
+            }
         }
     }
 
@@ -72,6 +116,18 @@ export class CodeTypeService {
         const checkData = await this.codeTypeModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Code Type',
+                actionMethod: 'GET',
+                actionFrom: 'Code Type',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This code type has been invalidated! Please contact admin!'
             }
@@ -82,6 +138,19 @@ export class CodeTypeService {
             })
         
             if (res.modifiedCount === 1) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Department',
+                    actionMethod: 'GET',
+                    actionFrom: 'Department',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
                 return {
                   msg: 'Invalidate successfully!'
                 }
@@ -99,21 +168,23 @@ export class CodeTypeService {
             const skip = (page - 1) * limit
     
             const filters = {
-                $or: [
-                    {
-                        valueName: { $regex: name, $options: 'i' }
-                    },
-                    {
-                        valueName: { $regex: name, $options: 'i' }
-                    },
-                    {
-                        type: { $regex: name, $options: 'i' }
-                    }
-                ],
+                ...name ? {
+                    $or: [
+                        {
+                            valueName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            valueName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            type: { $regex: name, $options: 'i' }
+                        }
+                    ],
+                } : {}, 
                 status: 1
             }
     
-            const users = await this.codeTypeModel.find(filters).skip(skip)
+            const lists = await this.codeTypeModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
             const total = await this.codeTypeModel.countDocuments()
@@ -123,7 +194,7 @@ export class CodeTypeService {
                 page,
                 limit,
                 totalPages: Math.ceil(total / limit),
-                data: users,
+                lists,
             }
     }
 }

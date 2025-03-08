@@ -25,7 +25,7 @@ export class CodeTypeController {
         return await this.codeTypeService.getOneById(id)
     }
 
-    @Delete('delete/:id')
+    @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
         return await this.codeTypeService.invalidateDepartment(id)

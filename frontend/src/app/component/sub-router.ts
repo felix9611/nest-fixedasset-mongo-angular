@@ -5,11 +5,17 @@ import { UserInfoComponent } from './page/userInfo/user-info.component'
 import { DepartmentComponent } from './page/department/department.component'
 import { RoleComponent } from './page/role/role.component'
 import { UsersComponent } from './page/users/users.component'
+import { CodeTypeComponent } from './page/code-type/code-type.component'
 
 export const pagesRoutes: Routes = [
     {
         path: 'asset-type',
         component: AssetTypeComponent, 
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'code-type',
+        component: CodeTypeComponent,
         canActivate: [AuthGuard]
     },
     {

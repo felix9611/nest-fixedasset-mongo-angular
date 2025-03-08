@@ -112,6 +112,11 @@ export class MenuComponent implements OnInit{
                 {
                     label: 'Location',
                     icon: ''
+                },
+                {
+                    label: 'Code Type',
+                    icon: '',
+                    path: 'code-type'
                 }
             ]
         },
