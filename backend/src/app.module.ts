@@ -15,6 +15,7 @@ import { TaxInformationMoudule } from './module/tax-information/tax-information.
 
 @Module({
   imports: [
+    ActionRecordMoudule,
     AuthModule, 
     CodeTypeMoudule,
     SysRoleMoudule,
