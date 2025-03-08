@@ -1,50 +1,50 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Department } from './department.schame'
+import { CodeType } from './codeType.schame'
 import { Model } from 'mongoose'
-import { CreateDeptDto, ListDeptRequestDto, UpdateDeptDto } from './department.dto';
+import { CreateCodeTypeDto, ListCodeTypeRequestDto, UpdateCodeTypeDto } from './codeType.dto'
 
 @Injectable()
-export class DepartmentService {
-    constructor(@InjectModel(Department.name) private departmentModel: Model<Department>) {}
+export class CodeTypeService {
+    constructor(@InjectModel(CodeType.name) private codeTypeModel: Model<CodeType>) {}
 
-    async findAll(): Promise<Department[]> {
-        return this.departmentModel.find({
+    async findAll(): Promise<CodeType[]> {
+        return this.codeTypeModel.find({
             status: 1
         }).exec();
     }
 
-    async create(createData: CreateDeptDto) {
-        const { deptCode, deptName, ..._data } = createData
+    async create(createData: UpdateCodeTypeDto) {
+        const { _id, valueCode, valueName, type } = createData
 
-        const checkData = await this.departmentModel.findOne({ deptCode, deptName, status: 1})
+        const checkData = await this.codeTypeModel.findOne({ valueCode, valueName, type, status: 1})
 
         if (checkData) {
             return {
-                msg: 'This department already exist!'
+                msg: 'This code type already exist!'
             }
         } else {
             const finalData = {
-                ...createData,
-                deptCode,
-                deptName,
+                valueCode, 
+                valueName, 
+                type,
                 status: 1,
                 createdAt: new Date()
             }
 
-            const create = new this.departmentModel(finalData)
+            const create = new this.codeTypeModel(finalData)
             return await create.save()
         }
     }
 
-    async update(updateData: UpdateDeptDto) {
+    async update(updateData: UpdateCodeTypeDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.departmentModel.findOne({ _id })
+        const checkData = await this.codeTypeModel.findOne({ _id })
 
         if (checkData?.status === 0) {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This code type has been invalidated! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -52,31 +52,31 @@ export class DepartmentService {
                 updatedAt: new Date()
             }
 
-            return await this.departmentModel.updateOne({ _id}, finalData)
+            return await this.codeTypeModel.updateOne({ _id}, finalData)
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.departmentModel.findOne({ _id, status: 1})
+        const data = await this.codeTypeModel.findOne({ _id, status: 1})
 
         if (data) {
             return data
         } else {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This code type has been invalidated! Please contact admin!'
             }
         }
     }
 
     async invalidateDepartment(_id: string) {
-        const checkData = await this.departmentModel.findOne({ _id })
+        const checkData = await this.codeTypeModel.findOne({ _id })
 
         if (checkData?.status === 0) {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This code type has been invalidated! Please contact admin!'
             }
         } else {
-            const res = await this.departmentModel.updateOne({ _id}, {
+            const res = await this.codeTypeModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
             })
@@ -93,7 +93,7 @@ export class DepartmentService {
         }
     }
 
-    async listPageRole(request: ListDeptRequestDto) {
+    async listPageRole(request: ListCodeTypeRequestDto) {
             const { page, limit, name } = request
     
             const skip = (page - 1) * limit
@@ -101,19 +101,22 @@ export class DepartmentService {
             const filters = {
                 $or: [
                     {
-                        deptName: { $regex: name, $options: 'i' }
+                        valueName: { $regex: name, $options: 'i' }
                     },
                     {
-                        deptCode: { $regex: name, $options: 'i' }
+                        valueName: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        type: { $regex: name, $options: 'i' }
                     }
                 ],
                 status: 1
             }
     
-            const users = await this.departmentModel.find(filters).skip(skip)
+            const users = await this.codeTypeModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.departmentModel.countDocuments()
+            const total = await this.codeTypeModel.countDocuments()
     
             return {
                 total,

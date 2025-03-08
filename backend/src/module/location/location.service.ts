@@ -1,50 +1,50 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Department } from './department.schame'
+import { Location } from './location.schame'
 import { Model } from 'mongoose'
-import { CreateDeptDto, ListDeptRequestDto, UpdateDeptDto } from './department.dto';
+import { CreateLocationDto, ListLocationRequestDto, UpdateLocationDto } from './location.dto';
 
 @Injectable()
-export class DepartmentService {
-    constructor(@InjectModel(Department.name) private departmentModel: Model<Department>) {}
+export class LocationService {
+    constructor(@InjectModel(Location.name) private locationModel: Model<Location>) {}
 
-    async findAll(): Promise<Department[]> {
-        return this.departmentModel.find({
+    async findAll(): Promise<Location[]> {
+        return this.locationModel.find({
             status: 1
         }).exec();
     }
 
-    async create(createData: CreateDeptDto) {
-        const { deptCode, deptName, ..._data } = createData
+    async create(createData: UpdateLocationDto) {
+        const { _id, placeCode, placeName, ..._data } = createData
 
-        const checkData = await this.departmentModel.findOne({ deptCode, deptName, status: 1})
+        const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1})
 
         if (checkData) {
             return {
-                msg: 'This department already exist!'
+                msg: 'This location already exist!'
             }
         } else {
             const finalData = {
                 ...createData,
-                deptCode,
-                deptName,
+                placeCode, 
+                placeName,
                 status: 1,
                 createdAt: new Date()
             }
 
-            const create = new this.departmentModel(finalData)
+            const create = new this.locationModel(finalData)
             return await create.save()
         }
     }
 
-    async update(updateData: UpdateDeptDto) {
+    async update(updateData: UpdateLocationDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.departmentModel.findOne({ _id })
+        const checkData = await this.locationModel.findOne({ _id })
 
         if (checkData?.status === 0) {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This location has been invalidated! Please contact admin!'
             }
         } else {
             const finalData = {
@@ -52,31 +52,31 @@ export class DepartmentService {
                 updatedAt: new Date()
             }
 
-            return await this.departmentModel.updateOne({ _id}, finalData)
+            return await this.locationModel.updateOne({ _id}, finalData)
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.departmentModel.findOne({ _id, status: 1})
+        const data = await this.locationModel.findOne({ _id, status: 1})
 
         if (data) {
             return data
         } else {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This location has been invalidated! Please contact admin!'
             }
         }
     }
 
     async invalidateDepartment(_id: string) {
-        const checkData = await this.departmentModel.findOne({ _id })
+        const checkData = await this.locationModel.findOne({ _id })
 
         if (checkData?.status === 0) {
             return {
-                msg: 'This department has been invalidated! Please contact admin!'
+                msg: 'This location has been invalidated! Please contact admin!'
             }
         } else {
-            const res = await this.departmentModel.updateOne({ _id}, {
+            const res = await this.locationModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
             })
@@ -93,7 +93,7 @@ export class DepartmentService {
         }
     }
 
-    async listPageRole(request: ListDeptRequestDto) {
+    async listPageRole(request: ListLocationRequestDto) {
             const { page, limit, name } = request
     
             const skip = (page - 1) * limit
@@ -101,19 +101,19 @@ export class DepartmentService {
             const filters = {
                 $or: [
                     {
-                        deptName: { $regex: name, $options: 'i' }
+                        placeName: { $regex: name, $options: 'i' }
                     },
                     {
-                        deptCode: { $regex: name, $options: 'i' }
+                        placeName: { $regex: name, $options: 'i' }
                     }
                 ],
                 status: 1
             }
     
-            const users = await this.departmentModel.find(filters).skip(skip)
+            const users = await this.locationModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.departmentModel.countDocuments()
+            const total = await this.locationModel.countDocuments()
     
             return {
                 total,

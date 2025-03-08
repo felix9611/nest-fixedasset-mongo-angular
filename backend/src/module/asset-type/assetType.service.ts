@@ -71,7 +71,7 @@ export class AssetTypeService {
 
         if (checkData?.status === 0) {
             return {
-                msg: 'This role has been invalidated! Please contact admin!'
+                msg: 'This asset type has been invalidated! Please contact admin!'
             }
         } else {
             const res = await this.assetTypeModel.updateOne({ _id}, {

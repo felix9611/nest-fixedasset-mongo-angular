@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { CartsStoreService } from '../../state/CartsStoreService'
 import { TooltipModule } from 'primeng/tooltip'
+import path from 'path'
 
 @Component({
   selector: 'app-menu',
@@ -71,10 +72,12 @@ export class MenuComponent implements OnInit{
             childrens: [
                 {
                     label: 'User',
+                    path: 'users',
                     icon: 'account-circle'
                 },
                 {
                     label: 'Role',
+                    path: 'role',
                     icon: ''
                 },
                 {
@@ -83,6 +86,7 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Department',
+                    path: 'department',
                     icon: 'team_dashboard'
                 }
             ]

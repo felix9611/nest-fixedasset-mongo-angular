@@ -8,15 +8,21 @@ import { SysUserMoudule } from './module/sys-user/sysUser.module'
 import { AuthModule } from './module/auth/auth.module'
 import { SysRoleMoudule } from './module/sys-role/role.module'
 import { DepartmentMoudule } from './module/department/department.module'
+import { LocationMoudule } from './module/location/location.module'
+import { VendorMoudule } from './module/vendor/vendor.module'
+import { CodeTypeMoudule } from './module/code-type/codeType.module'
 
 @Module({
   imports: [
     AuthModule, 
+    CodeTypeMoudule,
     SysRoleMoudule,
     SysUserMoudule,
     DepartmentMoudule,
     AssetTypeMoudule,
     ActionRecordMoudule,
+    LocationMoudule,
+    VendorMoudule,
     MongooseModule.forRoot('mongodb://localhost/fixedasset')
   ],
   controllers: [AppController],
