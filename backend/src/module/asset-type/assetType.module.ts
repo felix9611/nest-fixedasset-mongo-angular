@@ -7,9 +7,9 @@ import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.
 import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: AssetType.name, schema: AssetTypeSchema }, { name: ActionRecord.name, schema: ActionRecordSchema }])],
+    imports: [MongooseModule.forFeature([{ name: AssetType.name, schema: AssetTypeSchema }, { name: ActionRecord.name, schema: ActionRecordSchema }]), AssetType],
     controllers: [AssetTypeController],
     providers: [AssetTypeService, ActionRecordService],
-    exports: [],
+    exports: [AssetType, AssetTypeService],
 })
 export class AssetTypeMoudule {}

@@ -9,7 +9,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
-import { AssetTypeForm } from './interface'
+import { DepartmentForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 
@@ -31,10 +31,10 @@ export class DepartmentComponent {
         limit: 10
     }
 
-    editForm: AssetTypeForm = {
+    editForm: DepartmentForm = {
         _id: '',
-        typeCode: '',
-        typeName: '',
+        deptCode: '',
+        deptName: '',
         remark: ''
     }
 
@@ -47,11 +47,11 @@ export class DepartmentComponent {
     handleRemoveId: string = ''
 
     ngOnInit() {
-        this.loadAssetTypeLists()
+        this.loadDepartmentLists()
     }
 
     async submitForm() {
-        const url = this.editForm._id === '' ? '/asset/type/create' : `/asset/type/update`
+        const url = this.editForm._id === '' ? '/sys/department/create' : `/sys/department/update`
 
         const res = await postApiWithAuth(url, {
             
@@ -64,19 +64,19 @@ export class DepartmentComponent {
         } else if (res.matchedCount === 1 || !res.msg) {
             this.message.success('Save successful!')
             this.closeDialog()
-            this.loadAssetTypeLists()
+            this.loadDepartmentLists()
 
             this.editForm = {
                 _id: '',
-                typeCode: '',
-                typeName: '',
+                deptCode: '',
+                deptName: '',
                 remark: ''
             }
         }
     }
 
-    async loadAssetTypeLists() {
-        const res = await postApiWithAuth('/asset/type/list', this.searchForm)
+    async loadDepartmentLists() {
+        const res = await postApiWithAuth('/sys/department/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -99,16 +99,14 @@ export class DepartmentComponent {
     }
 
     handleRemove() {
-        const url = `/asset/type/remove/${this.handleRemoveId}`
+        const url = `/sys/department/remove/${this.handleRemoveId}`
 
         const res: any = getApiWithAuth(url)
 
-        if (res.msg) {
-            this.message.info(res.msg)
-        }
+        this.message.info(res.msg)
 
         this.closeRemoveDialog()
-        this.loadAssetTypeLists()
+        this.loadDepartmentLists()
     }
 
 
@@ -117,7 +115,7 @@ export class DepartmentComponent {
     }
 
     async getOneData(id:string) {
-        const res = await getApiWithAuth(`/asset/type/one/${id}`)
+        const res = await getApiWithAuth(`/sys/department/one/${id}`)
         this.editForm = res
         this.okText = 'Update'
         this.showDialog()

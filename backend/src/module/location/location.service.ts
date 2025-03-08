@@ -3,10 +3,14 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Location } from './location.schame'
 import { Model } from 'mongoose'
 import { CreateLocationDto, ListLocationRequestDto, UpdateLocationDto } from './location.dto';
+import { ActionRecordService } from '../action-record/actionRecord.service';
 
 @Injectable()
 export class LocationService {
-    constructor(@InjectModel(Location.name) private locationModel: Model<Location>) {}
+    constructor(
+        @InjectModel(Location.name) private locationModel: Model<Location>,
+        private actionRecordService: ActionRecordService
+    ) {}
 
     async findAll(): Promise<Location[]> {
         return this.locationModel.find({

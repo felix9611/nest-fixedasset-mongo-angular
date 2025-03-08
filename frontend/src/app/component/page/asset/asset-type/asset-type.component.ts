@@ -103,9 +103,7 @@ export class AssetTypeComponent {
 
         const res: any = getApiWithAuth(url)
 
-        if (res.msg) {
-            this.message.info(res.msg)
-        }
+        this.message.info(res.msg)
 
         this.closeRemoveDialog()
         this.loadAssetTypeLists()

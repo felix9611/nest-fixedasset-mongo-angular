@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { CartsStoreService } from '../../state/CartsStoreService'
 import { TooltipModule } from 'primeng/tooltip'
 import path from 'path'
+import { last } from 'rxjs'
 
 @Component({
   selector: 'app-menu',
@@ -106,6 +107,10 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Vendor',
+                    icon: ''
+                },
+                {
+                    label: 'Location',
                     icon: ''
                 }
             ]

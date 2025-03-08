@@ -3,10 +3,14 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Department } from './department.schame'
 import { Model } from 'mongoose'
 import { CreateDeptDto, ListDeptRequestDto, UpdateDeptDto } from './department.dto';
+import { ActionRecordService } from '../action-record/actionRecord.service';
 
 @Injectable()
 export class DepartmentService {
-    constructor(@InjectModel(Department.name) private departmentModel: Model<Department>) {}
+    constructor(
+        @InjectModel(Department.name) private departmentModel: Model<Department>,
+        private actionRecordService: ActionRecordService
+    ) {}
 
     async findAll(): Promise<Department[]> {
         return this.departmentModel.find({
@@ -14,23 +18,41 @@ export class DepartmentService {
         }).exec();
     }
 
-    async create(createData: CreateDeptDto) {
-        const { deptCode, deptName, ..._data } = createData
+    async create(createData: UpdateDeptDto) {
+        const { deptCode, deptName, _id, ..._data } = createData
 
         const checkData = await this.departmentModel.findOne({ deptCode, deptName, status: 1})
 
         if (checkData) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Department',
+                actionMethod: 'POST',
+                actionFrom: 'Department',
+                actionData: createData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This department already exist!'
             }
         } else {
             const finalData = {
-                ...createData,
+                ..._data,
                 deptCode,
                 deptName,
                 status: 1,
                 createdAt: new Date()
             }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Department',
+                actionMethod: 'POST',
+                actionFrom: 'Department',
+                actionData: finalData,
+                actionSuccess: 'Success',
+                createdAt: new Date()
+            })
 
             const create = new this.departmentModel(finalData)
             return await create.save()
@@ -43,6 +65,16 @@ export class DepartmentService {
         const checkData = await this.departmentModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Department',
+                actionMethod: 'POST',
+                actionFrom: 'Department',
+                actionData: updateData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This department has been invalidated! Please contact admin!'
             }
@@ -51,6 +83,15 @@ export class DepartmentService {
                 ...data,
                 updatedAt: new Date()
             }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Department',
+                actionMethod: 'POST',
+                actionFrom: 'Department',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
 
             return await this.departmentModel.updateOne({ _id}, finalData)
         }
@@ -72,6 +113,18 @@ export class DepartmentService {
         const checkData = await this.departmentModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Department',
+                actionMethod: 'GET',
+                actionFrom: 'Department',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This department has been invalidated! Please contact admin!'
             }
@@ -82,6 +135,20 @@ export class DepartmentService {
             })
         
             if (res.modifiedCount === 1) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Department',
+                    actionMethod: 'GET',
+                    actionFrom: 'Department',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
+
                 return {
                   msg: 'Invalidate successfully!'
                 }
@@ -99,18 +166,20 @@ export class DepartmentService {
             const skip = (page - 1) * limit
     
             const filters = {
-                $or: [
-                    {
-                        deptName: { $regex: name, $options: 'i' }
-                    },
-                    {
-                        deptCode: { $regex: name, $options: 'i' }
-                    }
-                ],
+                ...name? {
+                    $or: [
+                        {
+                            deptName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            deptCode: { $regex: name, $options: 'i' }
+                        }
+                    ],
+                } : {},
                 status: 1
             }
     
-            const users = await this.departmentModel.find(filters).skip(skip)
+            const lists = await this.departmentModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
             const total = await this.departmentModel.countDocuments()
@@ -120,7 +189,7 @@ export class DepartmentService {
                 page,
                 limit,
                 totalPages: Math.ceil(total / limit),
-                data: users,
+                lists,
             }
     }
 }

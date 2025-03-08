@@ -1,6 +1,6 @@
-export interface AssetTypeForm {
+export interface DepartmentForm {
     _id?: string,
-    typeCode: string,
-    typeName: string
+    deptCode: string,
+    deptName: string
     remark: string
 }

@@ -9,7 +9,7 @@ export class DepartmentController {
 
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: CreateDeptDto) {
+    async create(@Body() createData: UpdateDeptDto) {
         return await this.deptService.create(createData)
     }
 
@@ -25,7 +25,7 @@ export class DepartmentController {
         return await this.deptService.getOneById(id)
     }
 
-    @Delete('delete/:id')
+    @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
         return await this.deptService.invalidateDepartment(id)
