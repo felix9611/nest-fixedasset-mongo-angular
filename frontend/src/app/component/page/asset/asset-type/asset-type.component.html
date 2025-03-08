@@ -1,7 +1,13 @@
 <div class="bg-white px-[5rem]">
     <div class="p-8">
+        <div class="grid grid-cols-6 py-5">
+            <div (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center p-1 rounded-lg">
+                Create
+            </div>
+        </div>
         <nz-table
                 [nzData]="dataLists"
+                [nzPageSize]="searchForm.limit"
                 #dataTable
             >
                 <thead>
@@ -10,6 +16,7 @@
                         <th>Type Name</th>
                         <th>Created At</th>
                         <th>Updated At</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,8 +25,39 @@
                         <td>{{data.typeName}}</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
+                        <td>
+                            <div class="flex gap-3">
+                                <div class="w-[100px] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                    Edit
+                                </div>
+                                <div class="w-[100px] bg-[#FFA8A8] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
+                                    Delete
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
         </nz-table>
+
+
+        <nz-modal 
+            nzWidth="700px"
+            [(nzVisible)]="editFormDialog" 
+            (nzOnCancel)="closeDialog()"
+            (nzOnOk)="submitForm()"
+            nzTitle="Asset Type Form"
+        >
+            <ng-container *nzModalContent>
+                <form nz-form>
+                    <nz-form-item>
+                      <nz-form-label [nzSpan]="6" nzFor="email">E-mail</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <input nz-input name="email" type="email" id="email" />
+                      </nz-form-control>
+                    </nz-form-item>
+                </form>
+            </ng-container>
+           
+        </nz-modal>
     </div>
 </div>
