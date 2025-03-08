@@ -11,6 +11,7 @@ import { DepartmentMoudule } from './module/department/department.module'
 import { LocationMoudule } from './module/location/location.module'
 import { VendorMoudule } from './module/vendor/vendor.module'
 import { CodeTypeMoudule } from './module/code-type/codeType.module'
+import { TaxInformationMoudule } from './module/tax-information/tax-information.module'
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CodeTypeMoudule } from './module/code-type/codeType.module'
     ActionRecordMoudule,
     LocationMoudule,
     VendorMoudule,
+    TaxInformationMoudule,
     MongooseModule.forRoot('mongodb://localhost/fixedasset')
   ],
   controllers: [AppController],
