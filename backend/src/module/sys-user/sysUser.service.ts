@@ -29,7 +29,7 @@ export class SysUserService {
           msg: 'The user already exist! Please check again!'
         }
       } else {
-        const newPasswordString = hashPassword(userData.password, salt)
+        const newPasswordString = hashPassword('888888', salt)
 
         const finalData = {
           username: userData.username,

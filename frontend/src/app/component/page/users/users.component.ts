@@ -17,8 +17,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
     // selector: 'app-footer',
     standalone: true,
     imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
-    templateUrl: './role.component.html',
-    styleUrl: './role.component.css',
+    templateUrl: './users.component.html',
+    styleUrl: './users.component.css',
 })
 export class UsersComponent {
     constructor(

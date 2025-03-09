@@ -1,6 +1,6 @@
 export interface CreateUserDto {
     username: string
-    password: string
+    password?: string
     avatarBase64?: string
     deptId?: number
     email: string

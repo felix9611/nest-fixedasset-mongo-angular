@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { SysUserService } from './sysUser.service'
 import { CreateUserRequestDto, CreateUserDto, ListUserRequestDto } from './sysUser.dto'
 import { AuthGuard } from '../auth/AuthGuard'
-import { request } from 'http';
 
 @Controller('sys/user')
 export class SysUserController {
@@ -20,9 +19,15 @@ export class SysUserController {
         return await this.userService.updateUser(id, updateRequesr)
     }
 
+    @Post('user-self/update-password')
+    @UseGuards(AuthGuard)
+    async updatePasswordByUserSelf(@Body() updatePw: { password: string }, @Req() req: any) {
+        return await this.userService.updatePassword(req.user.username, updatePw.password)
+    }
+
     @Post('update-password')
     @UseGuards(AuthGuard)
-    async updatePassword(@Body() updatePw: { password: string, username: string}) {
+    async updatePassword(@Body() updatePw: { password: string, username: string }) {
         return await this.userService.updatePassword(updatePw.username, updatePw.password)
     }
 
