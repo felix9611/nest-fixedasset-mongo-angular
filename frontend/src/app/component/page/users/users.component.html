@@ -20,6 +20,7 @@
                     <tr>
                         <th>Type Code</th>
                         <th>Type Name</th>
+                        <th>Department</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>
@@ -29,6 +30,7 @@
                     <tr *ngFor="let data of dataTable.data">
                         <td>{{data.username}}</td>
                         <td>{{data.email}}</td>
+                        <td>{{data.department && data.department.deptName}}</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
@@ -39,6 +41,7 @@
                                     Edit
                                 </div>
                                 <div 
+                                    *ngIf="data.username !== 'admin'"
                                     (click)="handleRomeve(data._id)"
                                     class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
                                     Delete
@@ -100,6 +103,16 @@
                       <nz-form-control [nzSpan]="14">
                         <input nz-input type="email" id="email" name="email" [(ngModel)]="editForm.email" />
                       </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <nz-select name="department" [(ngModel)]="editForm.department"  nzPlaceHolder="Please select" (ngModelChange)="departmentOnChanges($event)">
+                                @for (option of deptLists; track option) {
+                                  <nz-option [nzLabel]="option.deptName" [nzValue]="option"></nz-option>
+                                }
+                              </nz-select>
+                        </nz-form-control>
                     </nz-form-item>
                 </form>
             </ng-container>

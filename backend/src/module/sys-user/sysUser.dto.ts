@@ -13,6 +13,10 @@ export interface CreateUserRequestDto {
     userData: CreateUserDto
 }
 
+export interface UpdateUserDto extends CreateUserDto{
+    _id: string
+}
+
 export interface ListUserRequestDto {
     page: number,
     limit: number,

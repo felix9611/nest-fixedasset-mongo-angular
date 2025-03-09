@@ -3,11 +3,12 @@ import { Injectable } from '@nestjs/common'
 import { SysUser } from './sysUser.schame'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
-import { CreateUserDto, CreateUserRequestDto, ListUserRequestDto } from './sysUser.dto'
+import { CreateUserDto, CreateUserRequestDto, ListUserRequestDto, UpdateUserDto } from './sysUser.dto'
 import { createUserKey } from './constants'
 import { hashPassword, salt } from 'src/tool/password-tools'
 import { SysRole } from '../sys-role/role.schame'
 import { SysRoleService } from '../sys-role/role.service'
+import { Department } from '../department/department.schame'
 
 export type User = any
 
@@ -38,8 +39,9 @@ export class SysUserService {
           email: userData.email,
           deptId: userData.deptId,
           roles: userData.roles,
-          createdAt: new Date(),
-          status: 1
+          department: userData.department,
+          status: 1,
+          createdAt: new Date()
         }
 
         return await this.sysUserModel.create(finalData)
@@ -53,15 +55,15 @@ export class SysUserService {
 
   }
 
-  async updateUser(_id: string, userData: CreateUserDto) {
-    const checkData = await this.sysUserModel.findOne({ _id})
+  async updateUser(userData: UpdateUserDto) {
+    const checkData = await this.sysUserModel.findOne({ _id: userData._id})
 
     if (checkData?.status === 0) {
       return {
         msg: 'This user has been invalidated! Please contact admin!'
       }
     } else {
-      return await this.sysUserModel.updateOne({ _id}, {
+      return await this.sysUserModel.updateOne({ _id: userData._id }, {
         ...userData,
         updateAt: new Date()
       })
@@ -132,6 +134,7 @@ export class SysUserService {
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
       deptId: answer?.deptId,
+      department: answer?.department,
       roleLists
     }
 

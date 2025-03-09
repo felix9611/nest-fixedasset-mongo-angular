@@ -17,3 +17,7 @@
     width: 128px;
     height: 128px;
   }
+
+  nz-select {
+    width: 100%;
+  }

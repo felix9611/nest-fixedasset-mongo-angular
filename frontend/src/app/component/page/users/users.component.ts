@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnChanges } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
@@ -14,6 +14,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { imgToBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
 import { Observable, Observer } from 'rxjs'
+import { NzSelectModule } from 'ng-zorro-antd/select'
+
 @Component({
     // selector: 'app-footer',
     standalone: true,
@@ -26,7 +28,8 @@ import { Observable, Observer } from 'rxjs'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        NzUploadModule
+        NzUploadModule,
+        NzSelectModule
     ],
     templateUrl: './users.component.html',
     styleUrl: './users.component.css',
@@ -48,7 +51,8 @@ export class UsersComponent {
         avatarBase64: '',
         deptId: 0,
         email: '',
-        roles: []
+        roles: [],
+        department: {}
     }
 
     okText: string = 'Create'
@@ -61,6 +65,8 @@ export class UsersComponent {
 
     fileList: any[] = []
     deptLists: any[] = []
+
+    department?: any = {}
 
     updateFile(file: any) {
         let testmsg = file.name.substring(file.name.lastIndexOf('.')+1)
@@ -98,11 +104,20 @@ export class UsersComponent {
     }
 
     async submitForm() {
-        const url = this.editForm._id === '' ? '/asset/type/create' : `/asset/type/update`
+        const url = this.editForm._id === '' ? '/sys/user/create-user' : `/sys/user/update-uesr`
 
-        const res = await postApiWithAuth(url, {
-            ...this.editForm,
-            avatarBase64: this.avatarUrl
+        console.log(this.editForm.department)
+        const res = await postApiWithAuth(url, this.editForm._id? {
+            avatarBase64: this.avatarUrl ? this.avatarUrl : this.editForm.avatarBase64,
+            deptId: this.editForm.department?._id,
+            ...this.editForm
+        } : {
+            key: '9@0UtWV:;}m@HkjHyVU=',
+            userData: {
+                avatarBase64: this.avatarUrl,
+                deptId: this.editForm.department?._id,
+                ...this.editForm
+            }
         })
 
         if (res.msg) {
@@ -118,7 +133,8 @@ export class UsersComponent {
                 avatarBase64: '',
                 deptId: 0,
                 email: '',
-                roles: []
+                roles: [],
+                department: {}
             }
         }
     }
@@ -167,8 +183,13 @@ export class UsersComponent {
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/sys/user/one/${id}`)
         this.editForm = res
+        this.department = res.department
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    departmentOnChanges(newValue: any) {
+        this.editForm.deptId = newValue._id
     }
 
     // upload

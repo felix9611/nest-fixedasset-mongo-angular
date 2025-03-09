@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { SysUserService } from './sysUser.service'
-import { CreateUserRequestDto, CreateUserDto, ListUserRequestDto } from './sysUser.dto'
+import { CreateUserRequestDto, CreateUserDto, ListUserRequestDto, UpdateUserDto } from './sysUser.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 
 @Controller('sys/user')
@@ -13,10 +13,10 @@ export class SysUserController {
         return await this.userService.createUser(createUserRequest);
     }
 
-    @Post('update-uesr/:id')
+    @Post('update-uesr')
     @UseGuards(AuthGuard)
-    async updateUser(@Body() updateRequesr: CreateUserDto, @Param('id') id: string) {
-        return await this.userService.updateUser(id, updateRequesr)
+    async updateUser(@Body() updateRequesr: UpdateUserDto) {
+        return await this.userService.updateUser(updateRequesr)
     }
 
     @Post('user-self/update-password')
