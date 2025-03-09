@@ -41,16 +41,48 @@
         <ng-container *nzModalContent>
             <form nz-form>
                 <nz-form-item>
-                    <nz-form-label [nzSpan]="6" nzFor="email">New Password</nz-form-label>
+                    <nz-form-label [nzSpan]="8" nzFor="email">New Password</nz-form-label>
                     <nz-form-control [nzSpan]="14">
-                      <input nz-input type="password" id="newPassword" name="newPassword" [(ngModel)]="resetPwForm.newPassword" />
+                        <nz-input-group [nzSuffix]="suffixTemplate1">
+                             <input
+                                [type]="passwordVisible ? 'text' : 'password'"
+                                nz-input
+                                placeholder="input password"
+                                [(ngModel)]="resetPwForm.newPassword"
+                            />
+                        </nz-input-group>
+                        <ng-template #suffixTemplate1>
+                            <span
+                                nz-icon
+                                class="ant-input-password-icon"
+                                [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                                (click)="passwordVisible = !passwordVisible"
+                            ></span>
+                        </ng-template>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label [nzSpan]="6" nzFor="email">Again New Password</nz-form-label>
+                    <nz-form-label [nzSpan]="8" nzFor="email">Again New Password</nz-form-label>
+
                     <nz-form-control [nzSpan]="14">
-                      <input nz-input type="password" id="againNewPassword" name="againNewPassword" [(ngModel)]="resetPwForm.againNewPassword" />
+                        <nz-input-group [nzSuffix]="suffixTemplate2">
+                            <input
+                               [type]="passwordVisible ? 'text' : 'password'"
+                               nz-input
+                               placeholder="input password"
+                               [(ngModel)]="resetPwForm.againNewPassword"
+                           />
+                       </nz-input-group>
+                       <ng-template #suffixTemplate2>
+                           <span
+                               nz-icon
+                               class="ant-input-password-icon"
+                               [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                               (click)="passwordVisible = !passwordVisible"
+                           ></span>
+                       </ng-template>
                     </nz-form-control>
+                    
                 </nz-form-item>
             </form>
         </ng-container>

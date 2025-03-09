@@ -7,10 +7,11 @@ import { FormsModule } from '@angular/forms'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { NzIconModule } from 'ng-zorro-antd/icon'
 
 @Component({
     // selector: 'app-footer',
-    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule],
+    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule, NzIconModule],
     templateUrl: './user-info.component.html',
     styleUrl: './user-info.component.css',
 })
@@ -32,6 +33,8 @@ export class UserInfoComponent implements OnInit {
         newPassword: '',
         againNewPassword: ''
     }
+
+    passwordVisible = false
 
     resetPwDialog: boolean = false
 
