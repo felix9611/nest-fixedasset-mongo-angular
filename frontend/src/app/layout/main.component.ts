@@ -6,7 +6,7 @@ import { HeaderComponent } from './header/header.component'
 import { UserStoreService } from '../../state/user.service'
 
 @Component({
-    imports: [ContentComponent, MenuComponent, HeaderComponent, RouterOutlet, RouterLinkActive, RouterModule],
+    imports: [ContentComponent, MenuComponent, HeaderComponent, RouterModule],
     selector: 'app-main',
     templateUrl: './main.component.html',
     styleUrl: './main.component.css',

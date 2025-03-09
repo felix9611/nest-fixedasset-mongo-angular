@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms'
 
 @Component({
     // selector: 'app-footer',
-    imports: [CommonModule, RouterOutlet, RouterLink, FormsModule, RouterLinkActive, NzFormModule, NzInputModule],
+    imports: [CommonModule, NzFormModule, NzInputModule],
     templateUrl: './user-info.component.html',
     styleUrl: './user-info.component.css',
 })
@@ -27,14 +27,21 @@ export class UserInfoComponent implements OnInit {
         email: '', 
     }
 
-    ngOnInit() {
+    resetPwDialog: boolean = false
 
+    ngOnInit() {
         this.userService.user$.subscribe(user => {
             console.log(user)
             this.userInfo = user
             
         })
-
-        
     } 
+
+    openResetPWDialog() {
+        this.resetPwDialog = true
+    }
+
+    closeResetPWDialog() {
+        this.resetPwDialog = false
+    }
 }

@@ -16,14 +16,13 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
     templateUrl: './department.component.html',
     styleUrl: './department.component.css',
 })
 export class DepartmentComponent {
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService
+        private message: NzMessageService
     ) {}
 
     searchForm: any = {

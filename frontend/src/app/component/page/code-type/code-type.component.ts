@@ -1,8 +1,7 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
-import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
@@ -16,7 +15,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
     templateUrl: './code-type.component.html',
     styleUrl: './code-type.component.css',
 })

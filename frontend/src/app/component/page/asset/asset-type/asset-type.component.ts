@@ -16,7 +16,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
 })

@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
+import { Router, RouterLink, RouterModule } from '@angular/router'
 
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
@@ -8,7 +8,7 @@ import { TooltipModule } from 'primeng/tooltip'
 
 @Component({
   selector: 'app-menu',
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, RouterModule, MatIconModule, MatButtonModule, TooltipModule],
+  imports: [CommonModule, RouterLink, RouterModule, MatIconModule, MatButtonModule, TooltipModule],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })

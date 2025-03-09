@@ -31,7 +31,7 @@ export class SysUserController {
         return await this.userService.updatePassword(updatePw.username, updatePw.password)
     }
 
-    @Delete('invalidate-user/:id')
+    @Get('invalidate-user/:id')
     @UseGuards(AuthGuard)
     async invalidateUser(@Param('id') id: string) {
         return await this.userService.invalidateUser(id)

@@ -17,14 +17,13 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [NzCheckboxModule, CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [NzCheckboxModule, CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
     templateUrl: './role.component.html',
     styleUrl: './role.component.css',
 })
 export class RoleComponent {
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService
+        private message: NzMessageService
     ) {}
 
     searchForm: any = {

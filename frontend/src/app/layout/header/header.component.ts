@@ -1,16 +1,15 @@
 import { Component, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
+import { RouterLink, RouterModule } from '@angular/router'
 
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
-import { CartsStoreService } from '../../state/CartsStoreService'
 import { UserStoreService } from '../../../state/user.service'
 import { UserInfo } from '../../../state/interface'
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, RouterModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, RouterLink, RouterModule, MatIconModule, MatButtonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

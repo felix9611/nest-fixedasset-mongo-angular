@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
+import { Router } from '@angular/router'
 import { NglModule } from 'ng-lightning'
 import { FormsModule } from '@angular/forms'
 import { UserStoreService } from '../../../../state/user.service'
@@ -12,7 +12,7 @@ import { postApi } from '../../../../tool/httpRequest-public'
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, NglModule, FormsModule],
+    imports: [CommonModule, NglModule, FormsModule],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss',
 })
