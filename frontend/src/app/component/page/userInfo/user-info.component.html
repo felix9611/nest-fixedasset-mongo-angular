@@ -26,9 +26,33 @@
     </form>
     <div>
         <div class="py-2">
-            <div class="w-[200px] hover:bg-[#71CAD8] bg-[#7FEFFF] border-1 border-[#71CAD8] text-[#4F909A] text-center p-1 rounded-lg">
+            <div (click)="openResetPWDialog()" class="w-[200px] hover:bg-[#71CAD8] bg-[#7FEFFF] border-1 border-[#71CAD8] text-[#4F909A] text-center p-1 rounded-lg">
                 Reset Password
             </div>
         </div>
     </div>
+
+    <nz-modal
+        [(nzVisible)]="resetPwDialog" 
+        nzTitle="Reset Password"
+        (nzOnCancel)="closeResetPWDialog()"
+        (nzOnOk)="submitForm()"
+    >
+        <ng-container *nzModalContent>
+            <form nz-form>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="6" nzFor="email">New Password</nz-form-label>
+                    <nz-form-control [nzSpan]="14">
+                      <input nz-input type="password" id="newPassword" name="newPassword" [(ngModel)]="resetPwForm.newPassword" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="6" nzFor="email">Again New Password</nz-form-label>
+                    <nz-form-control [nzSpan]="14">
+                      <input nz-input type="password" id="againNewPassword" name="againNewPassword" [(ngModel)]="resetPwForm.againNewPassword" />
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </ng-container>
+    </nz-modal>
 </div>

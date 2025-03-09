@@ -103,15 +103,18 @@ export class SysUserService {
 
       if (res.modifiedCount === 1) {
         return {
+          renew: true,
           msg: 'Renew password successfully!'
         }
       } else {
         return {
+          renew: false,
           msg: 'Ooops! Something went wrong! Please try again!'
         }
       }
     } else {
       return {
+        renew: false,
         msg: 'This user has been invalidated or does not exist! Please contact admin!'
       }
     }

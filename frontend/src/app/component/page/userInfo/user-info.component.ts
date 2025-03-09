@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
-import { UserInfo } from '../../../../state/interface'
 import { UserStoreService } from '../../../../state/user.service'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { FormsModule } from '@angular/forms'
+import { NzModalModule } from 'ng-zorro-antd/modal'
+import { NzMessageService } from 'ng-zorro-antd/message'
+import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
 
 @Component({
     // selector: 'app-footer',
-    imports: [CommonModule, NzFormModule, NzInputModule],
+    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule],
     templateUrl: './user-info.component.html',
     styleUrl: './user-info.component.css',
 })
 export class UserInfoComponent implements OnInit {
-    constructor(private userService: UserStoreService) {}
+    constructor(private userService: UserStoreService, private message: NzMessageService) {}
 
     userInfo: any = { 
         _id: '',
@@ -25,6 +26,11 @@ export class UserInfoComponent implements OnInit {
         roleIds: [],
         roleLists: [],
         email: '', 
+    }
+
+    resetPwForm: any = {
+        newPassword: '',
+        againNewPassword: ''
     }
 
     resetPwDialog: boolean = false
@@ -43,5 +49,21 @@ export class UserInfoComponent implements OnInit {
 
     closeResetPWDialog() {
         this.resetPwDialog = false
+    }
+
+    async submitForm() {
+        if (this.resetPwForm.newPassword === this.resetPwForm.againNewPassword) {
+            const res = await postApiWithAuth('/sys/user/user-self/update-password', {  password: this.resetPwForm.newPassword })
+
+            if (res.renew === true) {
+                this.message.info(res.msg)
+                this.closeResetPWDialog()
+            } else {
+                this.message.error(res.msg)
+            }
+            
+        } else {
+            this.message.error('Two passwords are inconsistent!')
+        }
     }
 }
