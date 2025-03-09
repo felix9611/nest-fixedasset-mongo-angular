@@ -4,7 +4,7 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
-            <div (click)="loadAssetTypeLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+            <div (click)="loadSysRoleLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
             <div (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
@@ -18,8 +18,8 @@
             >
                 <thead>
                     <tr>
-                        <th>Type Code</th>
-                        <th>Type Name</th>
+                        <th>Role Code</th>
+                        <th>Role Name</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>
@@ -27,8 +27,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of dataTable.data">
-                        <td>{{data.typeCode}}</td>
-                        <td>{{data.typeName}}</td>
+                        <td>{{data.code}}</td>
+                        <td>{{data.name}}</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
@@ -53,8 +53,8 @@
             [nzTotal]="totals" 
             nzShowSizeChanger 
             [nzPageSize]="searchForm.limit"
-            (nzPageIndexChange)="searchForm.page = $event; loadAssetTypeLists()"
-            (nzPageSizeChange)="searchForm.limit = $event; loadAssetTypeLists()"
+            (nzPageIndexChange)="searchForm.page = $event; loadSysRoleLists()"
+            (nzPageSizeChange)="searchForm.limit = $event; loadSysRoleLists()"
         ></nz-pagination>
 
         <nz-modal 
@@ -70,21 +70,45 @@
                     <nz-form-item>
                       <nz-form-label [nzSpan]="6" nzFor="email">Type Code</nz-form-label>
                       <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="typeCode" name="typeCode" [(ngModel)]="editForm.typeCode" />
+                        <input nz-input type="text" id="typeCode" name="typeCode" [(ngModel)]="editForm.code" />
                       </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                       <nz-form-label [nzSpan]="6" nzFor="email">Type Name</nz-form-label>
                       <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="typeName" name="typeName" [(ngModel)]="editForm.typeName" />
+                        <input nz-input type="text" id="typeName" name="typeName" [(ngModel)]="editForm.name" />
                       </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Read</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <label nz-checkbox id="read" name="read" [(ngModel)]="editForm.read"></label>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Write</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <label nz-checkbox id="write" name="write" [(ngModel)]="editForm.write"></label>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Delete</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <label nz-checkbox id="delete" name="delete" [(ngModel)]="editForm.delete"></label>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Update</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <label nz-checkbox id="update" name="update" [(ngModel)]="editForm.update"></label>
+                        </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
                         <nz-form-control [nzSpan]="14">
                           <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
                         </nz-form-control>
-                      </nz-form-item>
+                    </nz-form-item>
                 </form>
             </ng-container>
            

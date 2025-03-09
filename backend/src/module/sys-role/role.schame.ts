@@ -16,6 +16,18 @@ export class SysRole extends BaseSchema {
 
     @Prop({ type: SchemaTypes.Number})
     meunIds?: number[]
+
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    read: boolean
+
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    write: boolean
+
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    delete: boolean
+
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    update: boolean
 }
 
 export const SysRoleSchema = SchemaFactory.createForClass(SysRole)

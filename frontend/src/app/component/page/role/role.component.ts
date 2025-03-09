@@ -9,14 +9,15 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
-import { AssetTypeForm } from './interface'
+import { RoleForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [NzCheckboxModule, CommonModule, NzFormModule, RouterOutlet, RouterLink, RouterLinkActive, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
     templateUrl: './role.component.html',
     styleUrl: './role.component.css',
 })
@@ -31,11 +32,15 @@ export class RoleComponent {
         limit: 10
     }
 
-    editForm: AssetTypeForm = {
+    editForm: RoleForm = {
         _id: '',
-        typeCode: '',
-        typeName: '',
-        remark: ''
+        code: '',
+        name: '',
+        remark: '',
+        read: false,
+        write: false,
+        delete: false,
+        update: false,
     }
 
     okText: string = 'Create'
@@ -47,11 +52,11 @@ export class RoleComponent {
     handleRemoveId: string = ''
 
     ngOnInit() {
-        this.loadAssetTypeLists()
+        this.loadSysRoleLists()
     }
 
     async submitForm() {
-        const url = this.editForm._id === '' ? '/asset/type/create' : `/asset/type/update`
+        const url = this.editForm._id === '' ? '/sys/role/create' : `/sys/role/update`
 
         const res = await postApiWithAuth(url, {
             
@@ -62,21 +67,27 @@ export class RoleComponent {
         if (res.msg) {
             this.message.error(res.msg)
         } else if (res.matchedCount === 1 || !res.msg) {
-            this.message.success('Save successful!')
-            this.closeDialog()
-            this.loadAssetTypeLists()
-
             this.editForm = {
                 _id: '',
-                typeCode: '',
-                typeName: '',
-                remark: ''
+                code: '',
+                name: '',
+                remark: '',
+                read: false,
+                write: false,
+                delete: false,
+                update: false,
             }
+
+            this.message.success('Save successful!')
+            this.closeDialog()
+            this.loadSysRoleLists()
+
+            
         }
     }
 
-    async loadAssetTypeLists() {
-        const res = await postApiWithAuth('/asset/type/list', this.searchForm)
+    async loadSysRoleLists() {
+        const res = await postApiWithAuth('/sys/role/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -99,16 +110,16 @@ export class RoleComponent {
     }
 
     handleRemove() {
-        const url = `/asset/type/remove/${this.handleRemoveId}`
+        const url = `/sys/role/remove/${this.handleRemoveId}`
 
         const res: any = getApiWithAuth(url)
 
         if (res.msg) {
             this.message.info(res.msg)
         }
-
+        this.loadSysRoleLists()
         this.closeRemoveDialog()
-        this.loadAssetTypeLists()
+        
     }
 
 
@@ -117,7 +128,7 @@ export class RoleComponent {
     }
 
     async getOneData(id:string) {
-        const res = await getApiWithAuth(`/asset/type/one/${id}`)
+        const res = await getApiWithAuth(`/sys/role/one/${id}`)
         this.editForm = res
         this.okText = 'Update'
         this.showDialog()

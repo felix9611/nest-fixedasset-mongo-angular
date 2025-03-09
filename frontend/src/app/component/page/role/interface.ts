@@ -1,6 +1,11 @@
-export interface AssetTypeForm {
+export interface RoleForm {
     _id?: string,
-    typeCode: string,
-    typeName: string
-    remark: string
+    name: string
+    code: string
+    remark?: string
+    meunIds?: number[]
+    read: boolean
+    write: boolean
+    delete: boolean
+    update: boolean
 }

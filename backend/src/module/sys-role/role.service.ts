@@ -3,10 +3,14 @@ import { SysRole } from './role.schame'
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateSysRoleDto, ListRoleRequestDto, UpdateSysRoleDto } from './role.dto';
+import { ActionRecordService } from '../action-record/actionRecord.service';
 
 @Injectable()
 export class SysRoleService {
-    constructor(@InjectModel(SysRole.name) private sysRoleModel: Model<SysRole>) {}
+    constructor(
+        @InjectModel(SysRole.name) private sysRoleModel: Model<SysRole>,
+        private actionRecordService: ActionRecordService
+    ) {}
 
     async findAll(): Promise<SysRole[]> {
         return this.sysRoleModel.find({
@@ -14,12 +18,22 @@ export class SysRoleService {
         }).exec();
     }
 
-    async create(createData: CreateSysRoleDto) {
-        const { code, name, ..._data } = createData
+    async create(createData: UpdateSysRoleDto) {
+        const { code, name, _id, ..._data } = createData
 
         const checkData = await this.checkRoleExist(name, code)
 
         if (checkData) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Role',
+                actionMethod: 'POST',
+                actionFrom: 'Role',
+                actionData: createData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This role already exist!'
             }
@@ -31,6 +45,15 @@ export class SysRoleService {
                 status: 1,
                 createdAt: new Date()
             }
+
+           await this.actionRecordService.saveRecord({
+                actionName: 'Create Role',
+                actionMethod: 'POST',
+                actionFrom: 'Role',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
 
             const created = new this.sysRoleModel(finalData)
             return await created.save()
@@ -49,8 +72,27 @@ export class SysRoleService {
                 updatedAt: new Date()
             }
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Role',
+                actionMethod: 'POST',
+                actionFrom: 'Role',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             return await this.sysRoleModel.updateOne({ _id}, finalData)
         } else {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Role',
+                actionMethod: 'POST',
+                actionFrom: 'Role',
+                actionData: updateData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+
             return {
                 msg: 'This role has been invalidated! Please contact admin!'
               }
@@ -61,6 +103,18 @@ export class SysRoleService {
         const checkData = await this.sysRoleModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Role',
+                actionMethod: 'GET',
+                actionFrom: 'Role',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+
             return {
                 msg: 'This role has been invalidated! Please contact admin!'
             }
@@ -71,6 +125,18 @@ export class SysRoleService {
             })
         
             if (res.modifiedCount === 1) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Role',
+                    actionMethod: 'GET',
+                    actionFrom: 'Role',
+                    actionData: {
+                        _id,
+                        status: 0,
+                    updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
                 return {
                   msg: 'Invalidate successfully!'
                 }
@@ -100,18 +166,20 @@ export class SysRoleService {
         const skip = (page - 1) * limit
 
         const filters = {
-            $or: [
-                {
-                    code: { $regex: name, $options: 'i' }
-                },
-                {
-                    code: { $regex: name, $options: 'i' }
-                }
-            ],
+            ...name ? {
+                $or: [
+                    {
+                        code: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        code: { $regex: name, $options: 'i' }
+                    }
+                ],
+            } : {},
             status: 1
         }
 
-        const users = await this.sysRoleModel.find(filters).skip(skip)
+        const lists = await this.sysRoleModel.find(filters).skip(skip)
             .limit(limit)
             .exec()
         const total = await this.sysRoleModel.countDocuments()
@@ -121,7 +189,7 @@ export class SysRoleService {
             page,
             limit,
             totalPages: Math.ceil(total / limit),
-            data: users,
+            lists,
         }
     }
 

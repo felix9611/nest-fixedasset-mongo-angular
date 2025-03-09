@@ -9,7 +9,7 @@ export class SysRoleController {
 
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: CreateSysRoleDto) {
+    async create(@Body() createData: UpdateSysRoleDto) {
         return await this.sysRoleService.create(createData)
     }
 
@@ -25,7 +25,7 @@ export class SysRoleController {
         return await this.sysRoleService.getOneById(id)
     }
 
-    @Delete('delete/:id')
+    @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
         return await this.sysRoleService.invalidateRole(id)

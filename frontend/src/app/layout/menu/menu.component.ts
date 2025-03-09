@@ -1,13 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
+import { Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router'
 
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
-import { CartsStoreService } from '../../state/CartsStoreService'
 import { TooltipModule } from 'primeng/tooltip'
-import path from 'path'
-import { last } from 'rxjs'
 
 @Component({
   selector: 'app-menu',
@@ -16,7 +13,10 @@ import { last } from 'rxjs'
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit{
-    constructor() {}
+    constructor(private router: Router) {
+     //   let currentRoute = this.router.url.split('?')[0]
+
+    }
 
     isMenuExpanded: boolean = window.innerWidth > 640 // Expand only on large screens
     screenWidth: number = window.innerWidth

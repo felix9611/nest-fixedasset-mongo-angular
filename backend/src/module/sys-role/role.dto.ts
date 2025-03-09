@@ -3,6 +3,10 @@ export interface CreateSysRoleDto {
     code: string
     remark?: string
     meunIds?: number[]
+    read: boolean
+    write: boolean
+    delete: boolean
+    update: boolean
 }
 
 export interface UpdateSysRoleDto extends CreateSysRoleDto{
