@@ -8,10 +8,12 @@ import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { NzIconModule } from 'ng-zorro-antd/icon'
-
+import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
+import { Observable, Observer } from 'rxjs'
+import { getBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
 @Component({
     // selector: 'app-footer',
-    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule, NzIconModule],
+    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule, NzIconModule, NzUploadModule],
     templateUrl: './user-info.component.html',
     styleUrl: './user-info.component.css',
 })
@@ -67,6 +69,55 @@ export class UserInfoComponent implements OnInit {
             
         } else {
             this.message.error('Two passwords are inconsistent!')
+        }
+    }
+
+    // upload
+
+    loading = false
+    avatarUrl?: string
+    previewImage: string = ''
+    fileList: any[] = []
+
+    beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
+        new Observable((observer: Observer<boolean>) => {
+          const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+          if (!isJpgOrPng) {
+            this.message.error('You can only upload JPG or PNGfile!')
+            observer.complete()
+            return
+          }
+          const isLt2M = file.size! / 1024 / 1024 < 3
+          if (!isLt2M) {
+            this.message.error('Image must smaller than 3MB!')
+            observer.complete()
+            return
+          }
+
+          if (isJpgOrPng && isLt2M) {
+            this.fileList = [file]
+          }
+
+          observer.next(isJpgOrPng && isLt2M)
+          observer.complete()
+    })
+    
+
+    async handleChange(info: { file: any }) {
+        const response: any = await uploadImgToBase64(info.file.originFileObj)
+        this.avatarUrl = response.data
+    }
+
+
+    async handleUpdateAvatar() {
+        const response = await postApiWithAuth('/sys/user/user-self/update-avatar', { photo: this.avatarUrl})
+
+        if (response.matchedCount) {
+            this.message.success('Update success!')
+            this.userService.loadUserInfo()
+            this.avatarUrl = ''
+        } else {
+            this.message.error('Ooops! Try again!')
         }
     }
 }

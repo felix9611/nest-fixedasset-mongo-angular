@@ -4,6 +4,30 @@
             <img [src]="userInfo.avatarBase64" class="w-[50%] md:w-[35%] lg:w-[20%] h-[50%] md:h-[35%] lg:h-[50%]"/>
         </nz-form-item>
         <nz-form-item>
+            <nz-form-label class="font-bold" nzFor="email">Upload New Avatar</nz-form-label>
+            <nz-form-control [nzSpan]="9">
+                <div class="grid grid-cols-3">
+                    <nz-upload
+                        class="avatar-uploader"
+                        nzName="avatar"
+                        nzListType="picture-card"
+                        nzName="avatar"
+                        nzListType="picture-card"
+                        [nzShowUploadList]="false"
+                        [nzBeforeUpload]="beforeUpload"
+                        (nzChange)="handleChange($event)"
+                    >
+                    </nz-upload>
+                    <img class="w-[128px]" [src]="avatarUrl" />
+                    <div class="w-[100px] flex items-center justify-center">
+                        <div *ngIf="avatarUrl" (click)="handleUpdateAvatar()" class="hover:bg-[#71CAD8] bg-[#7FEFFF] border-1 border-[#71CAD8] text-[#4F909A] text-center p-1 rounded-lg">
+                            Confir Update
+                        </div>
+                    </div>
+                </div>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
             <nz-form-label class="font-bold" nzFor="email">Usernane</nz-form-label>
             <nz-form-control [nzSpan]="14">
                 {{ userInfo.username }}
