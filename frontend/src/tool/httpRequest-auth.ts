@@ -6,7 +6,7 @@ const contentType = 'application/json;charset=UTF-8'
 export const postApiWithAuth = async (url: string, data: any) => {
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage.getItem('accessToken')) {
+    if (localStorage && localStorage.getItem('accessToken')) {
         const accessToken = localStorage.getItem('accessToken')
         requestHeaders.append('Authorization', accessToken || '')
     }
@@ -26,7 +26,7 @@ export const getApiWithAuth = async (url: string) => {
 
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage.getItem('accessToken')) {
+    if (localStorage && localStorage.getItem('accessToken')) {
         const accessToken = localStorage.getItem('accessToken')
         requestHeaders.append('Authorization', accessToken || '')
     }
@@ -44,7 +44,7 @@ export const deleteApiWithAuth = async (url: string) => {
 
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage.getItem('accessToken')) {
+    if (localStorage && localStorage.getItem('accessToken')) {
         const accessToken = localStorage.getItem('accessToken')
         requestHeaders.append('Authorization', accessToken || '')
     }
@@ -60,7 +60,7 @@ export const deleteApiWithAuth = async (url: string) => {
 export const putApiWithAuth = async (url: string, data: any) => {
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage.getItem('accessToken')) {
+    if (localStorage && localStorage.getItem('accessToken')) {
         const accessToken = localStorage.getItem('accessToken')
         requestHeaders.append('Content-Type', accessToken || '')
     }
