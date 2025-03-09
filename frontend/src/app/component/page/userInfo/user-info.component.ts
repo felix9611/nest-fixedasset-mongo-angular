@@ -75,9 +75,8 @@ export class UserInfoComponent implements OnInit {
     // upload
 
     loading = false
-    avatarUrl?: string
+    avatarUrl?: string = ''
     previewImage: string = ''
-    fileList: any[] = []
 
     beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
         new Observable((observer: Observer<boolean>) => {
@@ -92,10 +91,6 @@ export class UserInfoComponent implements OnInit {
             this.message.error('Image must smaller than 3MB!')
             observer.complete()
             return
-          }
-
-          if (isJpgOrPng && isLt2M) {
-            this.fileList = [file]
           }
 
           observer.next(isJpgOrPng && isLt2M)

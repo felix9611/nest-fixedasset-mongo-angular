@@ -5,6 +5,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router'
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { TooltipModule } from 'primeng/tooltip'
+import path from 'path'
 
 @Component({
   selector: 'app-menu',
@@ -107,7 +108,8 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Action Log',
-                    icon: ''
+                    icon: '',
+                    path: 'action-record'
                 },
                 {
                     label: 'Vendor',
@@ -116,7 +118,7 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Location',
-                    icon: ''
+                    icon: 'location'
                 },
                 {
                     label: 'Code Type',

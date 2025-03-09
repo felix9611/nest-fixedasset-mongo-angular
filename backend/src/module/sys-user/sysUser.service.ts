@@ -168,7 +168,7 @@ export class SysUserService {
       ...deptIds ? { deptId: { $in: deptIds} } : {},
     }
 
-    const users = await this.sysUserModel.find(filters).skip(skip)
+    const lists = await this.sysUserModel.find(filters).skip(skip)
     .limit(limit)
     .exec()
 
@@ -179,7 +179,22 @@ export class SysUserService {
       page,
       limit,
       totalPages: Math.ceil(total / limit),
-      data: users,
+      lists,
+    }
+  }
+
+  async updateAvatar(username: string, photo: string) {
+    const checkData = await this.sysUserModel.findOne({ username })
+
+    if (checkData?.status === 0 || !checkData) {
+      return {
+        msg: 'This user has been invalidated! Please contact admin!'
+      }
+    } else {
+      return await this.sysUserModel.updateOne({ _id: checkData._id }, {
+        avatarBase64: photo,
+        updateAt: new Date()
+      })
     }
   }
 

@@ -4,7 +4,7 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
-            <div (click)="loadUserLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+            <div (click)="loadDepartmentLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
             <div (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
@@ -18,8 +18,8 @@
             >
                 <thead>
                     <tr>
-                        <th>Type Code</th>
-                        <th>Type Name</th>
+                        <th>Department Code</th>
+                        <th>Department Name</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>
@@ -27,8 +27,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of dataTable.data">
-                        <td>{{data.username}}</td>
-                        <td>{{data.email}}</td>
+                        <td>{{data.deptCode}}</td>
+                        <td>{{data.deptName}}</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
@@ -53,8 +53,8 @@
             [nzTotal]="totals" 
             nzShowSizeChanger 
             [nzPageSize]="searchForm.limit"
-            (nzPageIndexChange)="searchForm.page = $event; loadUserLists()"
-            (nzPageSizeChange)="searchForm.limit = $event; loadUserLists()"
+            (nzPageIndexChange)="searchForm.page = $event; loadDepartmentLists()"
+            (nzPageSizeChange)="searchForm.limit = $event; loadDepartmentLists()"
         ></nz-pagination>
 
         <nz-modal 
@@ -62,45 +62,29 @@
             [(nzVisible)]="editFormDialog" 
             (nzOnCancel)="closeDialog()"
             (nzOnOk)="submitForm()"
-            nzTitle="Asset Type Form"
+            nzTitle="Department Form"
             [nzOkText]="okText"
         >
             <ng-container *nzModalContent>
                 <form nz-form>
                     <nz-form-item>
-                        <img [src]="editForm.avatarBase64" class="w-[50%] md:w-[35%] lg:w-[20%] h-[50%] md:h-[35%] lg:h-[50%]"/>
+                      <nz-form-label [nzSpan]="6" nzFor="email">Department Code</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <input nz-input type="text" id="deptCode" name="deptCode" [(ngModel)]="editForm.deptCode" />
+                      </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Upload New Avatar</nz-form-label>
-                        <nz-form-control [nzSpan]="12">
-                            <div class="grid grid-cols-3 gap-2">
-                                <nz-upload
-                                    class="avatar-uploader"
-                                    nzName="avatar"
-                                    nzListType="picture-card"
-                                    nzName="avatar"
-                                    nzListType="picture-card"
-                                    [nzShowUploadList]="false"
-                                    [nzBeforeUpload]="beforeUpload"
-                                    (nzChange)="handleChange($event)"
-                                >
-                                </nz-upload>
-                                <img class="w-[128px]" [src]="avatarUrl" />
-                            </div>
+                      <nz-form-label [nzSpan]="6" nzFor="email">Department Name</nz-form-label>
+                      <nz-form-control [nzSpan]="14">
+                        <input nz-input type="text" id="deptName" name="deptName" [(ngModel)]="editForm.deptName" />
+                      </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
                         </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Username</nz-form-label>
-                      <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="username" name="username" [(ngModel)]="editForm.username" />
-                      </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Email</nz-form-label>
-                      <nz-form-control [nzSpan]="14">
-                        <input nz-input type="email" id="email" name="email" [(ngModel)]="editForm.email" />
-                      </nz-form-control>
-                    </nz-form-item>
+                      </nz-form-item>
                 </form>
             </ng-container>
            

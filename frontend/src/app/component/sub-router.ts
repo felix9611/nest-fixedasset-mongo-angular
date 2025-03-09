@@ -7,8 +7,15 @@ import { RoleComponent } from './page/role/role.component'
 import { UsersComponent } from './page/users/users.component'
 import { CodeTypeComponent } from './page/code-type/code-type.component'
 import { VendorComponent } from './page/vendor/vendor.component'
+import { LocationComponent } from './page/location/location.component'
+import { ActionRecordComponent } from './page/action-record/action-record.component'
 
 export const pagesRoutes: Routes = [
+    {
+        path: 'action-record',
+        component: ActionRecordComponent,
+        canActivate: [AuthGuard]
+    },
     {
         path: 'asset-type',
         component: AssetTypeComponent, 
@@ -22,6 +29,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'department',
         component: DepartmentComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'Location',
+        component: LocationComponent,
         canActivate: [AuthGuard]
     },
     {

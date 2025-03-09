@@ -1,0 +1,123 @@
+import { Component } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
+import { FormsModule } from '@angular/forms'
+import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { NzTableModule } from 'ng-zorro-antd/table'
+import { NzButtonModule } from 'ng-zorro-antd/button'
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
+import { NzInputModule } from 'ng-zorro-antd/input'
+import { NzFormModule } from 'ng-zorro-antd/form'
+import moment from 'moment'
+import { DepartmentForm } from './interface'
+import { NzMessageService } from 'ng-zorro-antd/message'
+import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+
+@Component({
+    // selector: 'app-footer',
+    standalone: true,
+    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    templateUrl: './location.component.html',
+    styleUrl: './location.component.css',
+})
+export class LocationComponent {
+    constructor(
+        private message: NzMessageService
+    ) {}
+
+    searchForm: any = {
+        page: 1,
+        limit: 10
+    }
+
+    editForm: DepartmentForm = {
+        _id: '',
+        deptCode: '',
+        deptName: '',
+        remark: ''
+    }
+
+    okText: string = 'Create'
+
+    dataLists: any[] = []
+    totals: number = 0
+    editFormDialog: boolean = false
+    removeDialog: boolean = false
+    handleRemoveId: string = ''
+
+    ngOnInit() {
+        this.loadDepartmentLists()
+    }
+
+    async submitForm() {
+        const url = this.editForm._id === '' ? '/sys/department/create' : `/sys/department/update`
+
+        const res = await postApiWithAuth(url, {
+            
+            ...this.editForm,
+            ...this.editForm._id ? { _id: this.editForm._id} : {},
+        })
+
+        if (res.msg) {
+            this.message.error(res.msg)
+        } else if (res.matchedCount === 1 || !res.msg) {
+            this.message.success('Save successful!')
+            this.closeDialog()
+            this.loadDepartmentLists()
+
+            this.editForm = {
+                _id: '',
+                deptCode: '',
+                deptName: '',
+                remark: ''
+            }
+        }
+    }
+
+    async loadDepartmentLists() {
+        const res = await postApiWithAuth('/sys/department/list', this.searchForm)
+        this.dataLists = res.lists
+        this.totals = res.total
+    }
+
+    showDialog() {
+        this.editFormDialog = true
+    }
+
+    closeDialog() {
+        this.editFormDialog = false
+    }
+
+    handleRomeve(id: string) {
+        this.handleRemoveId = id
+        this.removeDialog = true
+    }
+
+    closeRemoveDialog() {
+        this.removeDialog = false
+    }
+
+    handleRemove() {
+        const url = `/sys/department/remove/${this.handleRemoveId}`
+
+        const res: any = getApiWithAuth(url)
+
+        this.message.info(res.msg)
+
+        this.closeRemoveDialog()
+        this.loadDepartmentLists()
+    }
+
+
+    dateFormat(data: string) {
+        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+    }
+
+    async getOneData(id:string) {
+        const res = await getApiWithAuth(`/sys/department/one/${id}`)
+        this.editForm = res
+        this.okText = 'Update'
+        this.showDialog()
+    }
+
+}

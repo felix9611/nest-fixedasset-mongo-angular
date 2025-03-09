@@ -1,6 +1,10 @@
-export interface AssetTypeForm {
+export interface UserForm {
     _id?: string,
-    typeCode: string,
-    typeName: string
-    remark: string
+    username: string
+    password?: string
+    avatarBase64?: string
+    deptId?: number
+    department?: any
+    email: string
+    roles?: number[]
 }

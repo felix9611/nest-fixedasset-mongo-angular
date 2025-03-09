@@ -25,6 +25,12 @@ export class SysUserController {
         return await this.userService.updatePassword(req.user.username, updatePw.password)
     }
 
+    @Post('user-self/update-avatar')
+    @UseGuards(AuthGuard)
+    async updateAvatarByUserSelf(@Body() update: { photo: string }, @Req() req: any) {
+        return await this.userService.updateAvatar(req.user.username, update.photo)
+    }
+
     @Post('update-password')
     @UseGuards(AuthGuard)
     async updatePassword(@Body() updatePw: { password: string, username: string }) {
@@ -37,7 +43,7 @@ export class SysUserController {
         return await this.userService.invalidateUser(id)
     }
 
-    @Get(':id')
+    @Get('one/:id')
     @UseGuards(AuthGuard)
     async getUserInfoById(@Param('id') id: string) {
         return await this.userService.getUserInfo(id)
