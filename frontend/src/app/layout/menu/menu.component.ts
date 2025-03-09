@@ -102,12 +102,17 @@ export class MenuComponent implements OnInit{
                     icon: ''
                 },
                 {
+                    label: 'Budget',
+                    icon: ''
+                },
+                {
                     label: 'Action Log',
                     icon: ''
                 },
                 {
                     label: 'Vendor',
-                    icon: ''
+                    icon: '',
+                    path: 'vendor'
                 },
                 {
                     label: 'Location',

@@ -3,10 +3,14 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Vendor } from './vendor.schame'
 import { Model } from 'mongoose'
 import { CreateVendorDto, ListVendorRequestDto, UpdateVendorDto } from './vendor.dto';
+import { ActionRecordService } from '../action-record/actionRecord.service';
 
 @Injectable()
 export class VendorService {
-    constructor(@InjectModel(Vendor.name) private vendorModel: Model<Vendor>) {}
+    constructor(
+        @InjectModel(Vendor.name) private vendorModel: Model<Vendor>,
+        private actionRecordService: ActionRecordService
+    ) {}
 
     async findAll(): Promise<Vendor[]> {
         return this.vendorModel.find({
@@ -14,18 +18,28 @@ export class VendorService {
         }).exec();
     }
 
-    async create(createData: CreateVendorDto) {
-        const { vendorCode, vendorName, ..._data } = createData
+    async create(createData: UpdateVendorDto) {
+        const { vendorCode, vendorName, _id, ..._data } = createData
 
         const checkData = await this.vendorModel.findOne({ vendorCode, vendorName, status: 1})
 
         if (checkData) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Vendor',
+                actionMethod: 'POST',
+                actionFrom: 'Vendor',
+                actionData: createData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+
             return {
                 msg: 'This vendor already exist!'
             }
         } else {
             const finalData = {
-                ...createData,
+                ..._data,
                 vendorCode, 
                 vendorName,
                 status: 1,
@@ -43,6 +57,16 @@ export class VendorService {
         const checkData = await this.vendorModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Vendor',
+                actionMethod: 'POST',
+                actionFrom: 'Vendor',
+                actionData: updateData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This vendor has been invalidated! Please contact admin!'
             }
@@ -51,6 +75,15 @@ export class VendorService {
                 ...data,
                 updatedAt: new Date()
             }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Vendor',
+                actionMethod: 'POST',
+                actionFrom: 'Vendor',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
 
             return await this.vendorModel.updateOne({ _id}, finalData)
         }
@@ -72,6 +105,18 @@ export class VendorService {
         const checkData = await this.vendorModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Vendor',
+                actionMethod: 'GET',
+                actionFrom: 'Vendor',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This vendor has been invalidated! Please contact admin!'
             }
@@ -82,6 +127,21 @@ export class VendorService {
             })
         
             if (res.modifiedCount === 1) {
+
+
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Vendor',
+                    actionMethod: 'GET',
+                    actionFrom: 'Vendor',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
                 return {
                   msg: 'Invalidate successfully!'
                 }
@@ -131,7 +191,7 @@ export class VendorService {
                 status: 1
             }
     
-            const users = await this.vendorModel.find(filters).skip(skip)
+            const lists = await this.vendorModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
             const total = await this.vendorModel.countDocuments()
@@ -141,7 +201,7 @@ export class VendorService {
                 page,
                 limit,
                 totalPages: Math.ceil(total / limit),
-                data: users,
+                lists,
             }
     }
 }

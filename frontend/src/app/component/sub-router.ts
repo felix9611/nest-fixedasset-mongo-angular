@@ -6,6 +6,7 @@ import { DepartmentComponent } from './page/department/department.component'
 import { RoleComponent } from './page/role/role.component'
 import { UsersComponent } from './page/users/users.component'
 import { CodeTypeComponent } from './page/code-type/code-type.component'
+import { VendorComponent } from './page/vendor/vendor.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -36,6 +37,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'user-info',
         component: UserInfoComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'vendor',
+        component: VendorComponent,
         canActivate: [AuthGuard]
     }
 ]

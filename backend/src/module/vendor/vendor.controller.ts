@@ -3,13 +3,13 @@ import { VendorService } from './vendor.service';
 import { CreateVendorDto, ListVendorRequestDto, UpdateVendorDto } from './vendor.dto';
 import { AuthGuard } from '../auth/AuthGuard';
 
-@Controller('base/vndor')
+@Controller('base/vendor')
 export class VendorController {
     constructor(private vendorService: VendorService){}
 
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: CreateVendorDto) {
+    async create(@Body() createData: UpdateVendorDto) {
         return await this.vendorService.create(createData)
     }
 
@@ -25,7 +25,7 @@ export class VendorController {
         return await this.vendorService.getOneById(id)
     }
 
-    @Delete('delete/:id')
+    @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
         return await this.vendorService.invalidateDepartment(id)
