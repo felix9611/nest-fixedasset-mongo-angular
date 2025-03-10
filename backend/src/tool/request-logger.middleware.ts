@@ -7,8 +7,8 @@ export class LoggerMiddleware implements NestMiddleware {
 
   constructor() {
     // Enable Mongoose Debugging
-    mongoose.set('debug', (collectionName, method, query, doc) => {
-      this.logger.log(`📦 [MongoDB] ${collectionName}.${method} - Query: ${JSON.stringify(query)} - Data: ${JSON.stringify(doc)}`);
+    mongoose.set('debug', (collectionName, method, query, rawResponse) => {
+      this.logger.log(`📦 [MongoDB] ${collectionName}.${method} - Query: ${JSON.stringify(query)}`);
     });
   }
 
