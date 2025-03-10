@@ -9,6 +9,7 @@ import { CodeTypeComponent } from './page/code-type/code-type.component'
 import { VendorComponent } from './page/vendor/vendor.component'
 import { LocationComponent } from './page/location/location.component'
 import { ActionRecordComponent } from './page/action-record/action-record.component'
+import { BudgetComponent } from './page/budget/budget.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -19,6 +20,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'asset-type',
         component: AssetTypeComponent, 
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'budget',
+        component: BudgetComponent,
         canActivate: [AuthGuard]
     },
     {

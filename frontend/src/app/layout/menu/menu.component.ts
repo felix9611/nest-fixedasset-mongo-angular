@@ -104,6 +104,7 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Budget',
+                    path: 'budget',
                     icon: ''
                 },
                 {
