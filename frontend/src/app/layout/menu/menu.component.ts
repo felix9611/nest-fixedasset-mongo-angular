@@ -100,7 +100,8 @@ export class MenuComponent implements OnInit{
             childrens: [
                 {
                     label: 'Tax Information',
-                    icon: ''
+                    icon: '',
+                    path: 'tax-information'
                 },
                 {
                     label: 'Budget',

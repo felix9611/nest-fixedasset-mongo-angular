@@ -10,6 +10,7 @@ import { VendorComponent } from './page/vendor/vendor.component'
 import { LocationComponent } from './page/location/location.component'
 import { ActionRecordComponent } from './page/action-record/action-record.component'
 import { BudgetComponent } from './page/budget/budget.component'
+import { TaxInformationComponent } from './page/tax-information/tax-information.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -40,6 +41,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'location',
         component: LocationComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'tax-information',
+        component: TaxInformationComponent,
         canActivate: [AuthGuard]
     },
     {

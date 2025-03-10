@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -17,9 +17,12 @@ import { APP_GUARD } from '@nestjs/core'
 import { BudgetMoudule } from './module/budget/budget.module'
 import { SysRoleSchema } from './module/sys-role/role.schame'
 import { DepartmentSchema } from './module/department/department.schame'
+import { AssetListMoudule } from './module/asset-list/asset-list-module'
+import { LoggerMiddleware } from './tool/request-logger.middleware'
 
 @Module({
   imports: [
+    AssetListMoudule,
     ActionRecordMoudule,
     AuthModule, 
     BudgetMoudule,
@@ -47,4 +50,8 @@ import { DepartmentSchema } from './module/department/department.schame'
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*') // Logs all requests
+  }
+}

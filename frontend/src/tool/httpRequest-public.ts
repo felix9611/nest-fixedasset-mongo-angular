@@ -6,10 +6,6 @@ const contentType = 'application/json;charset=UTF-8'
 export const postApi = async (url: string, data: any) => {
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-  //  if (localStorage.getItem('accessToken')) {
-   //     const accessToken = localStorage.getItem('accessToken')
-   //     requestHeaders.append('Content-Type', accessToken || '')
-   // }
 
     const finalUrl = `${environment.apiUrl}${url}`
     const rawResponse = await fetch(finalUrl, {

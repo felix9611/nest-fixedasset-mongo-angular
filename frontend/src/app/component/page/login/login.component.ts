@@ -8,6 +8,7 @@ import { HttpService } from '../../../../tool/HttpService'
 import { callPostApi } from '../../../../tool/call-http'
 import { postApi } from '../../../../tool/httpRequest-public'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
 
 
 @Component({
@@ -36,7 +37,7 @@ export class LoginComponent {
 
     async login() {
 
-        const res = await postApi('/auth/login', this.loginForm)
+        const res = await postApiWithAuth('/auth/login', this.loginForm)
 
         if (!res.msg) {
             this.userStoreService.setAccessToken(res.accessToken)
