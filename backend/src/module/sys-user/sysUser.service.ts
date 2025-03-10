@@ -170,6 +170,7 @@ export class SysUserService {
       ...username ? { name: { $regex: username, $options: 'i' } } : {},
       ...roleIds ? { roleIds: { $in: roleIds} } : {},
       ...deptIds ? { deptId: { $in: deptIds} } : {},
+      status: 1
     }
 
     const lists = await this.sysUserModel.find(filters).skip(skip)

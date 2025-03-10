@@ -162,17 +162,15 @@ export class UsersComponent {
         this.removeDialog = false
     }
 
-    handleRemove() {
-        const url = `/asset/type/remove/${this.handleRemoveId}`
+    async handleRemove() {
+        const url = `/sys/user/invalidate-user/${this.handleRemoveId}`
 
-        const res: any = getApiWithAuth(url)
+        const res: any = await getApiWithAuth(url)
 
-        if (res.msg) {
-            this.message.info(res.msg)
-        }
-
-        this.closeRemoveDialog()
+        this.message.info(res.msg)
         this.loadUserLists()
+        this.closeRemoveDialog()
+        
     }
 
 

@@ -108,10 +108,10 @@ export class RoleComponent {
         this.removeDialog = false
     }
 
-    handleRemove() {
+    async handleRemove() {
         const url = `/sys/role/remove/${this.handleRemoveId}`
 
-        const res: any = getApiWithAuth(url)
+        const res: any = awa getApiWithAuth(url)
 
         if (res.msg) {
             this.message.info(res.msg)

@@ -93,10 +93,10 @@ export class CodeTypeComponent {
         this.removeDialog = false
     }
 
-    handleRemove() {
+    async handleRemove() {
         const url = `/base/code-type/remove/${this.handleRemoveId}`
 
-        const res: any = getApiWithAuth(url)
+        const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
 

@@ -110,10 +110,10 @@ export class VendorComponent {
         this.removeDialog = false
     }
 
-    handleRemove() {
+    async handleRemove() {
         const url = `/base/vendor/remove/${this.handleRemoveId}`
 
-        const res: any = getApiWithAuth(url)
+        const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
         this.loadVendorLists()

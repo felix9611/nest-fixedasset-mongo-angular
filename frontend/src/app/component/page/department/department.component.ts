@@ -97,10 +97,10 @@ export class DepartmentComponent {
         this.removeDialog = false
     }
 
-    handleRemove() {
+    async handleRemove() {
         const url = `/sys/department/remove/${this.handleRemoveId}`
 
-        const res: any = getApiWithAuth(url)
+        const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
 
