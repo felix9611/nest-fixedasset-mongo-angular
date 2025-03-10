@@ -188,7 +188,21 @@ export class SysUserService {
       status: 1
     }
 
-    const lists = await this.sysUserModel.find(filters).skip(skip)
+    const lists = await this.sysUserModel.aggregate([
+      {
+        $match: filters
+      },
+      {
+          $lookup: {
+            from: 'departments', // Ensure correct collection name
+            let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+            as: 'department'
+          }
+      },
+      { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } }
+    ])
+    .skip(skip)
     .limit(limit)
     .exec()
 
