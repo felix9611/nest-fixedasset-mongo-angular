@@ -189,7 +189,8 @@ export class UsersComponent {
     }
 
     departmentOnChanges(newValue: any) {
-        this.editForm.deptId = newValue._id
+        this.editForm.department = this.deptLists.find((item: any) => item._id === newValue)
+        console.log(this.editForm.department)
     }
 
     // upload
