@@ -49,9 +49,7 @@ export class BudgetComponent {
     editForm: BudgetForm =  {
         _id: '',
         deptId: '',
-        department: {},
         placeId: '',
-        place: {},
         budgetNo: '',
         budgetName: '',
         year: '',
@@ -113,9 +111,7 @@ export class BudgetComponent {
             this.editForm = {
                 _id: '',
                 deptId: '',
-                department: {},
                 placeId: '',
-                place: {},
                 budgetNo: '',
                 budgetName: '',
                 year: '',
@@ -174,15 +170,5 @@ export class BudgetComponent {
         this.department = res.department
         this.okText = 'Update'
         this.showDialog()
-    }
-
-    departmentOnChanges(newValue: any) {
-        this.editForm.department = this.deptLists.find((item: any) => item._id === newValue)
-        console.log(this.editForm.department)
-    }
-
-    locationOnChanges(newValue: any) {
-        this.editForm.place = this.placeLists.find((item: any) => item._id === newValue)
-        console.log(this.editForm.place)
     }
 }

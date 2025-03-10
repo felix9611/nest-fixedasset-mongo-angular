@@ -1,8 +1,6 @@
 export interface CreateBudgetDto {
     deptId: string
-    department: any
     placeId: string
-    place: any
     budgetNo?: string
     budgetName: string
     year: string

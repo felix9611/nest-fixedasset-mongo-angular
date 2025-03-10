@@ -59,8 +59,8 @@
                         <th>budget Name</th>
                         <th>From</th>
                         <th>To</th>
-                        <th>Department</th>
                         <th>Location</th>
+                        <th>Department</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>
@@ -116,7 +116,7 @@
                     <nz-form-item>
                         <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-select name="deptId" [nzShowArrow]="true" nzAllowClear [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select" (ngModelChange)="departmentOnChanges($event)">
+                            <nz-select name="deptId" [nzShowArrow]="true" nzAllowClear [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select">
                                 @for (option of deptLists; track option) {
                                   <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
                                 }
@@ -129,8 +129,7 @@
                             <nz-select 
                                 name="place" 
                                 [(ngModel)]="editForm.placeId"  
-                                nzPlaceHolder="Please select"  
-                                (ngModelChange)="locationOnChanges($event)"
+                                nzPlaceHolder="Please select"
                                 nzAllowClear 
                                 [nzShowArrow]="true">
                                 @for (option of placeLists; track option) {

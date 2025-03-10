@@ -171,9 +171,34 @@ export class BudgetService {
                 status: 1
             }
     
-            const lists = await this.budgetModel.find(filters).skip(skip)
+            /* const lists = await this.budgetModel.find(filters).skip(skip)
                 .limit(limit)
-                .exec()
+                .exec() */
+
+            const lists = await await this.budgetModel.aggregate([
+                {
+                    $match: filters
+                },
+                {
+                  $lookup: {
+                    from: "locations", // Ensure correct collection name
+                    let: { placeIdStr: { $toObjectId: "$placeId" } }, // Convert placeId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$placeIdStr"] } } }],
+                    as: "place"
+                  }
+                },
+                {
+                    $lookup: {
+                      from: "departments", // Ensure correct collection name
+                      let: { deptIdStr: { $toObjectId: "$deptId" } }, // Convert deptId to ObjectId
+                      pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$deptIdStr"] } } }],
+                      as: "department"
+                    }
+                  },
+                { $unwind: { path: "$place", preserveNullAndEmptyArrays: false } },
+                { $unwind: { path: "$department", preserveNullAndEmptyArrays: false } } // Avoids errors if no match
+              ]).skip(skip)
+              .limit(limit).exec();
             const total = await this.budgetModel.countDocuments()
     
             return {
@@ -186,7 +211,7 @@ export class BudgetService {
     }
 
     async getBudgetSummary() {
-        return this.budgetModel.aggregate([
+        return await this.budgetModel.aggregate([
             {
               $group: {
                 _id: {

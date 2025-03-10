@@ -10,14 +10,8 @@ export class Budget extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
     deptId: Types.ObjectId
 
-    @Prop({ DepartmentSchema })
-    department?: Department
-
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
     placeId: Types.ObjectId
-
-    @Prop({ LocationSchema })
-    place?: Location
 
     @Prop({ type: SchemaTypes.String, required: true })
     budgetNo: string
@@ -31,11 +25,11 @@ export class Budget extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
     month: string
 
-    @Prop({ type: SchemaTypes.Double, required: true })
+    @Prop({ type: SchemaTypes.Number, required: true })
     budgetAmount: number
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    budgetFrom: Date
+    budgetFrom: string
 
     @Prop({ type: SchemaTypes.String, required: true })
     budgetTo: string
