@@ -3,10 +3,14 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { TaxInformation } from './tax-information.schame'
 import { UpdateDtoTaxInformation, TaxInformationListSearchDto } from './tax-information.dto'
+import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
 export class TaxInformationService {
-    constructor(@InjectModel(TaxInformation.name) private taxInformationModel: Model<TaxInformation>) {}
+    constructor(
+        @InjectModel(TaxInformation.name) private taxInformationModel: Model<TaxInformation>,
+        private actionRecordService: ActionRecordService
+        ) {}
     
     async create(createDto: UpdateDtoTaxInformation) {
 
@@ -27,6 +31,19 @@ export class TaxInformationService {
                 updatedAt: new Date()
             })
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Tax information for update',
+                actionMethod: 'POST',
+                actionFrom: 'Tax information',
+                actionData: { 
+                    _id: checkData._id,
+                    ..._createData,
+                    updatedAt: new Date()
+                },
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This tax information is updated old data!'
             }
@@ -36,6 +53,17 @@ export class TaxInformationService {
                 createdAt: new Date(),
                 status: 1
             }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Tax information',
+                actionMethod: 'POST',
+                actionFrom: 'Tax information',
+                actionData: createDto,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
+
             const created = new this.taxInformationModel(finalData)
             return await created.save()
         }
@@ -52,16 +80,35 @@ export class TaxInformationService {
                 updatedAt: new Date()
             }
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Tax information',
+                actionMethod: 'POST',
+                actionFrom: 'Tax information',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             return await this.taxInformationModel.updateOne(
                 { _id }, 
                 finalData
             )
         } else {
+
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Tax information',
+                actionMethod: 'POST',
+                actionFrom: 'Tax information',
+                actionData: updateDto,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This tax information not exist!'
             }
             
-
         }
     }
 
@@ -81,6 +128,18 @@ export class TaxInformationService {
         const checkData = await this.taxInformationModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void tax information',
+                actionMethod: 'GET',
+                actionFrom: 'Tax information',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+
             return {
                 msg: 'This tax information has been invalidated! Please contact admin!'
             }
@@ -90,7 +149,21 @@ export class TaxInformationService {
                 updateAt: new Date()
             })
         
-            if (res.modifiedCount === 1) {
+            if (res.acknowledged === true) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void tax information',
+                    actionMethod: 'GET',
+                    actionFrom: 'Tax information',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
+
                 return {
                   msg: 'Invalidate successfully!'
                 }
