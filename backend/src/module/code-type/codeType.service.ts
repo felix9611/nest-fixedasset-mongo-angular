@@ -162,6 +162,13 @@ export class CodeTypeService {
         }
     }
 
+    async getByType(type: string): Promise<CodeType[]> {
+        return this.codeTypeModel.find({
+            type,
+            status: 1
+        }).exec()
+    }
+
     async listPageRole(request: ListCodeTypeRequestDto) {
             const { page, limit, name } = request
     

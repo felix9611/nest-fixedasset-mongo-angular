@@ -42,5 +42,11 @@ export class CodeTypeController {
     async listAndPage(@Body() req: ListCodeTypeRequestDto) {
         return this.codeTypeService.listPageRole(req)
     }
+
+    @Get('get-type/:type')
+    @UseGuards(AuthGuard)
+    async getByType(@Param('type') type: string) {
+        return await this.codeTypeService.getByType(type)
+    }
     
 }
