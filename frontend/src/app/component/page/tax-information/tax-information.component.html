@@ -1,47 +1,13 @@
 <div class="bg-white px-[2rem]">
     <div class="p-1  lg:p-6">
         <div class="flex gap-2 py-5">
-            <div class="w-[150px]">
+            <div class="w-[200px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
-            <div>
-                <nz-range-picker
-                    class="h-full"
-                    name="date"
-                    [nzShowTime]="{ nzFormat: 'HH:mm' }"
-                    nzFormat="yyyy-MM-dd HH:mm:ss"
-                    [(ngModel)]="searchForm.date"
-                ></nz-range-picker>
+            <div class="w-[200px]">
+                <input class="h-full" nz-input type="text" id="countryCodeName" name="countryCodeName" placeholder="Input Country Name/Code" [(ngModel)]="searchForm.name" />
             </div>
-            <div class="w-[150px]">
-                <nz-select 
-                    class="h-full"
-                    name="department" 
-                    [(ngModel)]="searchForm.placeId"  
-                    nzPlaceHolder="Please select"  
-                    nzMode="multiple"  
-                    nzAllowClear 
-                    [nzShowArrow]="true">
-                    @for (option of placeLists; track option) {
-                        <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
-                    }
-                </nz-select>
-            </div>
-            <div class="w-[150px]">
-                <nz-select 
-                    class="h-full"
-                    name="department" 
-                    [(ngModel)]="searchForm.deptId"  
-                    nzPlaceHolder="Please select"  
-                    nzMode="multiple"  
-                    nzAllowClear 
-                    [nzShowArrow]="true">
-                    @for (option of deptLists; track option) {
-                        <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
-                    }
-                </nz-select>
-            </div>
-            <div (click)="loadBudgetLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+            <div (click)="loadTaxInfoLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
             <div (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
@@ -55,12 +21,12 @@
             >
                 <thead>
                     <tr>
-                        <th>Budget No</th>
-                        <th>budget Name</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Department</th>
-                        <th>Location</th>
+                        <th>Nation Name</th>
+                        <th>Country Name</th>
+                        <th>Tax Type</th>
+                        <th>Tax Name</th>
+                        <th>Tax Rate</th>
+                        <th>Import Tax Rate</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>
@@ -68,12 +34,12 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let data of dataTable.data">
-                        <td>{{data.budgetNo}}</td>
-                        <td>{{data.budgetName}}</td>
-                        <td>{{  dateFormat(data.budgetFrom)  }}</td>
-                        <td>{{  dateFormat(data.budgetTo)  }}</td>
-                        <td>{{data.place && data.place.placeName}}</td>
-                        <td>{{data.department && data.department.deptName}}</td>
+                        <td>{{data.nationName}}</td>
+                        <td>{{data.countryName}}</td>
+                        <td>{{data.taxType}}</td>
+                        <td>{{data.taxName}}</td>
+                        <td>{{data.taxRate}}%</td>
+                        <td>{{data.importRate ?? 0}}%</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
@@ -99,8 +65,8 @@
             [nzTotal]="totals" 
             nzShowSizeChanger 
             [nzPageSize]="searchForm.limit"
-            (nzPageIndexChange)="searchForm.page = $event; loadBudgetLists()"
-            (nzPageSizeChange)="searchForm.limit = $event; loadBudgetLists()"
+            (nzPageIndexChange)="searchForm.page = $event; loadTaxInfoLists()"
+            (nzPageSizeChange)="searchForm.limit = $event; loadTaxInfoLists()"
         ></nz-pagination>
 
         <nz-modal 
@@ -112,96 +78,72 @@
             [nzOkText]="okText"
         >
             <ng-container *nzModalContent>
-                <form nz-form>
+                <form nz-form class="grid lg:grid-cols-2">
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
+                        <nz-form-label [nzSpan]="8" nzFor="nationCode">Nation Code</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-select name="deptId" [nzShowArrow]="true" nzAllowClear [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select">
-                                @for (option of deptLists; track option) {
-                                  <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
-                                }
-                              </nz-select>
+                          <input nz-input type="text" id="nationCode" name="nationCode" [(ngModel)]="editForm.nationCode"/>
                         </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Location</nz-form-label>
+                     </nz-form-item>
+                     <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzFor="nationCode">Nation Name</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-select 
-                                name="place" 
-                                [(ngModel)]="editForm.placeId"  
-                                nzPlaceHolder="Please select" 
-                                nzAllowClear 
-                                [nzShowArrow]="true">
-                                @for (option of placeLists; track option) {
-                                    <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
-                                }
-                            </nz-select>
+                          <input nz-input type="text" id="nationnAME" name="nationnAME" [(ngModel)]="editForm.nationName"/>
                         </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="name">Name</nz-form-label>
-                      <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="name" name="name" [(ngModel)]="editForm.budgetName"/>
-                      </nz-form-control>
-                    </nz-form-item>
-                    <div class="grid md:grid-cols-2 gap-1">
-                        <nz-form-item>
-                            <nz-form-label [nzSpan]="12" nzFor="year">Year</nz-form-label>
-                            <nz-form-control>
-                              <input nz-input type="text" id="year" name="year" [(ngModel)]="editForm.year"/>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label [nzSpan]="12" nzFor="month">Month</nz-form-label>
-                            <nz-form-control>
-                              <input nz-input type="text" id="month" name="month" [(ngModel)]="editForm.month"/>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Date From</nz-form-label>
+                     </nz-form-item>
+                     <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzFor="nationCode">Ccountry Code</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-date-picker
-                                name="budgetFrom"
-                                nzShowTime
-                                nzFormat="yyyy-MM-dd HH:mm:ss"
-                                [(ngModel)]="editForm.budgetFrom"
-                            >
-                            </nz-date-picker>
+                          <input nz-input type="text" id="countryCode" name="countryCode" [(ngModel)]="editForm.countryCode"/>
                         </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Date To</nz-form-label>
+                     </nz-form-item>
+                     <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzFor="countryCode">Country Name</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-date-picker
-                                name="budgetTo"
-                                nzShowTime
-                                nzFormat="yyyy-MM-dd HH:mm:ss"
-                                [(ngModel)]="editForm.budgetTo"
-                            >
-                            </nz-date-picker>
+                          <input nz-input type="text" id="countrynAME" name="countrynAME" [(ngModel)]="editForm.countryName"/>
                         </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Budget Amount</nz-form-label>
+                     </nz-form-item>
+                     <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzFor="taxType">Tax Type</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-input-number [style.width.%]="100" name="budgetAmount" [(ngModel)]="editForm.budgetAmount">
-                                <span nzInputPrefix>$</span>
+                          <input nz-input type="text" id="taxType" name="taxType" [(ngModel)]="editForm.taxType"/>
+                        </nz-form-control>
+                     </nz-form-item>
+                     <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzFor="taxCode">Tax Code</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="taxCode" name="taxCode" [(ngModel)]="editForm.taxCode"/>
+                        </nz-form-control>
+                     </nz-form-item>
+                     <nz-form-item class="col-span-2">
+                        <nz-form-label [nzSpan]="4" nzFor="taxCode">Tax Name</nz-form-label>
+                        <nz-form-control [nzSpan]="19">
+                          <input nz-input type="text" id="taxnAME" name="taxnAME" [(ngModel)]="editForm.taxName"/>
+                        </nz-form-control>
+                     </nz-form-item>
+                     <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzFor="name">Tax Rate</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <nz-input-number [style.width.%]="100" name="taxRate" [(ngModel)]="editForm.taxRate">
+                                <span nzInputAddonAfter>%</span>
                             </nz-input-number>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Status</nz-form-label>
+                        <nz-form-label [nzSpan]="8" nzFor="name">Import Tax Rate</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                          <input nz-input type="text" id="budgetStatus" name="budgetStatus" [(ngModel)]="editForm.budgetStatus"/>
+                            <nz-input-number [style.width.%]="100" name="importRate" [(ngModel)]="editForm.importRate">
+                                <span nzInputAddonAfter>%</span>
+                            </nz-input-number>
                         </nz-form-control>
-                      </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
-                        <nz-form-control [nzSpan]="14">
+                    </nz-form-item>
+                     <nz-form-item class="col-span-2">
+                        <nz-form-label [nzSpan]="4" nzFor="email">Remark</nz-form-label>
+                        <nz-form-control [nzSpan]="19">
                           <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
                         </nz-form-control>
                     </nz-form-item>
+                    
                 </form>
             </ng-container>
            
@@ -214,7 +156,7 @@
             (nzOnOk)="handleRemove()"
         >
             <ng-container *nzModalContent>
-                Are you sure to confirm invalidate this account?
+                Are you sure to confirm remove this tax information?
             </ng-container>
         </nz-modal>
     </div>

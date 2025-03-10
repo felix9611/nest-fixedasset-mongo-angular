@@ -1,14 +1,13 @@
-export interface BudgetForm {
+export interface TaxInfomationForm {
     _id?: string,
-    deptId: string
-    placeId: string
-    budgetNo?: string
-    budgetName: string
-    year: string
-    month: string
-    budgetAmount: number
-    budgetFrom: string
-    budgetTo: string
-    budgetStatus: string
+    nationCode: string
+    nationName: string
+    countryCode: string
+    countryName: string
+    taxType: string
+    taxCode: string
+    taxName: string
+    taxRate: number
+    importRate?: number
     remark?: string
 }

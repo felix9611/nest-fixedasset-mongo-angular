@@ -8,7 +8,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
-import { BudgetForm } from './interface'
+import { TaxInfomationForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzSelectModule } from 'ng-zorro-antd/select'
@@ -46,19 +46,18 @@ export class TaxInformationComponent {
         limit: 10
     }
 
-    editForm: BudgetForm =  {
+    editForm: TaxInfomationForm =  {
         _id: '',
-        deptId: '',
-        placeId: '',
-        budgetNo: '',
-        budgetName: '',
-        year: '',
-        month: '',
-        budgetAmount: 0,
-        budgetFrom: '',
-        budgetTo: '',
-        budgetStatus: '',
-        remark: '',
+        nationCode: '',
+        nationName: '',
+        countryCode: '',
+        countryName: '',
+        taxType: '',
+        taxCode: '',
+        taxName: '',
+        taxRate: 0,
+        importRate: 0,
+        remark:  ''
     }
 
     okText: string = 'Create'
@@ -77,10 +76,9 @@ export class TaxInformationComponent {
 
 
     ngOnInit() {
-        this.loadBudgetLists()
+        this.loadTaxInfoLists()
         this.loadDeptLists()
         this.loadPlaceLists()
-        this.tests()
     }
 
     async loadPlaceLists() {
@@ -91,42 +89,41 @@ export class TaxInformationComponent {
         this.deptLists = await getApiWithAuth('/base/budget/getBudgetSummary')
     }
 
-    async tests() {
-        await getApiWithAuth('/sys/department/getAll')
-    }
-
     async submitForm() {
-        const url = this.editForm._id === '' ? '/base/budget/create' : `/base/budget/update`
+        const url = this.editForm._id === '' ? '/base/tax-information/create' : `/base/tax-information/update`
 
         console.log(this.editForm)
-        const res = await postApiWithAuth(url, this.editForm)
+        const res = await postApiWithAuth(url, {
+            ...this.editForm,
+            taxRate: this.editForm.taxRate / 100,
+            importRate: this.editForm.importRate ? this.editForm.importRate / 100 : 0
+        })
 
         if (res.msg) {
             this.message.error(res.msg)
         } else if (res.matchedCount === 1 || !res.msg) {
             this.message.success('Save successful!')
             this.closeDialog()
-            this.loadBudgetLists()
+            this.loadTaxInfoLists()
 
             this.editForm = {
                 _id: '',
-                deptId: '',
-                placeId: '',
-                budgetNo: '',
-                budgetName: '',
-                year: '',
-                month: '',
-                budgetAmount: 0,
-                budgetFrom: '',
-                budgetTo: '',
-                budgetStatus: '',
-                remark: '',
+                nationCode: '',
+                nationName: '',
+                countryCode: '',
+                countryName: '',
+                taxType: '',
+                taxCode: '',
+                taxName: '',
+                taxRate: 0,
+                importRate: 0,
+                remark:  ''
             }
         }
     }
 
-    async loadBudgetLists() {
-        const res = await postApiWithAuth('/base/budget/list', this.searchForm)
+    async loadTaxInfoLists() {
+        const res = await postApiWithAuth('/base/tax-information/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -136,6 +133,19 @@ export class TaxInformationComponent {
     }
 
     closeDialog() {
+        this.editForm = {
+            _id: '',
+            nationCode: '',
+            nationName: '',
+            countryCode: '',
+            countryName: '',
+            taxType: '',
+            taxCode: '',
+            taxName: '',
+            taxRate: 0,
+            importRate: 0,
+            remark:  ''
+        }
         this.editFormDialog = false
     }
 
@@ -149,12 +159,12 @@ export class TaxInformationComponent {
     }
 
     async handleRemove() {
-        const url = `/base/budget/remove/${this.handleRemoveId}`
+        const url = `/base/tax-information/remove/${this.handleRemoveId}`
 
         const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
-        this.loadBudgetLists()
+        this.loadTaxInfoLists()
         this.closeRemoveDialog()
         
     }
@@ -165,8 +175,12 @@ export class TaxInformationComponent {
     }
 
     async getOneData(id:string) {
-        const res = await getApiWithAuth(`/base/budget/one/${id}`)
-        this.editForm = res
+        const res = await getApiWithAuth(`/base/tax-information/one/${id}`)
+        this.editForm = {
+            ...res,
+            taxRate: res.taxRate * 100,
+            importRate: res.importRate * 100
+        }
         this.department = res.department
         this.okText = 'Update'
         this.showDialog()
