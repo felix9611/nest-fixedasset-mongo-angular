@@ -32,7 +32,7 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'Location',
+        path: 'location',
         component: LocationComponent,
         canActivate: [AuthGuard]
     },

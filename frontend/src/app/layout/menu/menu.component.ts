@@ -118,6 +118,7 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Location',
+                    path: 'location',
                     icon: 'location'
                 },
                 {

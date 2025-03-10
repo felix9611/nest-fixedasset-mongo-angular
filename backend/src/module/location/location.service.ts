@@ -103,18 +103,20 @@ export class LocationService {
             const skip = (page - 1) * limit
     
             const filters = {
-                $or: [
-                    {
-                        placeName: { $regex: name, $options: 'i' }
-                    },
-                    {
-                        placeName: { $regex: name, $options: 'i' }
-                    }
-                ],
+                ... name ? {
+                    $or: [
+                        {
+                            placeName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            placeName: { $regex: name, $options: 'i' }
+                        }
+                    ],
+                } : {},
                 status: 1
             }
     
-            const users = await this.locationModel.find(filters).skip(skip)
+            const lists = await this.locationModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
             const total = await this.locationModel.countDocuments()
@@ -124,7 +126,7 @@ export class LocationService {
                 page,
                 limit,
                 totalPages: Math.ceil(total / limit),
-                data: users,
+                lists
             }
     }
 }

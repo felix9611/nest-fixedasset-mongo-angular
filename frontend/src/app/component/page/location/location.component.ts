@@ -75,7 +75,7 @@ export class LocationComponent {
     }
 
     async loadDepartmentLists() {
-        const res = await postApiWithAuth('/sys/department/list', this.searchForm)
+        const res = await postApiWithAuth('/base/location/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -97,10 +97,10 @@ export class LocationComponent {
         this.removeDialog = false
     }
 
-    handleRemove() {
+    async handleRemove() {
         const url = `/sys/department/remove/${this.handleRemoveId}`
 
-        const res: any = getApiWithAuth(url)
+        const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
 
