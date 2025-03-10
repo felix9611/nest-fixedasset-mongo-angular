@@ -9,7 +9,7 @@ export interface BudgetForm {
     year: string
     month: string
     budgetAmount: number
-    budgetFrom: Date
+    budgetFrom: string
     budgetTo: string
     budgetStatus: string
     remark?: string

@@ -11,10 +11,9 @@ import moment from 'moment'
 import { BudgetForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
-import { imgToBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
-import { Observable, Observer } from 'rxjs'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 
 @Component({
     // selector: 'app-footer',
@@ -28,8 +27,9 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        NzUploadModule,
-        NzSelectModule
+        NzSelectModule,
+        NzDatePickerModule,
+        NzInputNumberModule
     ],
     templateUrl: './budget.component.html',
     styleUrl: './budget.component.css',
@@ -45,7 +45,7 @@ export class BudgetComponent {
         limit: 10
     }
 
-    editForm: any =  {
+    editForm: BudgetForm =  {
         _id: '',
         deptId: '',
         department: {},
@@ -78,7 +78,7 @@ export class BudgetComponent {
 
 
     ngOnInit() {
-        this.loadUserLists()
+        this.loadBudgetLists()
         this.loadDeptLists()
         this.loadPlaceLists()
     }
@@ -94,25 +94,15 @@ export class BudgetComponent {
     async submitForm() {
         const url = this.editForm._id === '' ? '/base/budget/create' : `/base/budget/update`
 
-        console.log(this.editForm.department)
-        const res = await postApiWithAuth(url, this.editForm._id? {
-            avatarBase64: this.editForm.avatarBase64,
-            deptId: this.editForm.department?._id,
-            ...this.editForm
-        } : {
-            key: '9@0UtWV:;}m@HkjHyVU=',
-            userData: {
-                deptId: this.editForm.department?._id,
-                ...this.editForm
-            }
-        })
+        console.log(this.editForm)
+        const res = await postApiWithAuth(url, this.editForm)
 
         if (res.msg) {
             this.message.error(res.msg)
         } else if (res.matchedCount === 1 || !res.msg) {
             this.message.success('Save successful!')
             this.closeDialog()
-            this.loadUserLists()
+            this.loadBudgetLists()
 
             this.editForm = {
                 _id: '',
@@ -133,7 +123,7 @@ export class BudgetComponent {
         }
     }
 
-    async loadUserLists() {
+    async loadBudgetLists() {
         const res = await postApiWithAuth('/base/budget/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
@@ -162,7 +152,7 @@ export class BudgetComponent {
         const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
-        this.loadUserLists()
+        this.loadBudgetLists()
         this.closeRemoveDialog()
         
     }
@@ -185,4 +175,8 @@ export class BudgetComponent {
         console.log(this.editForm.department)
     }
 
+    locationOnChanges(newValue: any) {
+        this.editForm.place = this.placeLists.find((item: any) => item._id === newValue)
+        console.log(this.editForm.place)
+    }
 }

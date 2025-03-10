@@ -37,12 +37,14 @@ export class BudgetService {
                 msg: 'This budget already exist!'
             }
         } else {
+            const budgetNo = this.getRandom10Digit()
             const finalData = {
                 ..._data,
                 budgetName, 
                 year, 
                 month,
                 status: 1,
+                budgetNo, 
                 createdAt: new Date()
             }
 
@@ -212,5 +214,9 @@ export class BudgetService {
             },
             { $sort: { year: 1, month: 1 } } // Order by year, then month
         ])
+    }
+
+    getRandom10Digit(): string {
+        return Math.floor(1000000000 + Math.random() * 9000000000).toString()
     }
 }
