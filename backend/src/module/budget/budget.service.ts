@@ -199,7 +199,7 @@ export class BudgetService {
                 { $unwind: { path: "$department", preserveNullAndEmptyArrays: false } } // Avoids errors if no match
               ]).skip(skip)
               .limit(limit).exec();
-            const total = await this.budgetModel.countDocuments()
+            const total = await this.budgetModel.find(filters).countDocuments()
     
             return {
                 total,
