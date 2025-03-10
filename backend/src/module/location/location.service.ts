@@ -24,17 +24,35 @@ export class LocationService {
         const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1})
 
         if (checkData) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Location',
+                actionMethod: 'POST',
+                actionFrom: 'Location',
+                actionData: createData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This location already exist!'
             }
         } else {
             const finalData = {
-                ...createData,
+                ..._data,
                 placeCode, 
                 placeName,
                 status: 1,
                 createdAt: new Date()
             }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Create Location',
+                actionMethod: 'POST',
+                actionFrom: 'Location',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
 
             const create = new this.locationModel(finalData)
             return await create.save()
@@ -44,19 +62,40 @@ export class LocationService {
     async update(updateData: UpdateLocationDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.locationModel.findOne({ _id })
+        const checkData: any = await this.locationModel.findOne({ _id })
 
-        if (checkData?.status === 0) {
-            return {
-                msg: 'This location has been invalidated! Please contact admin!'
-            }
-        } else {
+        if (checkData.status === 1) {
+
             const finalData = {
                 ...data,
                 updatedAt: new Date()
             }
 
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Location',
+                actionMethod: 'POST',
+                actionFrom: 'Location',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
             return await this.locationModel.updateOne({ _id}, finalData)
+
+        } else {
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Location',
+                actionMethod: 'POST',
+                actionFrom: 'Location',
+                actionData: updateData,
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                msg: 'This location has been invalidated! Please contact admin!'
+            }
         }
     }
 
@@ -76,6 +115,17 @@ export class LocationService {
         const checkData = await this.locationModel.findOne({ _id })
 
         if (checkData?.status === 0) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Location',
+                actionMethod: 'GET',
+                actionFrom: 'Location',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
             return {
                 msg: 'This location has been invalidated! Please contact admin!'
             }
@@ -86,6 +136,20 @@ export class LocationService {
             })
         
             if (res.modifiedCount === 1) {
+
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Location',
+                    actionMethod: 'GET',
+                    actionFrom: 'Location',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
                 return {
                   msg: 'Invalidate successfully!'
                 }
