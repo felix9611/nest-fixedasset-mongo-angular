@@ -17,7 +17,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { BudgetMoudule } from './module/budget/budget.module'
 import { SysRoleSchema } from './module/sys-role/role.schame'
 import { DepartmentSchema } from './module/department/department.schame'
-import { AssetListMoudule } from './module/asset-list/asset-list-module'
+import { AssetListMoudule } from './module/asset-list/asset-list.module'
 import { LoggerMiddleware } from './tool/request-logger.middleware'
 
 @Module({
