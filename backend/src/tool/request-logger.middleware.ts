@@ -16,7 +16,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const { method, originalUrl, headers, body } = req;
     const start = Date.now();
 
-    this.logger.log(`📥 [Request] ${method} ${originalUrl} - Headers: ${JSON.stringify(headers)} - Body: ${JSON.stringify(body)}`);
+    this.logger.log(`📥 [Request] ${method} ${originalUrl}`);
 
     // Capture Response Data
     const oldWrite = res.write;
@@ -34,7 +34,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const responseBody = Buffer.concat(chunks).toString('utf8');
       const duration = Date.now() - start;
 
-      this.logger.log(`📤 [Response] ${method} ${originalUrl} - Status: ${res.statusCode} - Duration: ${duration}ms - Response: ${responseBody}`);
+      this.logger.log(`📤 [Response] ${method} ${originalUrl} - Status: ${res.statusCode} - Duration: ${duration}ms`);
 
       oldEnd.apply(res, arguments);
     }.bind(this);
