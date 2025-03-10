@@ -17,8 +17,8 @@ export class SysUser extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
     avatarBase64?: string
 
-    @Prop({ type: SchemaTypes.String })
-    deptId?: string
+    @Prop({ type: Types.ObjectId, ref: 'Department' })
+    deptId?: Types.ObjectId
 
     @Prop({ DepartmentSchema })
     department?: Department

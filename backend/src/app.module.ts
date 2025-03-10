@@ -14,11 +14,13 @@ import { CodeTypeMoudule } from './module/code-type/codeType.module'
 import { TaxInformationMoudule } from './module/tax-information/tax-information.module'
 import { AuthGuard } from './module/auth/AuthGuard'
 import { APP_GUARD } from '@nestjs/core'
+import { BudgetMoudule } from './module/budget/budget.module'
 
 @Module({
   imports: [
     ActionRecordMoudule,
     AuthModule, 
+    BudgetMoudule,
     CodeTypeMoudule,
     SysRoleMoudule,
     SysUserMoudule,
