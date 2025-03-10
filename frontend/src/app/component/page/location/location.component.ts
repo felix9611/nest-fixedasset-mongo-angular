@@ -9,7 +9,7 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
-import { DepartmentForm } from './interface'
+import { LocationForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 
@@ -30,10 +30,10 @@ export class LocationComponent {
         limit: 10
     }
 
-    editForm: DepartmentForm = {
+    editForm: LocationForm = {
         _id: '',
-        deptCode: '',
-        deptName: '',
+        placeCode: '',
+        placeName: '',
         remark: ''
     }
 
@@ -46,11 +46,11 @@ export class LocationComponent {
     handleRemoveId: string = ''
 
     ngOnInit() {
-        this.loadDepartmentLists()
+        this.loadLocationLists()
     }
 
     async submitForm() {
-        const url = this.editForm._id === '' ? '/sys/department/create' : `/sys/department/update`
+        const url = this.editForm._id === '' ? '/base/location/create' : `/base/location/update`
 
         const res = await postApiWithAuth(url, {
             
@@ -63,18 +63,18 @@ export class LocationComponent {
         } else if (res.matchedCount === 1 || !res.msg) {
             this.message.success('Save successful!')
             this.closeDialog()
-            this.loadDepartmentLists()
+            this.loadLocationLists()
 
             this.editForm = {
                 _id: '',
-                deptCode: '',
-                deptName: '',
+                placeCode: '',
+                placeName: '',
                 remark: ''
             }
         }
     }
 
-    async loadDepartmentLists() {
+    async loadLocationLists() {
         const res = await postApiWithAuth('/base/location/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
@@ -98,14 +98,14 @@ export class LocationComponent {
     }
 
     async handleRemove() {
-        const url = `/sys/department/remove/${this.handleRemoveId}`
+        const url = `/base/location/remove/${this.handleRemoveId}`
 
         const res: any = await getApiWithAuth(url)
 
         this.message.info(res.msg)
 
         this.closeRemoveDialog()
-        this.loadDepartmentLists()
+        this.loadLocationLists()
     }
 
 
@@ -114,7 +114,7 @@ export class LocationComponent {
     }
 
     async getOneData(id:string) {
-        const res = await getApiWithAuth(`/sys/department/one/${id}`)
+        const res = await getApiWithAuth(`/base/location/one/${id}`)
         this.editForm = res
         this.okText = 'Update'
         this.showDialog()

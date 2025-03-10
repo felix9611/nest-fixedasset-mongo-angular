@@ -65,6 +65,7 @@ export class UsersComponent {
 
     fileList: any[] = []
     deptLists: any[] = []
+    roleLists: any[] = []
 
     department?: any = {}
 
@@ -97,6 +98,11 @@ export class UsersComponent {
     ngOnInit() {
         this.loadUserLists()
         this.loadDeptLists()
+        this.loadRoleLists()
+    }
+
+    async loadRoleLists() {
+        this.roleLists = await getApiWithAuth('/sys/role/getAll')
     }
 
     async loadDeptLists() {

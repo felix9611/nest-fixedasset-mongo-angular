@@ -111,7 +111,7 @@ export class LocationService {
         }
     }
 
-    async invalidateDepartment(_id: string) {
+    async invalidate(_id: string) {
         const checkData = await this.locationModel.findOne({ _id })
 
         if (checkData?.status === 0) {
@@ -130,13 +130,11 @@ export class LocationService {
                 msg: 'This location has been invalidated! Please contact admin!'
             }
         } else {
-            const res = await this.locationModel.updateOne({ _id}, {
-                status: 0,
-                updateAt: new Date()
-            })
+                await this.locationModel.updateOne({ _id}, {
+                    status: 0,
+                    updateAt: new Date()
+                })
         
-            if (res.modifiedCount === 1) {
-
                 await this.actionRecordService.saveRecord({
                     actionName: 'Void Location',
                     actionMethod: 'GET',
@@ -153,11 +151,7 @@ export class LocationService {
                 return {
                   msg: 'Invalidate successfully!'
                 }
-            } else {
-                return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
-                }
-            }
+
         }
     }
 

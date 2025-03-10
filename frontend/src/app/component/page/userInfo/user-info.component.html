@@ -28,7 +28,7 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label class="font-bold" nzFor="email">Usernane</nz-form-label>
+            <nz-form-label class="font-bold" nzFor="username">Usernane</nz-form-label>
             <nz-form-control [nzSpan]="14">
                 {{ userInfo.username }}
             </nz-form-control>
@@ -40,12 +40,20 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label class="font-bold" nzFor="email">Roles</nz-form-label>
-            <div *ngFor="let role of userInfo.roleLists" class="flex gap-2">
-                <div class="border-1 border-[#21b700] rounded-lg p-1 text-[#21b700] bg-[#bfffb1]">
-                    {{ role.name }}
+            <nz-form-label class="font-bold" nzFor="department">Department</nz-form-label>
+            <nz-form-control [nzSpan]="14">
+                {{ userInfo.department?.deptName }}
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label class="font-bold" nzFor="roles">Roles</nz-form-label>
+            <nz-form-control [nzSpan]="20">
+                <div *ngFor="let role of userInfo.roleLists" class="flex gap-3">
+                    <div class="border-1 border-[#21b700] rounded-lg p-1 text-[#21b700] bg-[#bfffb1]">
+                        {{ role.name }}
+                    </div>
                 </div>
-            </div>
+            </nz-form-control>
         </nz-form-item>
     </form>
     <div>

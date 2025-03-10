@@ -25,10 +25,10 @@ export class LocationController {
         return await this.locationService.getOneById(id)
     }
 
-    @Delete('remove/:id')
+    @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
-        return await this.locationService.invalidateDepartment(id)
+        return await this.locationService.invalidate(id)
     }
 
     @Get('getAll')

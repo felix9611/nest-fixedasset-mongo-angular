@@ -95,7 +95,7 @@
                     <nz-form-item>
                       <nz-form-label [nzSpan]="6" nzFor="email">Username</nz-form-label>
                       <nz-form-control [nzSpan]="14">
-                        <input nz-input type="text" id="username" name="username" [(ngModel)]="editForm.username" />
+                        <input nz-input type="text" id="username" name="username" [(ngModel)]="editForm.username"/>
                       </nz-form-control>
                     </nz-form-item>
                     <nz-form-item *ngIf="!editForm._id">
@@ -113,11 +113,27 @@
                     <nz-form-item>
                         <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-select name="department" [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select" (ngModelChange)="departmentOnChanges($event)">
+                            <nz-select name="deptId" [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select" (ngModelChange)="departmentOnChanges($event)">
                                 @for (option of deptLists; track option) {
                                   <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
                                 }
                               </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Roles</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <nz-select 
+                                name="department" 
+                                [(ngModel)]="editForm.roles"  
+                                nzPlaceHolder="Please select"  
+                                nzMode="multiple"  
+                                nzAllowClear 
+                                [nzShowArrow]="true">
+                                @for (option of roleLists; track option) {
+                                    <nz-option [nzLabel]="option.name" [nzValue]="option._id"></nz-option>
+                                }
+                            </nz-select>
                         </nz-form-control>
                     </nz-form-item>
                 </form>

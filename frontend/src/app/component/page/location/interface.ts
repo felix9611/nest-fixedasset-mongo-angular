@@ -1,6 +1,6 @@
-export interface DepartmentForm {
+export interface LocationForm {
     _id?: string,
-    deptCode: string,
-    deptName: string
+    placeCode: string,
+    placeName: string
     remark: string
 }
