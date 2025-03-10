@@ -39,7 +39,6 @@ export class SysUserService {
           email: userData.email,
           deptId: userData.deptId,
           roles: userData.roles,
-          department: userData.department,
           status: 1,
           createdAt: new Date()
         }
@@ -141,20 +140,36 @@ export class SysUserService {
   }
 
   async findOneUser(username: string) {
-    const answer: any = await this.sysUserModel.findOne({ username })
+    // const answer: any = await this.sysUserModel.findOne({ username })
 
-    const roleLists: any = await this.sysRoleService.getRolelistsByIds(answer.roles)
-    return {
-      _id: answer?._id,
-      username: answer?.username,
-      email: answer?.email,
-      avatarBase64: answer?.avatarBase64,
-      lastLogin: answer?.lastLogin,
-      roles: answer?.roles,
-      deptId: answer?.deptId,
-      department: answer?.department,
-      roleLists
-    }
+    const answer = await this.sysUserModel.aggregate([
+      {
+        $match: {
+          username
+        }
+      },
+      {
+          $lookup: {
+            from: 'departments', // Ensure correct collection name
+            let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+            as: 'department'
+          }
+      },
+      {
+        $lookup: {
+          from: 'sysroles', // Make sure this matches your DB collection name
+          let: { roleIds: { $map: { input: '$roles', as: 'roleId', in: { $toObjectId: '$$roleId' } } } }, // Convert strings to ObjectIds
+          pipeline: [
+            { $match: { $expr: { $in: ['$_id', '$$roleIds'] } } }
+          ],
+          as: 'roleLists'
+        }
+      },
+      { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+    ]).exec();
+  
+    return answer[0]
   }
 
   async findOneUserAllData(username: string) {

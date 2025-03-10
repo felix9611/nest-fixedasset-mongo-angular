@@ -15,6 +15,8 @@ import { TaxInformationMoudule } from './module/tax-information/tax-information.
 import { AuthGuard } from './module/auth/AuthGuard'
 import { APP_GUARD } from '@nestjs/core'
 import { BudgetMoudule } from './module/budget/budget.module'
+import { SysRoleSchema } from './module/sys-role/role.schame'
+import { DepartmentSchema } from './module/department/department.schame'
 
 @Module({
   imports: [
@@ -30,7 +32,11 @@ import { BudgetMoudule } from './module/budget/budget.module'
     LocationMoudule,
     VendorMoudule,
     TaxInformationMoudule,
-    MongooseModule.forRoot('mongodb://localhost/fixedasset')
+    MongooseModule.forRoot('mongodb://localhost/fixedasset'),
+    MongooseModule.forFeature([
+      { name: 'SysRoles', schema: SysRoleSchema },
+      { name: 'Department', schema: DepartmentSchema }
+    ])
   ],
   controllers: [AppController],
   providers: [

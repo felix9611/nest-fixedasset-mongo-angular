@@ -52,7 +52,6 @@ export class UsersComponent {
         deptId: 0,
         email: '',
         roles: [],
-        department: {}
     }
 
     okText: string = 'Create'
@@ -112,16 +111,13 @@ export class UsersComponent {
     async submitForm() {
         const url = this.editForm._id === '' ? '/sys/user/create-user' : `/sys/user/update-uesr`
 
-        console.log(this.editForm.department)
         const res = await postApiWithAuth(url, this.editForm._id? {
             avatarBase64: this.avatarUrl ? this.avatarUrl : this.editForm.avatarBase64,
-            deptId: this.editForm.department?._id,
             ...this.editForm
         } : {
             key: '9@0UtWV:;}m@HkjHyVU=',
             userData: {
                 avatarBase64: this.avatarUrl,
-                deptId: this.editForm.department?._id,
                 ...this.editForm
             }
         })
@@ -139,8 +135,7 @@ export class UsersComponent {
                 avatarBase64: '',
                 deptId: 0,
                 email: '',
-                roles: [],
-                department: {}
+                roles: []
             }
         }
     }
@@ -190,11 +185,6 @@ export class UsersComponent {
         this.department = res.department
         this.okText = 'Update'
         this.showDialog()
-    }
-
-    departmentOnChanges(newValue: any) {
-        this.editForm.department = this.deptLists.find((item: any) => item._id === newValue)
-        console.log(this.editForm.department)
     }
 
     // upload

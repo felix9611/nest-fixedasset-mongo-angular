@@ -4,7 +4,6 @@ export interface UserForm {
     password?: string
     avatarBase64?: string
     deptId?: number
-    department?: any
     email: string
     roles?: number[]
 }

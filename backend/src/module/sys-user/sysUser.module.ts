@@ -7,6 +7,7 @@ import { SysRoleService } from '../sys-role/role.service'
 import { SysRole, SysRoleSchema } from '../sys-role/role.schame'
 import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.schame'
 import { ActionRecordService } from '../action-record/actionRecord.service'
+import { Department, DepartmentSchema } from '../department/department.schame'
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
             { name: SysUser.name, schema: SysUserSchema }, 
             { name: SysRole.name, schema: SysRoleSchema },
             { name: ActionRecord.name, schema: ActionRecordSchema },
+            { name: Department.name, schema: DepartmentSchema },
         ])
     ],
     controllers: [SysUserController],
