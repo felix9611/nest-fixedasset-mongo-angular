@@ -23,7 +23,8 @@ export interface ListBudgetRequestDto {
     limit: number
     name?: string
     year?: string
-    month?: string
-    deptId?: string
-    placeId: string
+    month?: string,
+    date?: string[]
+    deptId?: string[]
+    placeId: string[]
 }

@@ -4,6 +4,43 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
+            <div>
+                <nz-range-picker
+                    class="h-full"
+                    name="date"
+                    [nzShowTime]="{ nzFormat: 'HH:mm' }"
+                    nzFormat="yyyy-MM-dd HH:mm:ss"
+                    [(ngModel)]="searchForm.date"
+                ></nz-range-picker>
+            </div>
+            <div class="w-[150px]">
+                <nz-select 
+                    class="h-full"
+                    name="department" 
+                    [(ngModel)]="searchForm.placeId"  
+                    nzPlaceHolder="Please select"  
+                    nzMode="multiple"  
+                    nzAllowClear 
+                    [nzShowArrow]="true">
+                    @for (option of placeLists; track option) {
+                        <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
+                    }
+                </nz-select>
+            </div>
+            <div class="w-[150px]">
+                <nz-select 
+                    class="h-full"
+                    name="department" 
+                    [(ngModel)]="searchForm.deptId"  
+                    nzPlaceHolder="Please select"  
+                    nzMode="multiple"  
+                    nzAllowClear 
+                    [nzShowArrow]="true">
+                    @for (option of deptLists; track option) {
+                        <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
+                    }
+                </nz-select>
+            </div>
             <div (click)="loadBudgetLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
@@ -20,8 +57,10 @@
                     <tr>
                         <th>Budget No</th>
                         <th>budget Name</th>
-                        <th>Location</th>
+                        <th>From</th>
+                        <th>To</th>
                         <th>Department</th>
+                        <th>Location</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th class="text-center">Action</th>

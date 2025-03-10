@@ -159,14 +159,15 @@ export class BudgetService {
     }
 
     async listPageRole(request: ListBudgetRequestDto) {
-            const { page, limit, name } = request
+            const { page, limit, name, date, deptId, placeId } = request
     
             const skip = (page - 1) * limit
     
             const filters = {
-                ... name ? {
-                    budgetName: { $regex: name, $options: 'i' }
-                }: {},
+                ... name ? {budgetName: { $regex: name, $options: 'i' }}: {},
+                ... deptId ? { deptId: { $in: deptId } } : {},
+                ... placeId ? { placeId: { $in: placeId } } : {},
+                ... date && date?.length > 0 ? { budgetFrom: { $gte: date[0], $lte: date[1] } } : {},
                 status: 1
             }
     
@@ -187,33 +188,43 @@ export class BudgetService {
     async getBudgetSummary() {
         return this.budgetModel.aggregate([
             {
-                $group: {
-                  _id: {
-                    year: { $year: "$budget_from" },
-                    month: { $month: "$budget_from" }
-                  },
-                  budgetAmount: { $sum: "$budget_amount" }
-                }
+              $group: {
+                _id: {
+                  year: { $year: "$budgetFrom" },
+                  month: { $month: "$budgetFrom" }
+                },
+                budgetAmount: { $sum: "$budgetAmount" }
+              }
             },
             {
-                $project: {
-                  _id: 0,
-                  budgetAmount: 1,
-                  yearMonth: {
-                    $concat: [
-                      { $toString: "$_id.year" },
-                      "-",
-                      {
-                        $dateToString: { format: "%B", date: { $dateFromParts: { year: "$_id.year", month: "$_id.month", day: 1 } } }
+              $project: {
+                _id: 0,
+                budgetAmount: 1,
+                yearMonth: {
+                  $concat: [
+                    { $toString: "$_id.year" },
+                    "-",
+                    {
+                      $dateToString: { 
+                        format: "%B", 
+                        date: { 
+                          $dateFromParts: { 
+                            year: "$_id.year", 
+                            month: "$_id.month", 
+                            day: 1 
+                          } 
+                        } 
                       }
-                    ]
-                  },
-                  year: "$_id.year",
-                  month: "$_id.month"
-                }
+                    }
+                  ]
+                },
+                year: "$_id.year",
+                month: "$_id.month"
+              }
             },
-            { $sort: { year: 1, month: 1 } } // Order by year, then month
+            { $sort: { year: 1, month: 1 } }
         ])
+          
     }
 
     getRandom10Digit(): string {

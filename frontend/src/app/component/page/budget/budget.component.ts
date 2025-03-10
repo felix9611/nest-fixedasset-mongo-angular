@@ -41,6 +41,7 @@ export class BudgetComponent {
     ) {}
 
     searchForm: any = {
+        date: [],
         page: 1,
         limit: 10
     }
@@ -81,6 +82,7 @@ export class BudgetComponent {
         this.loadBudgetLists()
         this.loadDeptLists()
         this.loadPlaceLists()
+        this.tests()
     }
 
     async loadPlaceLists() {
@@ -88,7 +90,11 @@ export class BudgetComponent {
     }
 
     async loadDeptLists() {
-        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        this.deptLists = await getApiWithAuth('/base/budget/getBudgetSummary')
+    }
+
+    async tests() {
+        await getApiWithAuth('/sys/department/getAll')
     }
 
     async submitForm() {
