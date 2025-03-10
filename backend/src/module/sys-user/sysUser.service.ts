@@ -152,6 +152,7 @@ export class SysUserService {
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
       deptId: answer?.deptId,
+      department: answer?.department,
       roleLists
     }
   }

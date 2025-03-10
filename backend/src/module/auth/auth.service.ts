@@ -14,14 +14,22 @@ export class AuthService {
   async signIn(
     username: string,
     password: string,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<any> {
     console.log(username)
     const user = await this.usersService.findOneUserAllData(username)
+
+    if (!user) {
+      return {
+        msg: 'Username not found'
+      }
+    }
 
     const passwordString = hashPassword(password, salt)
 
     if (user?.password !== passwordString) {
-      throw new UnauthorizedException()
+      return {
+        msg: 'Password not match!'
+      }
     }
     const payload = { sub: user._id, username: user.username };
     return {

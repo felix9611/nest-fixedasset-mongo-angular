@@ -7,6 +7,7 @@ import { UserStoreService } from '../../../../state/user.service'
 import { HttpService } from '../../../../tool/HttpService'
 import { callPostApi } from '../../../../tool/call-http'
 import { postApi } from '../../../../tool/httpRequest-public'
+import { NzMessageService } from 'ng-zorro-antd/message'
 
 
 @Component({
@@ -20,7 +21,8 @@ export class LoginComponent {
     constructor(
         private userStoreService: UserStoreService, 
         private router: Router,
-        private httpService: HttpService
+        private httpService: HttpService,
+        private message: NzMessageService
     ) {}
 
     loginForm: any = {
@@ -35,11 +37,17 @@ export class LoginComponent {
     async login() {
 
         const res = await postApi('/auth/login', this.loginForm)
-        this.userStoreService.setAccessToken(res.accessToken)
-        const checkpoint = await this.userStoreService.isAuthenticated()
-        if (checkpoint) {
-            this.router.navigate(['/'])
+
+        if (!res.msg) {
+            this.userStoreService.setAccessToken(res.accessToken)
+            const checkpoint = await this.userStoreService.isAuthenticated()
+            if (checkpoint) {
+                this.router.navigate(['/'])
+            }
+        } else {
+            this.message.error(res.msg)
         }
+        
        
     }
 

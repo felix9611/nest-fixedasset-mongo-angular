@@ -12,6 +12,8 @@ import { LocationMoudule } from './module/location/location.module'
 import { VendorMoudule } from './module/vendor/vendor.module'
 import { CodeTypeMoudule } from './module/code-type/codeType.module'
 import { TaxInformationMoudule } from './module/tax-information/tax-information.module'
+import { AuthGuard } from './module/auth/AuthGuard'
+import { APP_GUARD } from '@nestjs/core'
 
 @Module({
   imports: [
@@ -29,6 +31,12 @@ import { TaxInformationMoudule } from './module/tax-information/tax-information.
     MongooseModule.forRoot('mongodb://localhost/fixedasset')
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard // This applies the guard globally
+    },
+  ],
 })
 export class AppModule {}

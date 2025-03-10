@@ -107,9 +107,9 @@
                     <nz-form-item>
                         <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
                         <nz-form-control [nzSpan]="14">
-                            <nz-select name="department" [(ngModel)]="editForm.department"  nzPlaceHolder="Please select" (ngModelChange)="departmentOnChanges($event)">
+                            <nz-select name="department" [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select" (ngModelChange)="departmentOnChanges($event)">
                                 @for (option of deptLists; track option) {
-                                  <nz-option [nzLabel]="option.deptName" [nzValue]="option"></nz-option>
+                                  <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
                                 }
                               </nz-select>
                         </nz-form-control>

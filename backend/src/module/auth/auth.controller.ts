@@ -3,14 +3,14 @@ import { Body, Controller, Post, Get, HttpCode, HttpStatus, UseGuards, Req } fro
 import { AuthService } from './auth.service'
 import { AuthGuard } from './AuthGuard'
 import { SysUserService } from '../sys-user/sysUser.service'
-import { PublicRoute } from 'src/tool/public-route.decorator'
+import { Public } from './public.decorator'
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService, private userService: SysUserService) {}
 
   @HttpCode(HttpStatus.OK)
-  @PublicRoute()
+  @Public()
   @Post('login')
   async signIn(@Body() signInDto: any) {
     return await this.authService.signIn(signInDto.username, signInDto.password)
