@@ -41,7 +41,7 @@ export class AssetFormComponent implements OnInit {
         typeId: '',
         deptId: '',
         placeId: '',
-        buyDate: '',
+        purchaseDate: '',
         description: '',
         sponsor:  false,
         sponsorName: '',

@@ -10,7 +10,7 @@ export interface CreateAssetDto {
     typeId: string
     deptId: string
     placeId: string
-    buyDate: string
+    purchaseDate: string
     description?: string
     sponsor: boolean
     sponsorName?: string

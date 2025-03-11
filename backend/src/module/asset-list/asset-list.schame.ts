@@ -26,7 +26,7 @@ export class AssetList extends BaseSchema {
     placeId: Types.ObjectId
 
     @Prop({ type: SchemaTypes.Date})
-    buyDate: string
+    purchaseDate: string
 
     @Prop({ type: SchemaTypes.String })
     description: string
