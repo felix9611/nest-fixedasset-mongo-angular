@@ -1,6 +1,8 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
+import { create } from 'domain'
+import { CreateAssetDto } from './asset-list.dto'
 
 @Controller('asset/asset-list')
 export class AssetListController {
@@ -17,5 +19,11 @@ export class AssetListController {
     @UseGuards(AuthGuard)
     async getByAssetCode(@Param('code') code: string) {
         return await this.assetListService.getById(code)
+    }
+
+    @Post('create')
+    @UseGuards(AuthGuard)
+    async create(@Body() createData: CreateAssetDto) {
+        return await this.assetListService.create(createData)
     }
 }

@@ -22,19 +22,18 @@ import { LoggerMiddleware } from './tool/request-logger.middleware'
 
 @Module({
   imports: [
-    AssetListMoudule,
     ActionRecordMoudule,
+    AssetListMoudule,
+    AssetTypeMoudule,
     AuthModule, 
     BudgetMoudule,
     CodeTypeMoudule,
-    SysRoleMoudule,
-    SysUserMoudule,
     DepartmentMoudule,
-    AssetTypeMoudule,
-    ActionRecordMoudule,
     LocationMoudule,
     VendorMoudule,
     TaxInformationMoudule,
+    SysRoleMoudule,
+    SysUserMoudule,
     MongooseModule.forRoot('mongodb://localhost/fixedasset'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
