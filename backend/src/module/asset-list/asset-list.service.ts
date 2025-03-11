@@ -202,7 +202,7 @@ export class AssetListService {
                   from: 'locations', // Ensure correct collection name
                   let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
                   pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
-                  as: 'place'
+                  as: 'location'
                 }
             },
             {
@@ -218,13 +218,15 @@ export class AssetListService {
                     from: 'assettypes', // Ensure correct collection name
                     let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
                     pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
-                    as: 'ssettype'
+                    as: 'assettype'
                 }
             },
-            { $unwind: { path: '$locations', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
-            { $unwind: { path: '$assettypes', preserveNullAndEmptyArrays: true } }
-        ]).exec()
+            { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } },
+            { $limit: limit },
+            { $sort: { assetCode: -1 } } 
+        ]).skip(skip).exec()
 
         const total = await this.assetListModel.find(filters).countDocuments()
 
