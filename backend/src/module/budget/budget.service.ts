@@ -97,7 +97,7 @@ export class BudgetService {
             })
 
             return {
-                msg: 'This budget has been invalidated! Please contact admin!'
+                msg: 'This budget may be invalidated or not exist! Please contact admin!'
             }
         }
     }
@@ -141,7 +141,7 @@ export class BudgetService {
                 await this.actionRecordService.saveRecord({
                     actionName: 'Void Budget',
                     actionMethod: 'GET',
-                    actionFrom: 'Location',
+                    actionFrom: 'Budget',
                     actionData: {
                         _id,
                         status: 0,

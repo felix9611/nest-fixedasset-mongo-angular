@@ -48,7 +48,8 @@ export interface ListAssetReqDto {
     page: number
     limit: number
     assetCode?: string
+    assetName?: string
     typeIds?: string[]
     placeIds?: string[]
-    depatIds?: string[]
+    deptIds?: string[]
 }
