@@ -8,33 +8,38 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
-import { AssetTypeForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { Router } from '@angular/router'
+import { NzSelectModule } from 'ng-zorro-antd/select'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [ 
+        NzSelectModule, 
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule
+    ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
 })
 export class AssetListComponent {
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService
+        private modalService: NzModalService, 
+        private routeTo: Router
     ) {}
 
     searchForm: any = {
         page: 1,
         limit: 10
-    }
-
-    editForm: AssetTypeForm = {
-        _id: '',
-        typeCode: '',
-        typeName: '',
-        remark: ''
     }
 
     okText: string = 'Create'
@@ -46,46 +51,32 @@ export class AssetListComponent {
     handleRemoveId: string = ''
 
     ngOnInit() {
-        this.loadAssetTypeLists()
+        this.loadAssetListLists()
+        this.loadTypeList()
+        this.loadDeptList()
+        this.loadLocationList()
     }
 
-    async submitForm() {
-        const url = this.editForm._id === '' ? '/asset/type/create' : `/asset/type/update`
-
-        const res = await postApiWithAuth(url, {
-            
-            ...this.editForm,
-            ...this.editForm._id ? { _id: this.editForm._id} : {},
-        })
-
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
-            this.message.success('Save successful!')
-            this.closeDialog()
-            this.loadAssetTypeLists()
-
-            this.editForm = {
-                _id: '',
-                typeCode: '',
-                typeName: '',
-                remark: ''
-            }
-        }
+    typeLists: any[] = []
+    async loadTypeList() {
+        this.typeLists = await getApiWithAuth('/asset/type/getAll')
     }
 
-    async loadAssetTypeLists() {
-        const res = await postApiWithAuth('/asset/type/list', this.searchForm)
+    deptLists: any[] = []
+    async loadDeptList() {
+        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+    }
+
+    placeLists: any[] = []
+    async loadLocationList() {
+        this.placeLists = await getApiWithAuth('/base/location/getAll')
+    }
+
+
+    async loadAssetListLists() {
+        const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
-    }
-
-    showDialog() {
-        this.editFormDialog = true
-    }
-
-    closeDialog() {
-        this.editFormDialog = false
     }
 
     handleRomeve(id: string) {
@@ -105,7 +96,7 @@ export class AssetListComponent {
         this.message.info(res.msg)
 
         this.closeRemoveDialog()
-        this.loadAssetTypeLists()
+        this.loadAssetListLists()
     }
 
 
@@ -113,11 +104,12 @@ export class AssetListComponent {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
 
-    async getOneData(id:string) {
-        const res = await getApiWithAuth(`/asset/type/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+    openEdit(id: string) {
+        this.routeTo.navigate([`/asset-update/${id}`])
+    }
+
+    goToCreate() {
+        this.routeTo.navigate(['/asset-create'])
     }
 
 }

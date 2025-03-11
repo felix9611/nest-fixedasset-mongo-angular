@@ -15,7 +15,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
-import e from 'express'
+import { ActivatedRoute, Router } from '@angular/router'
+import { timer } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -38,6 +39,12 @@ import e from 'express'
     styleUrl: './asset-form.component.css',
 })
 export class AssetFormComponent implements OnInit {
+
+    constructor(
+        private route: ActivatedRoute, 
+        private routeTo: Router,
+        private message: NzMessageService
+    ) {}
 
     editForm: AssetFormDto = {
         _id: '',
@@ -78,13 +85,24 @@ export class AssetFormComponent implements OnInit {
 
     taxInformation: boolean = false
 
+    theId: any = ''
+
 
     ngOnInit() {
+        if (this.route.snapshot.paramMap.get('id')) {
+            this.theId = this.route.snapshot.paramMap.get('id')
+            this.getOne()
+        }
+
         this.loadTypeList()
         this.loadDeptList()
         this.loadLocationList()
         this.loadVendorList()
         this.loadTaxInfoList()
+    }
+
+    async getOne() {
+        this.editForm = await getApiWithAuth(`/asset/asset-list/one/${ this.theId}`)
     }
 
     typeLists: any[] = []
@@ -148,7 +166,12 @@ export class AssetFormComponent implements OnInit {
 
         const res = await postApiWithAuth(url, this.editForm)
 
-        console.log(res)
+        if (!res.msg) {
+            this.message.info('Data save successfully!')
+            timer(2500).subscribe(() => {
+                this.routeTo.navigate(['/asset-list'])
+            })
+        }
     }
 
     resetForm() {
