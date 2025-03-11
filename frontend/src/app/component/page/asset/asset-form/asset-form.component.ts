@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
@@ -11,16 +11,27 @@ import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { AssetFormDto } from './interface'
+import { NzSelectModule } from 'ng-zorro-antd/select'
 
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [
+        CommonModule, 
+        NzFormModule,
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule,
+        NzSelectModule
+    ],
     templateUrl: './asset-form.component.html',
     styleUrl: './asset-form.component.css',
 })
-export class AssetFormComponent {
+export class AssetFormComponent implements OnInit {
 
     editForm: AssetFormDto = {
         _id: '',
@@ -57,6 +68,30 @@ export class AssetFormComponent {
         voucherNo: '',
         voucherUsedDate: '',
         assetListFiles: []
+    }
+
+    
+
+
+    ngOnInit() {
+        this.loadTypeList()
+        this.loadDeptList()
+        this.loadLocationList()
+    }
+
+    typeLists: any[] = []
+    async loadTypeList() {
+        this.typeLists = await getApiWithAuth('/asset/type/getAll')
+    }
+
+    deptLists: any[] = []
+    async loadDeptList() {
+        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+    }
+
+    placeLists: any[] = []
+    async loadLocationList() {
+        this.placeLists = await getApiWithAuth('/base/location/getAll')
     }
 
 }

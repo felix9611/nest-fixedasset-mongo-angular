@@ -5,7 +5,10 @@ import { ActionRecordService } from './actionRecord.service';
 import { ActionRecordController } from './actionRecord.controller';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: ActionRecord.name, schema: ActionRecordSchema }]), ActionRecord],
+    imports: [
+        MongooseModule.forFeature([
+            { name: ActionRecord.name, schema: ActionRecordSchema }
+    ]), ActionRecord],
     controllers: [ActionRecordController],
     providers: [ActionRecordService],
     exports: [ActionRecord, ActionRecordService],

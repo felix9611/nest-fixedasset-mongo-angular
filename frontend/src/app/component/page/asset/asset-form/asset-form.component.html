@@ -7,6 +7,42 @@
                   <input nz-input type="text" id="assetCode" name="assetCode" [(ngModel)]="editForm.assetCode" />
                 </nz-form-control>
             </nz-form-item>
+            <nz-form-item class="lg:col-span-3">
+                <nz-form-label [nzSpan]="2" nzFor="email">Asset Name</nz-form-label>
+                <nz-form-control [nzSpan]="18">
+                  <input class="w-[100%]" nz-input type="text" id="assetName" name="assetName" [(ngModel)]="editForm.assetName" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="email">Type</nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <nz-select name="typeId" [(ngModel)]="editForm.typeId"  nzPlaceHolder="Please select">
+                        @for (option of typeLists; track option) {
+                          <nz-option [nzLabel]="option.typeName" [nzValue]="option._id"></nz-option>
+                        }
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="email">Location</nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <nz-select name="placeId" [(ngModel)]="editForm.placeId"  nzPlaceHolder="Please select">
+                        @for (option of placeLists; track option) {
+                          <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
+                        }
+                      </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
+                <nz-form-control [nzSpan]="14">
+                    <nz-select name="deptId" [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select">
+                        @for (option of deptLists; track option) {
+                          <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
+                        }
+                      </nz-select>
+                </nz-form-control>
+            </nz-form-item>
         </form>
     </div>
 </div>
