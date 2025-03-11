@@ -24,7 +24,7 @@ export interface CreateAsset {
     taxInfofId?: string
     taxCountryCode?: string
     taxCode?: string
-    taxRate?: number
+    taxRate: number
     includeTax?: boolean
     afterBeforeTax?: number
     accountCode?: string

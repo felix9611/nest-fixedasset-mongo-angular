@@ -37,8 +37,8 @@ export class AssetListService {
         }
     }
 
-    async create(data: CreateAssetDto, username?: string) {
-        const {  assetName, ..._data } = data
+    async create(data: UpdateAssetDto, username?: string) {
+        const {  assetName, _id, assetCode, ..._data  } = data
 
         const check = await this.assetListModel.findOne({ assetName, status: 1})
 
@@ -56,10 +56,10 @@ export class AssetListService {
                 msg: 'This asset name already exist! Please check again!'
             }
         } else {
-            const assetCode = await this.createNewAssetCode()
+            const assetCodeNew = await this.createNewAssetCode()
 
             const finalData = {
-                assetCode,
+                assetCode: assetCodeNew,
                 assetName,
                 ..._data,
                 staffName: username,
@@ -77,13 +77,13 @@ export class AssetListService {
             })
 
             await this.invRecordService.create({
-                assetCode,
+                assetCode: assetCodeNew,
                 placeFrom: _data.placeId,
                 placeTo: ''
             })
 
             const create = new this.assetListModel(finalData)
-            return await create.save()
+            return create.save()
         }
     }
 

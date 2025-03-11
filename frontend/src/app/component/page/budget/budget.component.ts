@@ -68,6 +68,7 @@ export class BudgetComponent {
     editFormDialog: boolean = false
     removeDialog: boolean = false
     handleRemoveId: string = ''
+    taxInformation: boolean = false
 
     fileList: any[] = []
     deptLists: any[] = []

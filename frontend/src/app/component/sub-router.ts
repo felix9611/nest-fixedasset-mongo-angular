@@ -12,6 +12,7 @@ import { ActionRecordComponent } from './page/action-record/action-record.compon
 import { BudgetComponent } from './page/budget/budget.component'
 import { TaxInformationComponent } from './page/tax-information/tax-information.component'
 import { AssetFormComponent } from './page/asset/asset-form/asset-form.component'
+import { AssetListComponent } from './page/asset/asset-list/asset-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -22,6 +23,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'asset-create',
         component: AssetFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'asset-list',
+        component: AssetListComponent,
         canActivate: [AuthGuard]
     },
     {

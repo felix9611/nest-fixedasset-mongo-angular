@@ -23,7 +23,7 @@ export class AssetListController {
 
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: CreateAssetDto, @Req() req: any) {
+    async create(@Body() createData: UpdateAssetDto, @Req() req: any) {
         return await this.assetListService.create(createData, req.user.username)
     }
 
