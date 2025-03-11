@@ -7,6 +7,7 @@ import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.
 import { LocationSchema, Location } from '../location/location.schame'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
+import { InvRecordService } from '../InvRecord/InvRecord.service'
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
             { name: InvRecord.name, schema: InvRecordSchema }
         ]), AssetList
     ],
-    providers: [AssetListService, ActionRecordService],
+    providers: [AssetListService, ActionRecordService, InvRecordService],
     controllers: [AssetListController],
     exports: [AssetListService, AssetList]
 })

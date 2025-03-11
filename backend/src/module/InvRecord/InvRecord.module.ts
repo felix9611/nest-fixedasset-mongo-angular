@@ -3,14 +3,17 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { InvRecord, InvRecordSchema } from './InvRecord.schema'
 import { InvRecordService } from './InvRecord.service'
 import { ActionRecordService } from '../action-record/actionRecord.service'
+import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.schame'
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: InvRecord.name, schema: InvRecordSchema },
-            { name: InvRecord.name, schema: InvRecordSchema }
-        ])
+            { name: ActionRecord.name, schema: ActionRecordSchema }
+        ]),
+        InvRecord
     ],
-    providers: [InvRecordService, ActionRecordService]
+    providers: [InvRecordService, ActionRecordService],
+    exports: [InvRecord, InvRecordService]
 })
 export class InvRecordModule {}

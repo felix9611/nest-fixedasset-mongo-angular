@@ -4,7 +4,7 @@ export interface AssetListFileDto {
     status: boolean
 }
 
-export interface CreateAssetDto {
+export interface CreateAsset {
     assetName: string
     unit: string
     typeId: string
@@ -39,17 +39,7 @@ export interface CreateAssetDto {
     assetListFiles?: AssetListFileDto[]
 }
 
-export interface UpdateAssetDto extends CreateAssetDto {
-    _id: string
-    assetCode: string
-}
-
-export interface ListAssetReqDto {
-    page: number
-    limit: number
+export interface AssetFormDto extends CreateAsset {
+    _id?: string
     assetCode?: string
-    assetName?: string
-    typeIds?: string[]
-    placeIds?: string[]
-    deptIds?: string[]
 }

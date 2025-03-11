@@ -145,7 +145,8 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Create Asset',
-                    icon: ''
+                    icon: '',
+                    path: 'asset-create'
                 },
                 {
                     label: 'Stock Take',

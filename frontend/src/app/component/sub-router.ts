@@ -11,11 +11,17 @@ import { LocationComponent } from './page/location/location.component'
 import { ActionRecordComponent } from './page/action-record/action-record.component'
 import { BudgetComponent } from './page/budget/budget.component'
 import { TaxInformationComponent } from './page/tax-information/tax-information.component'
+import { AssetFormComponent } from './page/asset/asset-form/asset-form.component'
 
 export const pagesRoutes: Routes = [
     {
         path: 'action-record',
         component: ActionRecordComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'asset-create',
+        component: AssetFormComponent,
         canActivate: [AuthGuard]
     },
     {
