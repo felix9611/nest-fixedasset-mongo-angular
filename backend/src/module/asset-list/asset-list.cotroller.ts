@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { create } from 'domain'
-import { CreateAssetDto } from './asset-list.dto'
+import { CreateAssetDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
 
 @Controller('asset/asset-list')
 export class AssetListController {
@@ -23,7 +23,19 @@ export class AssetListController {
 
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: CreateAssetDto) {
-        return await this.assetListService.create(createData)
+    async create(@Body() createData: CreateAssetDto, @Req() req: any) {
+        return await this.assetListService.create(createData, req.user.username)
+    }
+
+    @Post('update')
+    @UseGuards(AuthGuard)
+    async update(@Body() updateData: UpdateAssetDto) {
+        return await this.assetListService.update(updateData)
+    }
+
+    @Post('list')
+    @UseGuards(AuthGuard)
+    async listAndPage(@Body() query: ListAssetReqDto) {
+        return await this.assetListService.listPage(query)
     }
 }

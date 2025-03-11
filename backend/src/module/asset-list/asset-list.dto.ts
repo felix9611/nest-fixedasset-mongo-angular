@@ -39,7 +39,7 @@ export interface CreateAssetDto {
     assetListFiles?: AssetListFileDto[]
 }
 
-export interface UpdateAssetDto {
+export interface UpdateAssetDto extends CreateAssetDto {
     _id: string
     assetCode: string
 }

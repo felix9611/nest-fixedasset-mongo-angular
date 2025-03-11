@@ -4,13 +4,15 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AssetList } from './asset-list.schame'
 import { CreateAssetDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { InvRecordService } from '../InvRecord/InvRecord.service'
 
 
 @Injectable()
 export class AssetListService {
     constructor(
         @InjectModel(AssetList.name) private assetListModel: Model<AssetList>,
-        private actionRecordService: ActionRecordService
+        private actionRecordService: ActionRecordService,
+        private invRecordService: InvRecordService
     ) {}
 
     async getById(_id: string) {
@@ -35,7 +37,7 @@ export class AssetListService {
         }
     }
 
-    async create(data: CreateAssetDto) {
+    async create(data: CreateAssetDto, username?: string) {
         const {  assetName, ..._data } = data
 
         const check = await this.assetListModel.findOne({ assetName, status: 1})
@@ -60,6 +62,7 @@ export class AssetListService {
                 assetCode,
                 assetName,
                 ..._data,
+                staffName: username,
                 status: 1,
                 createdAt: new Date()
             }
@@ -71,6 +74,12 @@ export class AssetListService {
                 actionData: finalData,
                 actionSuccess: 'Sussess',
                 createdAt: new Date()
+            })
+
+            await this.invRecordService.create({
+                assetCode,
+                placeFrom: _data.placeId,
+                placeTo: ''
             })
 
             const create = new this.assetListModel(finalData)
@@ -99,6 +108,14 @@ export class AssetListService {
                 actionSuccess: 'Sussess',
                 createdAt: new Date()
             })
+
+            if (check.placeId.toString() !== _data.placeId) {
+                await this.invRecordService.create({
+                    assetCode: _data.assetCode,
+                    placeFrom: check.placeId.toString(),
+                    placeTo: _data.placeId
+                })
+            }
 
             return await this.assetListModel.updateOne({ _id}, finalData)
 
@@ -161,7 +178,7 @@ export class AssetListService {
         }
     }
 
-    async listPageRole(request: ListAssetReqDto) {
+    async listPage(request: ListAssetReqDto) {
 
         const { page, limit, assetCode, assetName, typeIds, placeIds, deptIds } = request
 

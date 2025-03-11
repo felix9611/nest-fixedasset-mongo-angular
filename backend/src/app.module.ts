@@ -19,6 +19,7 @@ import { SysRoleSchema } from './module/sys-role/role.schame'
 import { DepartmentSchema } from './module/department/department.schame'
 import { AssetListMoudule } from './module/asset-list/asset-list.module'
 import { LoggerMiddleware } from './tool/request-logger.middleware'
+import { InvRecordModule } from './module/InvRecord/InvRecord.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { LoggerMiddleware } from './tool/request-logger.middleware'
     BudgetMoudule,
     CodeTypeMoudule,
     DepartmentMoudule,
+    InvRecordModule,
     LocationMoudule,
     VendorMoudule,
     TaxInformationMoudule,

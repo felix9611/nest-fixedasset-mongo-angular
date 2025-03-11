@@ -52,9 +52,6 @@ export class AssetList extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
     invoiceRemark: string
 
-    @Prop({ type: Types.ObjectId, ref: 'SysUser' })
-    staffId: string
-
     @Prop({ type: Types.ObjectId, ref: 'Vendor' })
     vendorId: string
 
@@ -108,6 +105,9 @@ export class AssetList extends BaseSchema {
 
     @Prop({ type: SchemaTypes.Array})
     assetListFiles: Types.Array<AssetListFile>
+
+    @Prop({ type: SchemaTypes.String, ref: 'SysUser' })
+    staffName: string
 }
 
 export const AssetListSchema = SchemaFactory.createForClass(AssetList)
