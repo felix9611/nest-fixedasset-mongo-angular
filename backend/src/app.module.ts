@@ -20,6 +20,7 @@ import { DepartmentSchema } from './module/department/department.schame'
 import { AssetListMoudule } from './module/asset-list/asset-list.module'
 import { LoggerMiddleware } from './tool/request-logger.middleware'
 import { InvRecordModule } from './module/InvRecord/InvRecord.module'
+import { WriteOffModule } from './module/write-off/write-off.module'
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { InvRecordModule } from './module/InvRecord/InvRecord.module'
     TaxInformationMoudule,
     SysRoleMoudule,
     SysUserMoudule,
+    WriteOffModule,
     MongooseModule.forRoot('mongodb://localhost/fixedasset'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
