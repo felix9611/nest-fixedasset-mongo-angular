@@ -4,6 +4,7 @@ import { InvRecord, InvRecordSchema } from './InvRecord.schema'
 import { InvRecordService } from './InvRecord.service'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.schame'
+import { InvRecordController } from './InvRecord.controller'
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.
         InvRecord
     ],
     providers: [InvRecordService, ActionRecordService],
-    exports: [InvRecord, InvRecordService]
+    exports: [InvRecord, InvRecordService],
+    controllers: [InvRecordController]
 })
 export class InvRecordModule {}

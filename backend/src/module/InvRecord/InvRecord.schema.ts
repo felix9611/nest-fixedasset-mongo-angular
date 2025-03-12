@@ -6,14 +6,14 @@ export type InvRecordDocument = HydratedDocument<InvRecord>
 export class InvRecord {
     _id: Types.ObjectId
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String, required: true, ref: 'AssetList' })
     assetCode: string
 
     @Prop({ type: Types.ObjectId, ref: 'Location' })
-    placeFrom: Types.ObjectId
+    placeFrom: string
 
     @Prop({ type: Types.ObjectId, ref: 'Location' })
-    placeTo: Types.ObjectId
+    placeTo: string
 
     @Prop({ type: SchemaTypes.Date, default: Date.now })
     createdAt: string

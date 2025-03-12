@@ -163,7 +163,8 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Inventory Record',
-                    icon: ''
+                    icon: '',
+                    path: 'inventory-record'
                 },
                 {
                     label: 'Repair Record',

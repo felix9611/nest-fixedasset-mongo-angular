@@ -15,6 +15,7 @@ import { AssetFormComponent } from './page/asset/asset-form/asset-form.component
 import { AssetListComponent } from './page/asset/asset-list/asset-list.component'
 import { WriteOffFormComponent } from './page/asset/write-off-form/write-off-form.component'
 import { WriteOffListComponent } from './page/asset/write-off-list/write-off-list.component'
+import { InventoryRecordListComponent } from './page/asset/inventory-record/inventory-record.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -65,6 +66,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'department',
         component: DepartmentComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'inventory-record',
+        component: InventoryRecordListComponent,
         canActivate: [AuthGuard]
     },
     {
