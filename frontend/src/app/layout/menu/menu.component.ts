@@ -155,7 +155,8 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Asset List Report',
-                    icon: ''
+                    icon: '',
+                    path: 'asset-list-all'
                 },
                 {
                     label: 'Stock Take Report',

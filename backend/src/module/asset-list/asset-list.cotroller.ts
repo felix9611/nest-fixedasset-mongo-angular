@@ -38,4 +38,10 @@ export class AssetListController {
     async listAndPage(@Body() query: ListAssetReqDto) {
         return await this.assetListService.listPage(query)
     }
+
+    @Get('list-all')
+    @UseGuards(AuthGuard)
+    async listAndPageGet() {
+        return await this.assetListService.listAllAsset()
+    }
 }

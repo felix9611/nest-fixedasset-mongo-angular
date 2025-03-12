@@ -239,6 +239,39 @@ export class AssetListService {
         }
     }
 
+    async listAllAsset() {
+        return  await await this.assetListModel.aggregate([
+            {
+                $lookup: {
+                  from: 'locations', // Ensure correct collection name
+                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                  as: 'location'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'departments', // Ensure correct collection name
+                    let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    as: 'department'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'assettypes', // Ensure correct collection name
+                    let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    as: 'assettype'
+                }
+            },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } },
+            { $sort: { assetCode: -1 } } 
+        ]).exec()
+    }
+
     /// gen asset code
 
     formatNumber(num: number, digits: number): string {
