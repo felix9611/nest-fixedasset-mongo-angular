@@ -14,6 +14,7 @@ import { TaxInformationComponent } from './page/tax-information/tax-information.
 import { AssetFormComponent } from './page/asset/asset-form/asset-form.component'
 import { AssetListComponent } from './page/asset/asset-list/asset-list.component'
 import { WriteOffFormComponent } from './page/asset/write-off-form/write-off-form.component'
+import { WriteOffListComponent } from './page/asset/write-off-list/write-off-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -39,6 +40,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'write-off/:id',
         component: WriteOffFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'write-off-list',
+        component: WriteOffListComponent,
         canActivate: [AuthGuard]
     },
     {

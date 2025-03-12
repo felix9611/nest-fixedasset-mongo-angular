@@ -6,6 +6,7 @@
             </div>
             <div>
                 <nz-range-picker
+                    nzSize="large"
                     class="h-full"
                     name="date"
                     [nzShowTime]="{ nzFormat: 'HH:mm' }"
@@ -15,10 +16,11 @@
             </div>
             <div class="w-[150px]">
                 <nz-select 
+                    nzSize="large"
                     class="h-full"
-                    name="department" 
+                    name="place" 
                     [(ngModel)]="searchForm.placeId"  
-                    nzPlaceHolder="Please select"  
+                    nzPlaceHolder="Lcoation"  
                     nzMode="multiple"  
                     nzAllowClear 
                     [nzShowArrow]="true">
@@ -29,10 +31,11 @@
             </div>
             <div class="w-[150px]">
                 <nz-select 
+                    nzSize="large"
                     class="h-full"
                     name="department" 
                     [(ngModel)]="searchForm.deptId"  
-                    nzPlaceHolder="Please select"  
+                    nzPlaceHolder="Department"  
                     nzMode="multiple"  
                     nzAllowClear 
                     [nzShowArrow]="true">

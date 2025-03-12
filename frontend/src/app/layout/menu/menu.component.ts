@@ -168,6 +168,10 @@ export class MenuComponent implements OnInit{
                 {
                     label: 'Repair Record',
                     icon: ''
+                },
+                {
+                    label: 'Write Off Record',
+                    path: 'write-off-list'
                 }
             ]
         },

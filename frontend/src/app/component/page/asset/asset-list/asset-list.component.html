@@ -9,35 +9,38 @@
             </div>
             <div class="w-[150px] h-full">
                 <nz-select
+                    nzSize="large"
                     class="w-full h-full" 
                     name="typeId" 
                     [(ngModel)]="searchForm.typeIds"  
                     nzMode="multiple" nzAllowClear 
-                     nzPlaceHolder="Please select Asset Type">
+                     nzPlaceHolder="Asset Type">
                     @for (option of typeLists; track option) {
                       <nz-option [nzLabel]="option.typeName" [nzValue]="option._id"></nz-option>
                     }
                 </nz-select>
             </div>
-            <div class="w-[200px] h-full">
+            <div class="w-[150px] h-full">
                 <nz-select
+                    nzSize="large"
                     class="w-full h-full" 
                     name="placeId" 
                     [(ngModel)]="searchForm.placeIds"  
                     nzMode="multiple" nzAllowClear 
-                     nzPlaceHolder="Please select Location">
+                     nzPlaceHolder="Location">
                     @for (option of placeLists; track option) {
                       <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
                     }
                 </nz-select>
             </div>
-            <div class="w-[200px] h-full">
+            <div class="w-[150px] h-full">
                 <nz-select
+                    nzSize="large"
                     class="w-full h-full" 
                     name="deptId" 
                     [(ngModel)]="searchForm.deptIds"  
                     nzMode="multiple" nzAllowClear 
-                     nzPlaceHolder="Please select Location">
+                     nzPlaceHolder="Location">
                     @for (option of deptLists; track option) {
                       <nz-option [nzLabel]="option.deptName" [nzValue]="option._id"></nz-option>
                     }
