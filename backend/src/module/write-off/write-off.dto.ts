@@ -6,3 +6,10 @@ export interface CreateWriteOffRecrod {
     disposalMethod?: string
     remainingValue?: number
 }
+
+export interface ListWriteOffReqDto {
+    page: number
+    limit: number
+    placeId?: string
+    dateRange?: string[]
+}

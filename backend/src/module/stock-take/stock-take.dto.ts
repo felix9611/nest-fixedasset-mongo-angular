@@ -11,7 +11,7 @@ export interface StockTakeItem {
 
 export interface StockTakeForm {
     actionName: string
-    actionPlace: string
+    actionPlaceId: string
     remark?: string
     createdTime: string
     finishTime?: string

@@ -3,7 +3,7 @@ import { WriteOff } from './write-off.schema'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { CreateWriteOffRecrod } from './write-off.dto'
+import { CreateWriteOffRecrod, ListWriteOffReqDto } from './write-off.dto'
 import { AssetListService } from '../asset-list/asset-list.service'
 import { WriteOffModule } from './write-off.module'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
@@ -37,16 +37,7 @@ export class WriteOffService {
                 status: 1
             }
 
-            await this.assetListService.invalidate(checkAsset._id)
-
-            await this.actionRecordService.saveRecord({
-                actionName: 'Create Write Off Record',
-                actionMethod: 'POST',
-                actionFrom: 'Off Record',
-                actionData: finalData,
-                actionSuccess: 'Sussess',
-                createdAt: new Date()
-            })
+            await this.assetListService.invalidate(assetId)
 
             await this.invRecordService.create({
                 assetCode: checkAsset.assetCode,
@@ -54,8 +45,29 @@ export class WriteOffService {
                 placeTo: ''
             })
 
+            
+
             const create = new this.writeOffModel(finalData)
-            return create.save()
+            const res = await create.save()
+            if (res._id) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Create Write Off Record',
+                    actionMethod: 'POST',
+                    actionFrom: 'Off Record',
+                    actionData: finalData,
+                    actionSuccess: 'Sussess',
+                    createdAt: new Date()
+                })
+
+                return {
+                    msg: 'End the write off process!',
+                    finish: true
+                }
+            } else {
+                return {
+                    msg: 'Oooops! Maybe something wrong, please try again!'
+                }
+            }
 
 
         } else {
@@ -73,5 +85,53 @@ export class WriteOffService {
                 msg: 'This asset already write off or invalidate!'
             }
         }
+    }
+
+    async listAndPage(query: ListWriteOffReqDto) {
+        const { page, limit, placeId, dateRange } = query
+
+        const skip = (page - 1) * limit
+
+        const finalFilter = {
+            status: 1,
+            ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {},
+            ... placeId ? { lastPlaceId: placeId } : {}
+        }
+
+        const lists = await this.writeOffModel.aggregate([
+            {
+                $match: finalFilter 
+            },
+            {
+                $lookup: {
+                  from: 'assetlists',
+                  let: { assetIdStr: { $toObjectId: '$assetId' } }, // assetId as assetIdStr
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } } }],
+                  as: 'assetlist'
+                }
+            },
+            {
+                $lookup: {
+                  from: 'locations',
+                  let: { placeIdStr: { $toObjectId: '$lastPlaceId' } }, // Convert lastPlaceId as placeIdStr
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                  as: 'location'
+                }
+            },
+            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            { $limit: limit },
+        ]).skip(skip).exec()
+
+        const total = await this.writeOffModel.find(finalFilter).countDocuments()
+
+        return {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            lists,
+        }
+
     }
 }
