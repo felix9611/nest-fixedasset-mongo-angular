@@ -99,7 +99,7 @@ export class AssetListComponent {
 
     goToCreate() {
         this.routeTo.navigate(['/asset-create'])
-    }f
+    }
 
     goToWriteOff() {
         this.routeTo.navigate([`write-off/${this.handleId}`])

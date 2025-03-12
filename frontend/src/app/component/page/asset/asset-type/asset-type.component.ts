@@ -11,11 +11,22 @@ import moment from 'moment'
 import { AssetTypeForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule,
+        NzInputNumberModule
+    ],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
 })
@@ -34,7 +45,8 @@ export class AssetTypeComponent {
         _id: '',
         typeCode: '',
         typeName: '',
-        remark: ''
+        remark: '',
+        depreciationRate: 0
     }
 
     okText: string = 'Create'
@@ -56,6 +68,7 @@ export class AssetTypeComponent {
             
             ...this.editForm,
             ...this.editForm._id ? { _id: this.editForm._id} : {},
+            ...this.editForm.depreciationRate ? { depreciationRate: this.editForm.depreciationRate / 100 } : {}
         })
 
         if (res.msg) {
@@ -98,14 +111,16 @@ export class AssetTypeComponent {
     }
 
     async handleRemove() {
-        const url = `/asset/type/remove/${this.handleRemoveId}`
+        if (this.handleRemoveId) {
+            const url = `/asset/type/remove/${this.handleRemoveId}`
 
-        const res: any = await getApiWithAuth(url)
+            const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
+            this.message.info(res.msg)
 
-        this.closeRemoveDialog()
-        this.loadAssetTypeLists()
+            this.closeRemoveDialog()
+            this.loadAssetTypeLists()
+        }
     }
 
 
@@ -115,7 +130,10 @@ export class AssetTypeComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/asset/type/one/${id}`)
-        this.editForm = res
+        this.editForm = {
+            ...res,
+            depreciationRate: res.depreciationRate * 100
+        }
         this.okText = 'Update'
         this.showDialog()
     }
