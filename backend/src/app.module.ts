@@ -26,6 +26,7 @@ import { WriteOffModule } from './module/write-off/write-off.module'
   imports: [
     ActionRecordMoudule,
     AssetListMoudule,
+    WriteOffModule,
     AssetTypeMoudule,
     AuthModule, 
     BudgetMoudule,
@@ -37,7 +38,7 @@ import { WriteOffModule } from './module/write-off/write-off.module'
     TaxInformationMoudule,
     SysRoleMoudule,
     SysUserMoudule,
-    WriteOffModule,
+
     MongooseModule.forRoot('mongodb://localhost/fixedasset'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },

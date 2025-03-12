@@ -78,8 +78,8 @@ export class AssetListService {
 
             await this.invRecordService.create({
                 assetCode: assetCodeNew,
-                placeFrom: _data.placeId,
-                placeTo: ''
+                placeFrom: '',
+                placeTo: _data.placeId
             })
 
             const create = new this.assetListModel(finalData)

@@ -13,11 +13,17 @@ import { BudgetComponent } from './page/budget/budget.component'
 import { TaxInformationComponent } from './page/tax-information/tax-information.component'
 import { AssetFormComponent } from './page/asset/asset-form/asset-form.component'
 import { AssetListComponent } from './page/asset/asset-list/asset-list.component'
+import { WriteOffFormComponent } from './page/asset/write-off-form/write-off-form.component'
 
 export const pagesRoutes: Routes = [
     {
         path: 'action-record',
         component: ActionRecordComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'asset-list',
+        component: AssetListComponent,
         canActivate: [AuthGuard]
     },
     {
@@ -31,8 +37,8 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'asset-list',
-        component: AssetListComponent,
+        path: 'write-off/:id',
+        component: WriteOffFormComponent,
         canActivate: [AuthGuard]
     },
     {

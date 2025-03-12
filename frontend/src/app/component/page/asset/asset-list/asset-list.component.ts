@@ -48,7 +48,7 @@ export class AssetListComponent {
     totals: number = 0
     editFormDialog: boolean = false
     removeDialog: boolean = false
-    handleRemoveId: string = ''
+    handleId: string = ''
 
     ngOnInit() {
         this.loadAssetListLists()
@@ -80,23 +80,12 @@ export class AssetListComponent {
     }
 
     handleRomeve(id: string) {
-        this.handleRemoveId = id
+        this.handleId = id
         this.removeDialog = true
     }
 
     closeRemoveDialog() {
         this.removeDialog = false
-    }
-
-    async handleRemove() {
-        const url = `/asset/type/remove/${this.handleRemoveId}`
-
-        const res: any = await getApiWithAuth(url)
-
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadAssetListLists()
     }
 
 
@@ -110,6 +99,10 @@ export class AssetListComponent {
 
     goToCreate() {
         this.routeTo.navigate(['/asset-create'])
+    }
+
+    goToWriteOff() {
+        this.routeTo.navigate([`write-off/${this.handleId}`])
     }
 
 }

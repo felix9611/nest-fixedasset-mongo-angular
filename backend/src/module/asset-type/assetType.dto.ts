@@ -2,6 +2,7 @@ export interface AssetTypeCreateDto {
     typeCode: string
     typeName: string
     remark?: string
+    depreciationRate?: number
 }
 
 export interface AssetTypeUpdateDto extends AssetTypeCreateDto{

@@ -88,7 +88,7 @@
                                 <div 
                                     (click)="handleRomeve(data._id)"
                                     class="w-[100px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
-                                    Delete
+                                    Write Off
                                 </div>
                             </div>
                         </td>
@@ -106,12 +106,12 @@
 
         <nz-modal
             [(nzVisible)]="removeDialog" 
-            nzTitle="Confirm Delete"
+            nzTitle="Confirm Write Off"
             (nzOnCancel)="closeRemoveDialog()"
-            (nzOnOk)="handleRemove()"
+            (nzOnOk)="goToWriteOff()"
         >
             <ng-container *nzModalContent>
-                Are you sure to confirm delete this asset type?
+                Are you sure to confirm write off this asset?
             </ng-container>
         </nz-modal>
     </div>

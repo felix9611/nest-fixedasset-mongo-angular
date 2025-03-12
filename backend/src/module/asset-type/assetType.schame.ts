@@ -14,6 +14,9 @@ export class AssetType extends BaseSchema {
 
     @Prop({ type: SchemaTypes.String })
     remark?: string
+
+    @Prop({ type: SchemaTypes.Number })
+    depreciationRate: number
 }
 
 export const AssetTypeSchema = SchemaFactory.createForClass(AssetType)
