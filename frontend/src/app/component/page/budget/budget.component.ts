@@ -89,7 +89,7 @@ export class BudgetComponent {
     }
 
     async loadDeptLists() {
-        this.deptLists = await getApiWithAuth('/base/budget/getBudgetSummary')
+        this.deptLists = await getApiWithAuth('/sys/department/getAll')
     }
 
     async tests() {

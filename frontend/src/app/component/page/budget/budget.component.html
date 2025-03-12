@@ -104,17 +104,17 @@
         ></nz-pagination>
 
         <nz-modal 
-            nzWidth="700px"
+            nzWidth="600px"
             [(nzVisible)]="editFormDialog" 
             (nzOnCancel)="closeDialog()"
             (nzOnOk)="submitForm()"
-            nzTitle="Asset Type Form"
+            nzTitle="Budget Form"
             [nzOkText]="okText"
         >
             <ng-container *nzModalContent>
                 <form nz-form>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Department</div>
                         <nz-form-control [nzSpan]="14">
                             <nz-select name="deptId" [nzShowArrow]="true" nzAllowClear [(ngModel)]="editForm.deptId"  nzPlaceHolder="Please select">
                                 @for (option of deptLists; track option) {
@@ -124,7 +124,7 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Location</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Location</div>
                         <nz-form-control [nzSpan]="14">
                             <nz-select 
                                 name="place" 
@@ -139,27 +139,27 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="name">Name</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Name</div>
                       <nz-form-control [nzSpan]="14">
                         <input nz-input type="text" id="name" name="name" [(ngModel)]="editForm.budgetName"/>
                       </nz-form-control>
                     </nz-form-item>
                     <div class="grid md:grid-cols-2 gap-1">
                         <nz-form-item>
-                            <nz-form-label [nzSpan]="12" nzFor="year">Year</nz-form-label>
+                            <div class="px-1 w-[105px] flex items-center">Year</div>
                             <nz-form-control>
                               <input nz-input type="text" id="year" name="year" [(ngModel)]="editForm.year"/>
                             </nz-form-control>
                         </nz-form-item>
                         <nz-form-item>
-                            <nz-form-label [nzSpan]="12" nzFor="month">Month</nz-form-label>
+                            <div class="px-2 w-[80px] flex items-center">Month</div>
                             <nz-form-control>
                               <input nz-input type="text" id="month" name="month" [(ngModel)]="editForm.month"/>
                             </nz-form-control>
                         </nz-form-item>
                     </div>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Date From</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Date From</div>
                         <nz-form-control [nzSpan]="14">
                             <nz-date-picker
                                 name="budgetFrom"
@@ -171,7 +171,7 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Date To</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Date To</div>
                         <nz-form-control [nzSpan]="14">
                             <nz-date-picker
                                 name="budgetTo"
@@ -183,7 +183,7 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Budget Amount</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Amount</div>
                         <nz-form-control [nzSpan]="14">
                             <nz-input-number class="w-[100%]" name="budgetAmount" [(ngModel)]="editForm.budgetAmount">
                                 <span nzInputPrefix>$</span>
@@ -191,13 +191,13 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="name">Status</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Status</div>
                         <nz-form-control [nzSpan]="14">
                           <input nz-input type="text" id="budgetStatus" name="budgetStatus" [(ngModel)]="editForm.budgetStatus"/>
                         </nz-form-control>
                       </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
+                        <div class="px-1 w-[105px] flex items-center">Remark</div>
                         <nz-form-control [nzSpan]="14">
                           <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
                         </nz-form-control>
