@@ -42,4 +42,10 @@ export interface CreateAsset {
 export interface AssetFormDto extends CreateAsset {
     _id?: string
     assetCode?: string
+    reason?: string
+    lastDay?: string
+    disposalMethod?: string
+    remainingValue?: number,
+    depreciationRate?: number,
+    yearNumber?: number
 }

@@ -18,7 +18,7 @@ export class WriteOffService {
     ) {}
 
     async create(createData: CreateWriteOffRecrod) {
-        let { assetId, lastPlaceId, reason, lastDay } = createData
+        let { assetId, lastPlaceId, reason, lastDay, disposalMethod, remainingValue } = createData
         
         const checkAsset: any = await this.assetListService.getById(assetId)
 
@@ -33,6 +33,8 @@ export class WriteOffService {
                 lastPlaceId,
                 lastDay,
                 reason,
+                disposalMethod, 
+                remainingValue,
                 createdAt: new Date(),
                 status: 1
             }

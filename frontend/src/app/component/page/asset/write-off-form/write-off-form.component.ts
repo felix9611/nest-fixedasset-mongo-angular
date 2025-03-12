@@ -80,7 +80,13 @@ export class WriteOffFormComponent implements OnInit {
         maintenancePeriodEnd: '',
         voucherNo: '',
         voucherUsedDate: '',
-        assetListFiles: []
+        assetListFiles: [],
+        reason: '',
+        lastDay: '',
+        disposalMethod: '',
+        remainingValue: 0,
+        depreciationRate: 0,
+        yearNumber: 0
     }
 
     taxInformation: boolean = false
@@ -92,21 +98,39 @@ export class WriteOffFormComponent implements OnInit {
         if (this.route.snapshot.paramMap.get('id')) {
             this.theId = this.route.snapshot.paramMap.get('id')
             this.getOne()
+            this.loadCodeTypeList()
+            this.loadTypeList()
+            this.loadDeptList()
+            this.loadLocationList()
+            this.loadVendorList() 
         }
+        
+    }
 
-        this.loadTypeList()
-        this.loadDeptList()
-        this.loadLocationList()
-        this.loadVendorList()
+    dataCal() {
+        const typeData = this.typeLists.find((x: any) => x._id === this.editForm.typeId)
+        this.editForm.depreciationRate = typeData.depreciationRate * 100
+        const today = new Date()
+        const oldDate = new Date(this.editForm.purchaseDate)
+
+        const yearGap = today.getFullYear() - oldDate.getFullYear()
+        this.editForm.yearNumber = yearGap
+
+        const todayValue = (this.editForm.cost * typeData.depreciationRate) / yearGap
+        this.editForm.remainingValue = todayValue
+
+        
     }
 
     async getOne() {
         this.editForm = await getApiWithAuth(`/asset/asset-list/one/${ this.theId}`)
+        
     }
 
     typeLists: any[] = []
     async loadTypeList() {
         this.typeLists = await getApiWithAuth('/asset/type/getAll')
+        this.dataCal()
     }
 
     deptLists: any[] = []
@@ -123,19 +147,10 @@ export class WriteOffFormComponent implements OnInit {
     async loadVendorList() {
         this.vendorLists = await getApiWithAuth('/base/vendor/getAll')
     }
-    
 
-    async submitForm() {
-        const url = this.editForm._id ? '/asset/asset-list/update' : '/asset/asset-list/create'
-
-        const res = await postApiWithAuth(url, this.editForm)
-
-        if (!res.msg) {
-            this.message.info('Data save successfully!')
-            timer(2500).subscribe(() => {
-                this.routeTo.navigate(['/asset-list'])
-            })
-        }
+    typeCodeList: any[] = []
+    async loadCodeTypeList() {
+        this.typeCodeList = await getApiWithAuth('/base/code-type/get-type/WriteOff')
     }
 
     backTo() {
@@ -145,9 +160,25 @@ export class WriteOffFormComponent implements OnInit {
     removeDialog: boolean = false
 
 
-    goToWriteOff() {
+    async goToWriteOff() {
         const finalForm = {
+            assetId: this.editForm._id,
+            lastPlaceId: this.editForm.placeId,
+            reason: this.editForm.reason,
+            lastDay: this.editForm.lastDay,
+            disposalMethod: this.editForm.disposalMethod,
+            remainingValue: this.editForm.remainingValue
+        }
 
+        const res = await postApiWithAuth('/aaset/write-off/create', finalForm)
+        
+        if (res.finish) {
+            this.message.info(res.msg)
+            timer(2500).subscribe(() => {
+                this.backTo()
+            })
+        } else {
+            this.message.error(res.msg)
         }
     }
 
@@ -159,4 +190,15 @@ export class WriteOffFormComponent implements OnInit {
         this.removeDialog = true
     }
 
+    valueOnChange(event: any) {
+        const typeData = this.typeLists.find((x: any) => x._id === this.editForm.typeId)
+        const oldDate = new Date(this.editForm.purchaseDate)
+
+        const yearGap = event.getFullYear() - oldDate.getFullYear()
+        this.editForm.yearNumber = yearGap
+
+        const todayValue = (this.editForm.cost * typeData.depreciationRate) / yearGap
+        this.editForm.remainingValue = todayValue
+    }
+ 
 }

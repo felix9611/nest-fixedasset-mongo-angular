@@ -1,5 +1,6 @@
 <div class="bg-white p-[1rem]">
     <div>
+        <div class="text-center py-3 text-[2rem] font-bold">Write Off Form</div>
         <form nz-form class="grid lg:grid-cols-4 p-2 gap-2">
             <nz-form-item>
               <div class="px-1 w-[105px] flex items-center">Asset Code</div>
@@ -159,6 +160,95 @@
             </nz-form-control>
           </nz-form-item>
 
+          <nz-form-item class="lg:col-span-2">
+            <div class="px-1 w-[130px] flex items-center">Write Off Reason</div>
+            <nz-form-control>
+              <input nz-input type="text" name="reason" [(ngModel)]="editForm.reason"/>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <div class="px-1 w-[120px] flex items-center">Write Off Day</div>
+            <nz-form-control>
+              <nz-date-picker
+                    class="w-[100%]"
+                    name="lastDay"
+                    nzShowTime
+                    nzFormat="yyyy-MM-dd HH:mm:ss"
+                    [(ngModel)]="editForm.lastDay"
+                    (ngModelChange)="valueOnChange($event)"
+                >
+                </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <div class="px-1 w-[130px] flex items-center">Disposal Method</div>
+            <nz-form-control>
+              <nz-select name="disposalMethod" [(ngModel)]="editForm.disposalMethod"  nzPlaceHolder="Please select">
+                  @for (option of typeCodeList; track option) {
+                    <nz-option [nzLabel]="option.valueName" [nzValue]="option.valueCode"></nz-option>
+                  }
+                </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <div class="lg:col-span-4 flex">
+            <nz-form-item>
+              <div class="px-1 w-[200px] flex items-center">Value Remaining Calculate</div>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[60px] flex items-center">Cost</div>
+              <nz-form-control>
+                  <nz-form-control class="w-full">
+                    <nz-input-number [style.width.%]="100" name="cost" [(ngModel)]="editForm.cost" [disabled]="true">
+                        <span nzInputPrefix>$</span>
+                    </nz-input-number>
+                </nz-form-control>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[30px] flex items-center">X</div>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[120px] flex items-center">Depreciation Rate</div>
+              <nz-form-control>
+                  <nz-form-control class="w-full">
+                    <nz-input-number [style.width.%]="100" name="depreciationRate" [(ngModel)]="editForm.depreciationRate" [disabled]="true">
+                      <span nzInputAddonAfter>%</span>
+                    </nz-input-number>
+                </nz-form-control>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[30px] flex items-center">/</div>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[120px] flex items-center">Year of use period</div>
+              <nz-form-control>
+                  <nz-form-control class="w-full">
+                    <nz-input-number [style.width.%]="100" name="yearNumber" [(ngModel)]="editForm.yearNumber" [disabled]="true">
+                    </nz-input-number>
+                </nz-form-control>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[30px] flex items-center">=</div>
+            </nz-form-item>
+            <nz-form-item>
+              <div class="px-1 w-[120px] flex items-center">Value Remaining</div>
+              <nz-form-control>
+                  <nz-form-control class="w-full">
+                    <nz-input-number [style.width.%]="100" name="remainingValue" [(ngModel)]="editForm.remainingValue" [disabled]="true">
+                    </nz-input-number>
+                </nz-form-control>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+
+          
+          
+
           <div class="flex gap-5">
             <div (click)="backTo()" class="rounded-lg border-2 text-[#bf7b00] border-[#bf7b00] bg-[#fbd695] hover:bg-[#dabc87] p-1 w-[100px] text-center ">
               Back
@@ -167,7 +257,7 @@
               Submit
             </div>
           </div>
-
+          
         </form>
 
         <nz-modal
