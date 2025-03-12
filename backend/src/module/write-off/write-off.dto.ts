@@ -3,4 +3,6 @@ export interface CreateWriteOffRecrod {
     lastPlaceId: string
     reason: string
     lastDay?: any
+    disposalMethod?: string
+    remainingValue?: number
 }

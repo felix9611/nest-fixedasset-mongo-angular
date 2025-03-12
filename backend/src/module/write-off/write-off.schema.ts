@@ -17,6 +17,12 @@ export class WriteOff extends BaseSchema {
 
     @Prop({ type: SchemaTypes.Date, required: true })
     lastDay: string
+
+    @Prop({ type: SchemaTypes.String })
+    disposalMethod: string
+
+    @Prop({ type: SchemaTypes.Number })
+    remainingValue: number
 }
 
 export const WriteOffSchema = SchemaFactory.createForClass(WriteOff)

@@ -98,7 +98,6 @@ export class WriteOffFormComponent implements OnInit {
         this.loadDeptList()
         this.loadLocationList()
         this.loadVendorList()
-        this.loadTaxInfoList()
     }
 
     async getOne() {
@@ -124,42 +123,7 @@ export class WriteOffFormComponent implements OnInit {
     async loadVendorList() {
         this.vendorLists = await getApiWithAuth('/base/vendor/getAll')
     }
-
-    taxLists: any[] = []
-    async loadTaxInfoList() {
-        const results = await getApiWithAuth('/base/tax-information/getAll')
-        const updates = results.map((x: any)=> {
-            return {
-              ...x,
-              taxRate: Number(x.taxRate),
-              label: `${x.countryName} ${x.taxCode} (${Number(x.taxRate) * 100}%)`
-            }
-        })
-
-        this.taxLists = updates
-    }
     
-    taxInfoOnChanges(event: Event) {
-        const data = this.taxLists.find((item: any) => item._id === event)
-        this.editForm.taxInfofId = data._id
-        this.editForm.taxCountryCode = data.countryCode
-        this.editForm.taxCode = data.taxCode
-        this.editForm.taxRate = data.taxRate
-    }
-
-    taxOnChanges(event: any) {
-        const cost: number = this.editForm.cost 
-        const taxRate: number = this.editForm.taxRate
-
-        switch(event) {
-            case true:
-                this.editForm.afterBeforeTax = cost * (1 - taxRate)
-            break
-            case false:
-                this.editForm.afterBeforeTax = cost * (1 + taxRate)
-            break
-        }
-    }
 
     async submitForm() {
         const url = this.editForm._id ? '/asset/asset-list/update' : '/asset/asset-list/create'
@@ -174,43 +138,25 @@ export class WriteOffFormComponent implements OnInit {
         }
     }
 
-    resetForm() {
-        this.editForm = {
-            _id: '',
-            assetCode: '',
-            assetName: '',
-            unit: '',
-            typeId: '',
-            deptId: '',
-            placeId: '',
-            purchaseDate: '',
-            description: '',
-            sponsor:  false,
-            sponsorName: '',
-            cost: 0,
-            serialNo:  '',
-            invoiceNo: '',
-            invoiceDate: '',
-            invoiceRemark:  '',
-            vendorId:  '',
-            remark:  '',
-            taxInfofId:  '',
-            taxCountryCode:  '',
-            taxCode:  '',
-            taxRate:  0,
-            includeTax: false,
-            afterBeforeTax: 0,
-            accountCode:  '',
-            accountName: '',
-            brandCode: '',
-            brandName: '',
-            chequeNo: '',
-            maintenancePeriodStart: '',
-            maintenancePeriodEnd: '',
-            voucherNo: '',
-            voucherUsedDate: '',
-            assetListFiles: []
+    backTo() {
+        this.routeTo.navigate(['/asset-list'])
+    }
+
+    removeDialog: boolean = false
+
+
+    goToWriteOff() {
+        const finalForm = {
+
         }
+    }
+
+    closeRemoveDialog() {
+        this.removeDialog = false
+    }
+
+    showDialog() {
+        this.removeDialog = true
     }
 
 }
