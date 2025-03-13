@@ -84,6 +84,11 @@
                         <td>
                             <div class="flex gap-3">
                                 <div 
+                                    (click)="openRepairRecordDialog(data)"
+                                    class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                    Repiar
+                                </div>
+                                <div 
                                     (click)="openQrCodeDialog(data)"
                                     class="w-[100px] bg-[#8ee0ff] hover:bg-[#87d3ef] border-1 border-[#408eab] text-[#408eab] text-center p-1 rounded-lg">
                                     QR Tag
@@ -122,6 +127,8 @@
                 Are you sure to confirm write off this asset?
             </ng-container>
         </nz-modal>
+
+        <app-repair-record-create [(repairRecordDialog)]="repairRecordDialog" [handleId]="handleId" />
 
         <app-qrcode [(isOpen)]="qrCodeDialog" [qrCodeString]="qrCodeString" [randomHtml]="qrCodeRandomHtml" [widthInBox]="'300px'"/>
     </div>

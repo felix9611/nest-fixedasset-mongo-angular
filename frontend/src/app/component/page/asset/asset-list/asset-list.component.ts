@@ -13,6 +13,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { QRcodeComponent } from '../../../components/qr-code/qr-code.component'
+import { RepairRecordCreateComponent } from '../repair-record-create/repair-record-create.component'
 
 @Component({
     // selector: 'app-footer',
@@ -27,7 +28,8 @@ import { QRcodeComponent } from '../../../components/qr-code/qr-code.component'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        QRcodeComponent
+        QRcodeComponent,
+        RepairRecordCreateComponent
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
@@ -136,4 +138,11 @@ export class AssetListComponent {
         this.qrCodeDialog = false
     }
 
+    repairRecordDialog: boolean = false
+    handleData: any = {}
+
+    openRepairRecordDialog(data: any) {
+        this.repairRecordDialog = true
+        this.handleId = data._id
+    }
 }

@@ -52,17 +52,27 @@ export class RepairRecordService {
                 status: 1
             }
 
-            await this.actionRecordService.saveRecord({
-                actionName: 'Create Repair Record',
-                actionMethod: 'POST',
-                actionFrom: 'Repair Record',
-                actionData: finalData,
-                actionSuccess: 'Success',
-                createdAt: new Date()
-            })
+            
 
             const create = new this.repairRecordModel(finalData)
-            return await create.save()
+            const res = await create.save()
+            if (res._id) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Create Repair Record',
+                    actionMethod: 'POST',
+                    actionFrom: 'Repair Record',
+                    actionData: finalData,
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
+                return {
+                    finish: true,
+                    msg: 'Save Success!'
+                }
+            } else {
+                msg: 'Ooops! Something went wrong! Please try again!'
+            }
         }
     }
 
