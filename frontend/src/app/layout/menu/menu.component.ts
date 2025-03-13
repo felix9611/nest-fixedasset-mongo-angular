@@ -169,7 +169,8 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Repair Record',
-                    icon: ''
+                    icon: '',
+                    path: 'repair-records'
                 },
                 {
                     label: 'Write Off Record',

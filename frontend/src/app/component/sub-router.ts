@@ -17,6 +17,7 @@ import { WriteOffFormComponent } from './page/asset/write-off-form/write-off-for
 import { WriteOffListComponent } from './page/asset/write-off-list/write-off-list.component'
 import { InventoryRecordListComponent } from './page/asset/inventory-record/inventory-record.component'
 import { AssetListAllComponent } from './page/asset/asset-list-all/asset-list-all.component'
+import { RepairRecordListComponent } from './page/asset/repair-record-list/repair-record-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -89,6 +90,11 @@ export const pagesRoutes: Routes = [
         component: TaxInformationComponent,
         canActivate: [AuthGuard]
     },
+    {
+        path: 'repair-records',
+        component: RepairRecordListComponent,
+        canActivate: [AuthGuard]
+    }, 
     {
         path: 'role',
         component: RoleComponent,
