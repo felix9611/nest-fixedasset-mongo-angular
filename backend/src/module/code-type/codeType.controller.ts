@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { CreateCodeTypeBody, UpdateCodeTypeBody, ListCodeTypeRequestDto, UpdateCodeTypeDto, CodeTypeBody } from './codeType.dto'
+import { CreateCodeTypeBody, UpdateCodeTypeBody, ListCodeTypeRequestDto, UpdateCodeTypeDto, CodeTypeBody, ListCodeTypeQuery, ListCodeTypeQueryRes } from './codeType.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { CodeTypeService } from './codeType.service'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
@@ -46,6 +46,7 @@ export class CodeTypeController {
         return await this.codeTypeService.update(updateDto)
     }
 
+    @ApiOperation({ summary: 'Get one data by id'})
     @ApiResponse({
         description: 'If save successful',
         status: 201,
@@ -86,6 +87,15 @@ export class CodeTypeController {
         return this.codeTypeService.findAll()
     }
     
+    @ApiOperation({ summary: 'Page and list'})
+    @ApiBody({
+        type: ListCodeTypeQuery
+    })
+    @ApiResponse({
+        description: 'If successful',
+        status: 201,
+        type: ListCodeTypeQueryRes
+    })
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListCodeTypeRequestDto) {

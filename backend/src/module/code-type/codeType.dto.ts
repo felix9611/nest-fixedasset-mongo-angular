@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
 
 export interface CreateCodeTypeDto {
     valueCode: string
@@ -44,4 +45,14 @@ export class CodeTypeBody extends UpdateCodeTypeBody {
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
     status: number
+}
+
+export class ListCodeTypeQuery extends CommonPageAndList {
+    @ApiProperty({ description: 'For search data keywords' })  
+    name: string
+}
+
+export class ListCodeTypeQueryRes extends CommonPageAndListResponse {
+    @ApiProperty({ type: [CodeTypeBody], description: 'Data List' })
+    lists: CodeTypeBody[]
 }
