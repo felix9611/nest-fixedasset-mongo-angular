@@ -10,18 +10,8 @@
                     [(ngModel)]="searchForm.dateRange"
                 ></nz-range-picker>
             </div>
-            <div class="w-[200px] h-full">
-                <nz-select
-                    class="w-full"
-                    nzSize="large"
-                    name="placeId" 
-                    [(ngModel)]="searchForm.placeIds"  
-                    nzMode="multiple" nzAllowClear 
-                     nzPlaceHolder="Please select Location">
-                    @for (option of placeLists; track option) {
-                      <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
-                    }
-                </nz-select>
+            <div class="w-[150px]">
+                <input class="h-full" nz-input type="text" name="assetCode" placeholder="Input Asset Code" [(ngModel)]="searchForm.assetCode" />
             </div>
 
             <div (click)="loadRepairRecordLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">

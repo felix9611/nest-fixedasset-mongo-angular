@@ -5,6 +5,7 @@ import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { CreateRepairRecordDto, ListRepairRecordDto, UpdateRepairRecordDto } from './repair-record.dto'
 import { AssetListService } from '../asset-list/asset-list.service'
+import { create } from 'domain'
 
 @Injectable()
 export class RepairRecordService {
@@ -173,17 +174,29 @@ export class RepairRecordService {
 
         const skip = (page - 1) * limit
 
+        const finalFilter = {
+            status: 1,
+            ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1]} } : {}
+        }
+
         const lists = await this.repairRecordModel.aggregate([
+            {
+                $match: finalFilter
+            },
             {
                 $lookup: {
                     from: 'assetlists',
                     let: { assetIdStr: { $toObjectId: '$assetId' } }, // assetId as assetIdStr
                     pipeline: [
-                        { $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } }},
-                        ...(assetCode ? [{ $match: { assetCode: assetCode } }] : []),
-                        ...(deptIds && deptIds.length > 0 ? [{ $match: { deptId: { $in: deptIds }} }] : []),
-                        ...(typeIds && typeIds.length > 0 ? [{ $match: { typeId: { $in: typeIds }} }] : []),
-                        ...(placeIds && placeIds.length > 0 ? [{ $match: { placeId: { $in: placeIds }} }] : []),
+                        { 
+                            $match: { 
+                                $expr: { $eq: ['$_id', '$$assetIdStr'] }, 
+                                ...assetCode ? { assetCode} : {},
+                                ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds }} : {},
+                                ...deptIds && deptIds.length > 0 ? { deptId: { $in: typeIds }} : {},
+                                ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds }} : {}
+                            }
+                        },
                         {
                             $lookup: {
                               from: 'locations', // Ensure correct collection name
@@ -220,16 +233,22 @@ export class RepairRecordService {
 
         const total = await this.repairRecordModel.aggregate([
             {
+                $match: finalFilter
+            },
+            {
                 $lookup: {
                     from: 'assetlists',
                     let: { assetIdStr: { $toObjectId: '$assetId' } }, // assetId as assetIdStr
                     pipeline: [
-                        { $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } }},
-                        ...(assetCode ? [{ $match: { assetCode: assetCode } }] : []),
-                        ...(deptIds && deptIds.length > 0 ? [{ $match: { deptId: { $in: deptIds }} }] : []),
-                        ...(typeIds && typeIds.length > 0 ? [{ $match: { typeId: { $in: typeIds }} }] : []),
-                        ...(placeIds && placeIds.length > 0 ? [{ $match: { placeId: { $in: placeIds }} }] : []),
-
+                        { 
+                            $match: { 
+                                $expr: { $eq: ['$_id', '$$assetIdStr'] }, 
+                                ...assetCode ? { assetCode} : {},
+                                ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds }} : {},
+                                ...deptIds && deptIds.length > 0 ? { deptId: { $in: typeIds }} : {},
+                                ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds }} : {}
+                            }
+                        }
                     ],
                   as: 'assetlist'
                 }
