@@ -10,19 +10,9 @@ export class DepartmentController {
     constructor(private deptService: DepartmentService){}
 
     @ApiOperation({ summary: 'Create Department' })
-    @ApiBody({
-        type: CreateDeptBody
-    })
-    @ApiResponse({
-        description: 'If save successful',
-        status: 201,
-        type: DepartmentBody
-    })
-    @ApiResponse({
-        description: 'If not save successful',
-        status: 200,
-        type: ReturnMsg
-    })
+    @ApiBody({ type: CreateDeptBody })
+    @ApiResponse({ description: 'If save successful', status: 201, type: DepartmentBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
     async create(@Body() createData: UpdateDeptDto) {
@@ -30,14 +20,8 @@ export class DepartmentController {
     }
 
     @ApiOperation({ summary: 'Update Department' })
-    @ApiBody({
-        type: UpdateDeptBody
-    })
-    @ApiResponse({
-        description: 'If not save successful',
-        status: 200,
-        type: ReturnMsg
-    })
+    @ApiBody({ type: UpdateDeptBody })
+    @ApiResponse({ description: 'If not save successful',status: 200,type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() updateDto: UpdateDeptDto) {
@@ -45,10 +29,7 @@ export class DepartmentController {
     }
 
     @ApiOperation({ summary: 'Get One by Id' })
-    @ApiResponse({
-        status: 201,
-        type: DepartmentBody
-    })
+    @ApiResponse({ status: 201, type: DepartmentBody })
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
@@ -56,11 +37,7 @@ export class DepartmentController {
     }
 
     @ApiOperation({ summary: 'Void One by Id' })
-    @ApiResponse({
-            description: 'Return message only',
-            status: 200,
-            type: ReturnMsg
-    })
+    @ApiResponse({  description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
@@ -68,10 +45,7 @@ export class DepartmentController {
     }
 
     @ApiOperation({ summary: 'Get all data' })
-    @ApiResponse({
-        status: 201,
-        type: [DepartmentBody]
-    })
+    @ApiResponse({ status: 201, type: [DepartmentBody] })
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll() {
@@ -79,13 +53,8 @@ export class DepartmentController {
     }
     
     @ApiOperation({ summary: 'Lsit and page' })
-    @ApiBody({
-        type: ListDepartmentQuery
-    })
-    @ApiResponse({
-        status: 200,
-        type: ListDepartmentQueryRes
-})
+    @ApiBody({ type: ListDepartmentQuery })
+    @ApiResponse({ status: 200,  type: ListDepartmentQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListDeptRequestDto) {

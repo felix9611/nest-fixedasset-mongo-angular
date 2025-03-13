@@ -11,20 +11,9 @@ export class CodeTypeController {
     constructor(private codeTypeService: CodeTypeService){}
 
     @ApiOperation({ summary: 'Create Code Type' })
-    @ApiBody({
-        description: 'Create Code Type',
-        type: CreateCodeTypeBody
-    })
-    @ApiResponse({
-        description: 'If save successful',
-        status: 201,
-        type: CodeTypeBody
-    })
-    @ApiResponse({
-        description: 'If not save successful',
-        status: 200,
-        type: ReturnMsg
-    })
+    @ApiBody({ description: 'Create Code Type', type: CreateCodeTypeBody })
+    @ApiResponse({ description: 'If save successful', status: 201, type: CodeTypeBody  })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
     async create(@Body() createData: UpdateCodeTypeDto) {
@@ -32,14 +21,8 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Update Code Type' })
-    @ApiBody({
-        type: UpdateCodeTypeBody
-    })
-    @ApiResponse({
-        description: 'If not save successful',
-        status: 200,
-        type: ReturnMsg
-    })
+    @ApiBody({ type: UpdateCodeTypeBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() updateDto: UpdateCodeTypeDto) {
@@ -47,16 +30,8 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Get one data by id'})
-    @ApiResponse({
-        description: 'If save successful',
-        status: 201,
-        type: CodeTypeBody
-    })
-    @ApiResponse({
-        description: 'If not save successful',
-        status: 200,
-        type: ReturnMsg
-    })
+    @ApiResponse({ description: 'If save successful', status: 201, type: CodeTypeBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
@@ -64,11 +39,7 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Void data by Id'})
-    @ApiResponse({
-        description: 'Return message only',
-        status: 200,
-        type: ReturnMsg
-    })
+    @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
     async removeById(@Param('id') id: string) {
@@ -76,11 +47,7 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Get all data'})
-    @ApiResponse({
-        description: 'If save successful',
-        status: 201,
-        type: [CodeTypeBody]
-    })
+    @ApiResponse({ description: 'If save successful', status: 201, type: [CodeTypeBody] })
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll() {
@@ -88,14 +55,8 @@ export class CodeTypeController {
     }
     
     @ApiOperation({ summary: 'Page and list'})
-    @ApiBody({
-        type: ListCodeTypeQuery
-    })
-    @ApiResponse({
-        description: 'If successful',
-        status: 201,
-        type: ListCodeTypeQueryRes
-    })
+    @ApiBody({ type: ListCodeTypeQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListCodeTypeQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListCodeTypeRequestDto) {
@@ -103,11 +64,7 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Get data by type'})
-    @ApiResponse({
-        description: 'If save successful',
-        status: 201,
-        type: [CodeTypeBody]
-    })
+    @ApiResponse({ description: 'If save successful', status: 201, type: [CodeTypeBody] })
     @Get('get-type/:type')
     @UseGuards(AuthGuard)
     async getByType(@Param('type') type: string) {
