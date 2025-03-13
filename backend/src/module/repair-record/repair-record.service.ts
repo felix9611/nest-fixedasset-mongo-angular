@@ -246,11 +246,13 @@ export class RepairRecordService {
             }
         ]).exec()
 
+        const counts = total[0].counts
+
         return {
-            total: total[0].counts,
+            total: counts[0].total,
             page,
             limit,
-            totalPages: Math.ceil(total[0].counts / limit),
+            totalPages: Math.ceil(counts[0].total / limit),
             lists,
         }
     }
