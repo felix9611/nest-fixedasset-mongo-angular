@@ -1,0 +1,17 @@
+<div>
+    <nz-modal 
+        [nzWidth]="widthInBox"
+        [(nzVisible)]="isOpen" 
+        (nzOnCancel)="closeDialog()"
+        nzTitle="QR Tag"
+    >
+        <ng-container *nzModalContent>
+            <div>
+                <qrcode [qrdata]="qrCodeString" [width]="256" [errorCorrectionLevel]="'M'" />
+                <div [innerHTML]="randomHtml"></div>
+                
+            </div>
+        </ng-container>
+    </nz-modal>
+    
+</div>

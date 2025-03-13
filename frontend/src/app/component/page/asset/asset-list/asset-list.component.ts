@@ -12,6 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { QRcodeComponent } from '../../../components/qr-code/qr-code.component'
 
 @Component({
     // selector: 'app-footer',
@@ -25,7 +26,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
         NzModalModule, 
         NzTableModule, 
         NzInputModule, 
-        NzPaginationModule
+        NzPaginationModule,
+        QRcodeComponent
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
@@ -103,6 +105,35 @@ export class AssetListComponent {
 
     goToWriteOff() {
         this.routeTo.navigate([`write-off/${this.handleId}`])
+    }
+
+    qrCodeDialog: boolean = false
+    qrCodeString: string = ''
+    qrCodeRandomHtml: string = ''
+
+    openQrCodeDialog(data: any) {
+        this.qrCodeDialog = true
+
+        const qrCodeString = `${data.assetCode}|${data.assetName}|${this.dateFormat(data.purchaseDate)}|${data.assettype.typeCode}|${data.assettype.typeName}|${data.location.placeCode}|${data.location.placeName}|${data.department.deptCode}|${data.department.deptName}`
+        this.qrCodeString = qrCodeString
+
+        this.qrCodeRandomHtml = `
+            <div class="px-3 text-left grid grid-cols-1">
+                <div><span class="font-bold">Asset Code:</span>${data.assetCode}</div>
+                <div><span class="font-bold">Asset Name:</span> ${data.assetName}</div>
+                <div><span class="font-bold">Purchase Date:</span> ${this.dateFormat(data.purchaseDate)}</div>
+                <div><span class="font-bold">Type Code:</span> ${data.assettype.typeCode}</div>
+                <div><span class="font-bold">Type Name:</span> ${data.assettype.typeName}</div>
+                <div><span class="font-bold">Location Code:</span> ${data.location.placeCode}</div>
+                <div><span class="font-bold">Location Name:</span> ${data.location.placeName}</div>
+                <div><span class="font-bold">Department Code:</span> ${data.department.deptCode}</div>
+                <div><span class="font-bold">Department Code:</span> ${data.department.deptName}</div>
+            </div>
+        `
+    }
+
+    openQrCodeDialogClose(event: any) {
+        this.qrCodeDialog = false
     }
 
 }
