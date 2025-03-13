@@ -47,7 +47,7 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Get all data'})
-    @ApiResponse({ description: 'If save successful', status: 201, type: [CodeTypeBody] })
+    @ApiResponse({ description: 'If successful', status: 201, type: [CodeTypeBody] })
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll() {
