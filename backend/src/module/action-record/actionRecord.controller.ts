@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common'
 import { ActionRecordService } from './actionRecord.service'
-import { ActionRecordListDto, ListCodeTypeQueryRes } from './actionRecord.dto'
+import { ActionRecordListDto, ListActionRecordRes  } from './actionRecord.dto'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { CommonPageAndList } from 'src/tool/open-api-body'
 
@@ -10,7 +10,7 @@ export class ActionRecordController {
 
     @ApiOperation({ summary: 'Page and list'})
     @ApiBody({ type: CommonPageAndList })
-    @ApiResponse({ status: 201, type: ListCodeTypeQueryRes})
+    @ApiResponse({ status: 201, type: ListActionRecordRes })
     @Post('list')
     async list(@Body() query: ActionRecordListDto) {
         return await this.actionRecordService.listAndPage(query)

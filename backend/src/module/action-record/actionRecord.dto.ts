@@ -25,8 +25,8 @@ export class ActionRecordBody {
     @ApiProperty({ description: 'Action From' })
     actionFrom: string
 
-    @ApiProperty({ description: 'Data in action' })
-    actionData: any
+    @ApiProperty({ description: 'Data in action', example: {} })
+    actionData: object
 
     @ApiProperty({ description: 'Success or not' })
     actionSuccess: string
@@ -35,7 +35,7 @@ export class ActionRecordBody {
     createdAt: Date
 }
 
-export class ListCodeTypeQueryRes extends CommonPageAndListResponse {
+export class ListActionRecordRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [ActionRecordBody], description: 'Data List' })
     lists: ActionRecordBody[]
 }
