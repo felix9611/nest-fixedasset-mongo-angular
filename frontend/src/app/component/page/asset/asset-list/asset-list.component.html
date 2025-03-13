@@ -119,12 +119,12 @@
 
         <nz-modal
             [(nzVisible)]="removeDialog" 
-            nzTitle="Confirm Write Off"
+            nzTitle="Confirm"
             (nzOnCancel)="closeRemoveDialog()"
             (nzOnOk)="goToWriteOff()"
         >
             <ng-container *nzModalContent>
-                Are you sure to confirm write off this asset?
+                Are you sure to confirm void this record?
             </ng-container>
         </nz-modal>
 

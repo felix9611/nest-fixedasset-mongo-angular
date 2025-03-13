@@ -97,8 +97,15 @@ export class RepairRecordListComponent {
         this.routeTo.navigate(['/asset-create'])
     }
 
-    goToWriteOff() {
-        this.routeTo.navigate([`write-off/${this.handleId}`])
+    async goToWriteOff() {
+        
+
+        const res = await getApiWithAuth(`/aaset/repair-record/void/${this.handleId}`)
+
+        this.message.info(res.msg)
+
+        this.closeRemoveDialog()
+        this.loadRepairRecordLists()
     }
 
 }
