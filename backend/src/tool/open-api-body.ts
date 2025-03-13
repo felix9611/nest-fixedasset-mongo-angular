@@ -26,3 +26,23 @@ export class CommonPageAndListResponse {
     @ApiProperty({ description: 'Total pages number' })
     totalPages: number
 }
+
+export class CommonId {
+    @ApiProperty({ description: 'Data Id' })
+    _id: string
+    
+}
+
+export class CommonBody {
+    @ApiProperty({ description: 'Data Id' })
+    _id: string
+
+    @ApiProperty({ description: 'Created At' })
+    createdAt: string
+
+    @ApiProperty({ description: 'Updated At' })
+    updatedAt: string
+
+    @ApiProperty({ description: '1 = Active, 0 = inactive' })  
+    status: number
+}

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { CreateCodeTypeBody, UpdateCodeTypeBody, ListCodeTypeRequestDto, UpdateCodeTypeDto, CodeTypeBody, ListCodeTypeQuery, ListCodeTypeQueryRes } from './codeType.dto'
+import { CreateCodeTypeBody, ListCodeTypeRequestDto, UpdateCodeTypeDto, CodeTypeBody, ListCodeTypeQuery, ListCodeTypeQueryRes, UpdateCodeTypeBody } from './codeType.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { CodeTypeService } from './codeType.service'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
