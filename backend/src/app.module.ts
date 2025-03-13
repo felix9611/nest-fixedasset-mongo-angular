@@ -22,6 +22,7 @@ import { LoggerMiddleware } from './tool/request-logger.middleware'
 import { InvRecordModule } from './module/InvRecord/InvRecord.module'
 import { WriteOffModule } from './module/write-off/write-off.module'
 import { SysMenuMoudule } from './module/sys-menu/sys-menu.module'
+import { RepairRecordMoudule } from './module/repair-record/repair-record.module'
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SysMenuMoudule } from './module/sys-menu/sys-menu.module'
     DepartmentMoudule,
     InvRecordModule,
     LocationMoudule,
+    RepairRecordMoudule,
     VendorMoudule,
     TaxInformationMoudule,
     SysRoleMoudule,

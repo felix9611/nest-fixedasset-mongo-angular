@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { CreateWriteOffRecrod, ListWriteOffReqDto } from './write-off.dto'
 import { AssetListService } from '../asset-list/asset-list.service'
-import { WriteOffModule } from './write-off.module'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
 
 @Injectable()
