@@ -3,7 +3,10 @@
         [nzWidth]="widthInBox"
         [(nzVisible)]="isOpen" 
         (nzOnCancel)="closeDialog()"
+        (nzOnOk)="closeDialog()"
+        [nzCancelDisabled]="true"
         nzTitle="QR Tag"
+        [nzOkLoading]="false"
     >
         <ng-container *nzModalContent>
             <div>
