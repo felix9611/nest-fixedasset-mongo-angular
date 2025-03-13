@@ -10,6 +10,8 @@ export interface CreateWriteOffRecrod {
 export interface ListWriteOffReqDto {
     page: number
     limit: number
-    placeId?: string
+    placeIds?: string
+    deptIds?: string[]
+    typeIds?: string[]
     dateRange?: string[]
 }

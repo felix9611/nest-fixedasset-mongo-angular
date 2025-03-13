@@ -90,14 +90,14 @@ export class WriteOffService {
     }
 
     async listAndPage(query: ListWriteOffReqDto) {
-        const { page, limit, placeId, dateRange } = query
+        const { page, limit, placeIds, deptIds, typeIds, dateRange } = query
 
         const skip = (page - 1) * limit
 
         const finalFilter = {
             status: 1,
             ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {},
-            ... placeId ? { lastPlaceId: placeId } : {}
+            ... placeIds && placeIds.length > 0 ? { lastPlaceId: { $in: placeIds } } : {}
         }
 
         const lists = await this.writeOffModel.aggregate([
@@ -108,7 +108,29 @@ export class WriteOffService {
                 $lookup: {
                   from: 'assetlists',
                   let: { assetIdStr: { $toObjectId: '$assetId' } }, // assetId as assetIdStr
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } } }],
+                  pipeline: [
+                    { $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } } },
+                    ...(deptIds && deptIds.length > 0 ? [{ $match: { deptId: { $in: deptIds }} }] : []),
+                    ...(typeIds && typeIds.length > 0 ? [{ $match: { typeId: { $in: typeIds }} }] : []),
+                    {
+                        $lookup: {
+                            from: 'departments', // Ensure correct collection name
+                            let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                            as: 'department'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'assettypes', // Ensure correct collection name
+                            let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                            as: 'assettype'
+                        }
+                    },
+                    { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+                    { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } }
+                ],
                   as: 'assetlist'
                 }
             },
