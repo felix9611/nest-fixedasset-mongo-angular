@@ -30,6 +30,7 @@ export class DepartmentController {
 
     @ApiOperation({ summary: 'Get One by Id' })
     @ApiResponse({ status: 201, type: DepartmentBody })
+    @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {

@@ -30,8 +30,8 @@ export class CodeTypeController {
     }
 
     @ApiOperation({ summary: 'Get one data by id'})
-    @ApiResponse({ description: 'If save successful', status: 201, type: CodeTypeBody })
-    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @ApiResponse({ description: 'If successful', status: 201, type: CodeTypeBody })
+    @ApiResponse({ description: 'If not successful', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {
