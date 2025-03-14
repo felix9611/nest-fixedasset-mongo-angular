@@ -13,7 +13,11 @@ export interface StockTakeForm {
     actionName: string
     actionPlaceId: string
     remark?: string
+}
+
+export interface UpdateStockTakeForm extends StockTakeForm {
+    stockTakeItems?: StockTakeItem[]
     createdTime: string
     finishTime?: string
-    stockTakeItems?: StockTakeItem[]
+    _id: string
 }

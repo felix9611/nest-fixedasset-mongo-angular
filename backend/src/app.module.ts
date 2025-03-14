@@ -23,6 +23,7 @@ import { InvRecordModule } from './module/InvRecord/InvRecord.module'
 import { WriteOffModule } from './module/write-off/write-off.module'
 import { SysMenuMoudule } from './module/sys-menu/sys-menu.module'
 import { RepairRecordMoudule } from './module/repair-record/repair-record.module'
+import { StockTakeMoudule } from './module/stock-take/stcok-take.module'
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { RepairRecordMoudule } from './module/repair-record/repair-record.module
     RepairRecordMoudule,
     VendorMoudule,
     TaxInformationMoudule,
+    StockTakeMoudule,
     SysRoleMoudule,
     SysUserMoudule,
     SysMenuMoudule,
