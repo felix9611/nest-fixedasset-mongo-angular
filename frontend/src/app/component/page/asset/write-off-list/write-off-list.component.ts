@@ -90,7 +90,7 @@ export class WriteOffListComponent {
     }
 
     openEdit(id: string) {
-        this.routeTo.navigate([`/asset-update/${id}`])
+        this.routeTo.navigate([`/asset-update/`])
     }
 
     goToCreate() {
@@ -98,7 +98,7 @@ export class WriteOffListComponent {
     }
 
     goToWriteOff() {
-        this.routeTo.navigate([`write-off/${this.handleId}`])
+        this.routeTo.navigate([`write-off`])
     }
 
 }
