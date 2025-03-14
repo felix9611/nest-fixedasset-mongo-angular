@@ -90,11 +90,11 @@ export class RepairRecordListComponent {
     }
 
     openEdit(id: string) {
-        this.routeTo.navigate([`/asset-update/${id}`])
+        this.editFormDialog = true
     }
 
-    goToCreate() {
-        this.routeTo.navigate(['/asset-create'])
+    closeEditDialog() {
+        this.editFormDialog = false
     }
 
     async goToWriteOff() {

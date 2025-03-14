@@ -17,9 +17,6 @@
             <div (click)="loadRepairRecordLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
-            <div (click)="goToCreate()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
-                Create
-            </div>
         </div>
         <nz-table
                 [nzData]="dataLists"
@@ -85,5 +82,10 @@
                 Are you sure to confirm write off this asset?
             </ng-container>
         </nz-modal>
+
+        <nz-modal
+            [(nzVisible)]="editFormDialog" 
+            (nzOnCancel)="closeEditDialog()"
+        ></nz-modal>
     </div>
 </div>
