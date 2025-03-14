@@ -1,4 +1,4 @@
-export interface StockTakeItem {
+export interface StockTakeItemDto {
     _id?: string
     stockTakeId: string
     assetId: string
@@ -16,8 +16,15 @@ export interface StockTakeForm {
 }
 
 export interface UpdateStockTakeForm extends StockTakeForm {
-    stockTakeItems?: StockTakeItem[]
+    stockTakeItems?: StockTakeItemDto[]
     createdTime: string
     finishTime?: string
     _id: string
+}
+
+export interface ListStockTakeDto {
+    page: number
+    limit: number
+    placeIds?: string[]
+    name?: string
 }
