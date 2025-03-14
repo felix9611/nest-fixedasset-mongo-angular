@@ -6,3 +6,8 @@ export interface SysMenuDto {
     sort: number
     type: number
 }
+
+
+export interface SysMenuTree extends SysMenuDto {
+    childrens: SysMenuTree[]
+}

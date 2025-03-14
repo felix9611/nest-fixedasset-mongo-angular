@@ -13,7 +13,7 @@ export class StockTake {
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
     actionPlaceId: string 
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     remark: string
 
     @Prop({ type: SchemaTypes.Date, required: true })
@@ -21,6 +21,9 @@ export class StockTake {
 
     @Prop({ type: SchemaTypes.Date, required: true })
     finishTime: string
+
+    @Prop({ type: SchemaTypes.Number, required: true})
+    status: number
 }
 
 export const StockTakeSchema = SchemaFactory.createForClass(StockTake)
