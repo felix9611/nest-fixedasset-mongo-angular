@@ -13,6 +13,10 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { UpdateRepairRecordDto } from './interface'
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
+import { timer } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -28,6 +32,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
         NzInputModule, 
         NzPaginationModule,
         NzDatePickerModule,
+        NzCheckboxModule,
+        NzInputNumberModule
     ],
     templateUrl: './repair-record-list.component.html',
     styleUrl: './repair-record-list.component.css',
@@ -42,6 +48,20 @@ export class RepairRecordListComponent {
     searchForm: any = {
         page: 1,
         limit: 10
+    }
+
+    editForm: UpdateRepairRecordDto = {
+        _id: '',
+        assetId: '',
+        repairReason: '',
+        maintenanceReriod: false,
+        maintenanceName: '',
+        maintenanceDate: '',
+        maintenanceFinishDate: '',
+        repairInvoiceDate: '',
+        repairInvoiceNo: '',
+        repairAmount: 0,
+        remark: ''
     }
 
     okText: string = 'Create'
@@ -89,8 +109,26 @@ export class RepairRecordListComponent {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
 
-    openEdit(id: string) {
+    editTitle: string = ''
+    async openEdit(data: any) {
         this.editFormDialog = true
+        this.editTitle = `Edit Repair Record (Code: ${data.assetlist.assetCode})`
+        const id = data._id
+        const getUrl = `/aaset/repair-record/one/${id}`
+        this.editForm = await getApiWithAuth(getUrl)
+    }
+
+    async goToSave() {
+            
+        const res = await postApiWithAuth('/aaset/repair-record/update', this.editForm)
+            
+        if (res.acknowledged === true) {
+            this.message.info('Update successfully!')
+            this.loadRepairRecordLists()
+            this.closeEditDialog()
+        } else {
+            this.message.error(res.msg)
+        }
     }
 
     closeEditDialog() {
