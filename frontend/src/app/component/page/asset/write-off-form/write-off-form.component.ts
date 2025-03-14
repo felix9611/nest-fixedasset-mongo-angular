@@ -95,15 +95,17 @@ export class WriteOffFormComponent implements OnInit {
 
 
     ngOnInit() {
-        if (this.route.snapshot.paramMap.get('id')) {
-            this.theId = this.route.snapshot.paramMap.get('id')
-            this.getOne()
-            this.loadCodeTypeList()
-            this.loadTypeList()
-            this.loadDeptList()
-            this.loadLocationList()
-            this.loadVendorList() 
-        }
+        this.route.queryParams.subscribe((x: any) => {
+            if (x.id) {
+                this.theId = x.id
+                this.getOne()
+                this.loadCodeTypeList()
+                this.loadTypeList()
+                this.loadDeptList()
+                this.loadLocationList()
+                this.loadVendorList() 
+            }
+        })
         
     }
 

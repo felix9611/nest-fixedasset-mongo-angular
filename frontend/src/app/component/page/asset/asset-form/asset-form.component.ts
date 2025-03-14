@@ -89,10 +89,18 @@ export class AssetFormComponent implements OnInit {
 
 
     ngOnInit() {
-        if (this.route.snapshot.paramMap.get('id')) {
+        this.route.queryParams.subscribe((x: any) => {
+            if (x.id) {
+                this.theId = x.id
+                this.getOne()
+            }
+        })
+
+
+      /*  if (this.route.snapshot.paramMap.get('id')) {
             this.theId = this.route.snapshot.paramMap.get('id')
             this.getOne()
-        }
+        } */
 
         this.loadTypeList()
         this.loadDeptList()

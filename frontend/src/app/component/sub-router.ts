@@ -41,12 +41,12 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'asset-update/:id',
+        path: 'asset-update',
         component: AssetFormComponent,
         canActivate: [AuthGuard]
     },
     {
-        path: 'write-off/:id',
+        path: 'write-off',
         component: WriteOffFormComponent,
         canActivate: [AuthGuard]
     },

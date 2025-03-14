@@ -98,7 +98,7 @@ export class AssetListComponent {
     }
 
     openEdit(id: string) {
-        this.routeTo.navigate([`/asset-update/${id}`])
+        this.routeTo.navigate([`/asset-update/`], { queryParams: { id } })
     }
 
     goToCreate() {
