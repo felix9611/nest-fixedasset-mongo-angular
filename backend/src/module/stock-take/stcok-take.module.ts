@@ -9,6 +9,7 @@ import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { StockTake, StockTakeSchema } from './stock-take.schema'
 import { StockTakeItem, StockTakeItemSchema } from './stock-take-item.schema'
 import { StockTakeService } from './stock-take.service'
+import { StockTakeController } from './stcok-take.controller'
 
 @Module({
     imports: [
@@ -22,6 +23,6 @@ import { StockTakeService } from './stock-take.service'
     ],
     providers: [ActionRecordService, StockTakeService, AssetListService, InvRecordService],
     exports: [],
-    controllers: []
+    controllers: [StockTakeController]
 })
 export class StockTakeMoudule {}

@@ -16,7 +16,7 @@ export class StockTakeService {
         private actionRecordService: ActionRecordService
     ) {}
 
-    async create(createData: StockTakeForm) {
+    async create(createData: StockTakeForm, username?: string) {
         const { actionName, ..._data } = createData
 
         const checkData = await this.stockTakeModel.findOne({ actionName, status: 1 })
@@ -27,7 +27,10 @@ export class StockTakeService {
                 actionName: 'Create Stock Take',
                 actionMethod: 'POST',
                 actionFrom: 'Stock Take',
-                actionData: createData,
+                actionData: {
+                    ...createData,
+                    createBy: username
+                },
                 actionSuccess: 'FAILURE',
                 createdAt: new Date()
             })
@@ -40,6 +43,7 @@ export class StockTakeService {
 
             const finalData = {
                 actionName,
+                createBy: username,
                 ..._data,
                 status: 1,
                 createdTime: new Date()
@@ -140,7 +144,7 @@ export class StockTakeService {
         }
     }
 
-    async finishOrVoid(_id: string, status: number) {
+    async finishOrVoid(_id: string, status: number, username?: string) {
 
         const checkForm = await this.stockTakeModel.findOne({ _id })
 
@@ -180,6 +184,7 @@ export class StockTakeService {
 
             const finalData = {
                 status,
+                finishBy: username,
                 updatedAt: new Date()
             }
 

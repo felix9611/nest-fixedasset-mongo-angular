@@ -24,6 +24,12 @@ export class StockTake {
 
     @Prop({ type: SchemaTypes.Number, required: true})
     status: number
+
+    @Prop({ type: SchemaTypes.String })
+    createBy: string
+
+    @Prop({ type: SchemaTypes.String })
+    finishBy: string
 }
 
 export const StockTakeSchema = SchemaFactory.createForClass(StockTake)
