@@ -13,20 +13,41 @@ import moment from 'moment'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
+import { NzSelectModule } from 'ng-zorro-antd/select'
+import { StockTakeForm } from './interface'
 
 @Component({
     standalone: true,
-    imports: [NzCheckboxModule, CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, FormsModule],
+    imports: [
+        NzSelectModule, 
+        NzCheckboxModule, 
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        FormsModule
+    ],
     templateUrl: './stock-take-list.component.html',
     styleUrl: './stock-take-list.component.css',
 })
 export class StockTakeListComponent implements OnInit{
     ngOnInit(): void {
-        
+        this.loadLocationList()
+        this.loadStockTakeLists()
     }
 
     dataLists: any[] = []
     totals: number = 0
+
+    editForm: StockTakeForm = {
+        actionName: '',
+        actionPlaceId: '',
+        remark: '',
+    }
 
     searchForm: any = {
         page: 1,
@@ -38,7 +59,22 @@ export class StockTakeListComponent implements OnInit{
         this.formDialog = true
     }
 
+    closeDialog() {
+        this.formDialog = false
+    }
+
     async loadStockTakeLists() {
+        const res = await postApiWithAuth('/asset/stock-take/list', this.searchForm)
+        this.dataLists = res.lists
+        this.totals = res.total
+    }
+
+    placeLists: any[] = []
+    async loadLocationList() {
+        this.placeLists = await getApiWithAuth('/base/location/getAll')
+    }
+
+    async submitForm() {
 
     }
 }

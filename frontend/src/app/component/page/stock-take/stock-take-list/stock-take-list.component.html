@@ -4,6 +4,19 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name" [(ngModel)]="searchForm.name" />
             </div>
+            <div class="w-[150px] h-full">
+                <nz-select
+                    nzSize="large"
+                    class="w-full h-full" 
+                    name="placeId" 
+                    [(ngModel)]="searchForm.placeIds"  
+                    nzMode="multiple" nzAllowClear nzShowArrow
+                     nzPlaceHolder="Location">
+                    @for (option of placeLists; track option) {
+                      <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
+                    }
+                </nz-select>
+            </div>
             <div (click)="loadStockTakeLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
@@ -38,5 +51,46 @@
             (nzPageIndexChange)="searchForm.page = $event; loadStockTakeLists()"
             (nzPageSizeChange)="searchForm.limit = $event; loadStockTakeLists()"
         ></nz-pagination>
+
+        <nz-modal 
+            nzWidth="700px"
+            [(nzVisible)]="formDialog" 
+            (nzOnCancel)="closeDialog()"
+            (nzOnOk)="submitForm()"
+            nzTitle="Stock Take Form"
+            nzOkText="Submit"
+        >
+            <ng-container *nzModalContent>
+                <form nz-form>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Action Name</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <input nz-input type="text" id="actionName" name="actionName" [(ngModel)]="editForm.actionName" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Location Code</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <nz-select
+                                class="w-full h-full" 
+                                name="actionPlaceId" 
+                                [(ngModel)]="editForm.actionPlaceId"  
+                                nzMode="multiple" nzAllowClear nzShowArrow
+                                nzPlaceHolder="Please Select">
+                                @for (option of placeLists; track option) {
+                                <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
+                                }
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Remark</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                          <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+            </ng-container>
+        </nz-modal>
     </div>
 </div>

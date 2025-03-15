@@ -4,7 +4,7 @@ import { AuthGuard } from '../auth/AuthGuard'
 import { ListStockTakeDto, StockTakeForm, StockTakeItemDto, UpdateStockTakeForm } from './stock-take.dto'
 
 
-@Controller('aaset/stock-take')
+@Controller('asset/stock-take')
 export class StockTakeController {
     constructor(
         private stockTakeService: StockTakeService

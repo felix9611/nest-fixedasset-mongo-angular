@@ -16,7 +16,7 @@
                     nzSize="large"
                     name="placeId" 
                     [(ngModel)]="searchForm.placeIds"  
-                    nzMode="multiple" nzAllowClear 
+                    nzMode="multiple" nzAllowClear  nzShowArrow
                      nzPlaceHolder="Please select Location">
                     @for (option of placeLists; track option) {
                       <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>
