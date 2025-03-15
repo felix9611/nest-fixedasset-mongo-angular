@@ -18,6 +18,7 @@ import { WriteOffListComponent } from './page/asset/write-off-list/write-off-lis
 import { InventoryRecordListComponent } from './page/asset/inventory-record/inventory-record.component'
 import { AssetListAllComponent } from './page/asset/asset-list-all/asset-list-all.component'
 import { RepairRecordListComponent } from './page/asset/repair-record-list/repair-record-list.component'
+import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -98,6 +99,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'role',
         component: RoleComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stock-takes',
+        component: StockTakeListComponent,
         canActivate: [AuthGuard]
     },
     {
