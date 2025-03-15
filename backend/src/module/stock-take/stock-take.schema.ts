@@ -19,7 +19,7 @@ export class StockTake {
     @Prop({ type: SchemaTypes.Date, required: true })
     createdTime: string
 
-    @Prop({ type: SchemaTypes.Date, required: true })
+    @Prop({ type: SchemaTypes.Date })
     finishTime: string
 
     @Prop({ type: SchemaTypes.Number, required: true})

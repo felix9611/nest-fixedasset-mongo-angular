@@ -40,7 +40,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let data of dataTable.data"></tr>
+                <tr *ngFor="let data of dataTable.data">
+                    <td>{{data.actionName}}</td>
+                    <td>{{data.location.placeCode}}</td>
+                    <td>{{data.location.placeName}}</td>
+                    <td>{{ dateFormat(data.createdTime)}}</td>
+                    <td>{{data.createBy}}</td>
+                    <td>
+                        <div class="flex gap-3">
+                            <div 
+                                class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                Detail
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </nz-table>
         <nz-pagination 
@@ -75,7 +89,7 @@
                                 class="w-full h-full" 
                                 name="actionPlaceId" 
                                 [(ngModel)]="editForm.actionPlaceId"  
-                                nzMode="multiple" nzAllowClear nzShowArrow
+                                nzAllowClear nzShowArrow
                                 nzPlaceHolder="Please Select">
                                 @for (option of placeLists; track option) {
                                 <nz-option [nzLabel]="option.placeName" [nzValue]="option._id"></nz-option>

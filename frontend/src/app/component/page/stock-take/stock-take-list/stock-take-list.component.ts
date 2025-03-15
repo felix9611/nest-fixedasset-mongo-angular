@@ -35,6 +35,10 @@ import { StockTakeForm } from './interface'
     styleUrl: './stock-take-list.component.css',
 })
 export class StockTakeListComponent implements OnInit{
+    constructor(
+        private message: NzMessageService
+    ) {}
+
     ngOnInit(): void {
         this.loadLocationList()
         this.loadStockTakeLists()
@@ -75,6 +79,23 @@ export class StockTakeListComponent implements OnInit{
     }
 
     async submitForm() {
+        const res = await postApiWithAuth('/asset/stock-take/create-form', this.editForm)
+        if (res.msg) {
+            this.message.error(res.msg)
+        } else {
+            this.message.success('Save successful!')
+            this.closeDialog()
+            this.loadStockTakeLists()
 
+            this.editForm = {
+                actionName: '',
+                actionPlaceId: '',
+                remark: ''
+            }
+        }
+    }
+
+    dateFormat(data: string) {
+        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
 }
