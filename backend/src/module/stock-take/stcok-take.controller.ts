@@ -25,7 +25,7 @@ export class StockTakeController {
     @Post('update-form')
     @UseGuards(AuthGuard)
     async update(@Body() createBody: UpdateStockTakeForm) {
-        return await this.stockTakeService.create(createBody)
+        return await this.stockTakeService.update(createBody)
     }
 
     @Get('void/:id')

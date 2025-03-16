@@ -14,7 +14,8 @@ import { FormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
 import { StockTakeFormEdit } from './interface'
-import { getApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 
 @Component({
     standalone: true,
@@ -29,7 +30,8 @@ import { getApiWithAuth } from '../../../../../tool/httpRequest-auth'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule, 
-        FormsModule
+        FormsModule,
+        NzDatePickerModule,
     ],
     templateUrl: './stock-take-form.component.html',
     styleUrl: './stock-take-form.component.css',
@@ -55,6 +57,7 @@ export class StockTakeFormComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loadLocationList()
         this.route.queryParams.subscribe((x: any) => {
             if (x.id) {
                 this.theId = x.id
@@ -65,5 +68,19 @@ export class StockTakeFormComponent implements OnInit {
 
     async getOne() {
         this.editForm = await getApiWithAuth(`/asset/stock-take/one/${ this.theId}`)    
+    }
+
+    placeLists: any[] = []
+    async loadLocationList() {
+        this.placeLists = await getApiWithAuth('/base/location/getAll')
+    }
+
+    async updateForm() {
+        const res = await postApiWithAuth('/asset/stock-take/update-form', this.editForm)
+        if (res.finished) {
+            this.message.success(res.msg)
+        } else {
+            this.message.error(res.msg)
+        }
     }
 }

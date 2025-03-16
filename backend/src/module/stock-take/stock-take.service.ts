@@ -90,7 +90,7 @@ export class StockTakeService {
     }
 
 
-    async updated(updateData: UpdateStockTakeForm) {
+    async update(updateData: UpdateStockTakeForm) {
         const { _id, ..._data } = updateData
 
         const checkForm = await this.stockTakeModel.findOne({ _id})
