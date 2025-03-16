@@ -36,7 +36,8 @@ import { StockTakeForm } from './interface'
 })
 export class StockTakeListComponent implements OnInit{
     constructor(
-        private message: NzMessageService
+        private message: NzMessageService,
+        private routeTo: Router
     ) {}
 
     ngOnInit(): void {
@@ -97,5 +98,9 @@ export class StockTakeListComponent implements OnInit{
 
     dateFormat(data: string) {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+    }
+
+    getToDetail(id: string) {
+        this.routeTo.navigate([`/stock-take-form`], { queryParams: { id } })
     }
 }

@@ -19,6 +19,7 @@ import { InventoryRecordListComponent } from './page/asset/inventory-record/inve
 import { AssetListAllComponent } from './page/asset/asset-list-all/asset-list-all.component'
 import { RepairRecordListComponent } from './page/asset/repair-record-list/repair-record-list.component'
 import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
+import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -104,6 +105,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'stock-takes',
         component: StockTakeListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'stock-take-form',
+        component: StockTakeFormComponent,
         canActivate: [AuthGuard]
     },
     {

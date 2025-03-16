@@ -72,7 +72,13 @@ export class StockTakeService {
             let stockTakeItems: any[] = await this.getStockTakeItem(_id)
 
             return {
-                ...data[0],
+                _id: data._id,
+                actionName: data.actionName,
+                actionPlaceId: data.actionPlaceId,
+                remark: data.remark,
+                createdTime: data.createdTime,
+                finishTime: data.finishTime,
+                createBy: data.createBy,
                 stockTakeItems
             }
 
