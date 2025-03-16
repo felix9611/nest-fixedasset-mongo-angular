@@ -18,7 +18,7 @@ export class AssetListController {
     @Get('code/:code')
     @UseGuards(AuthGuard)
     async getByAssetCode(@Param('code') code: string) {
-        return await this.assetListService.getById(code)
+        return await this.assetListService.getByAssetCode(code)
     }
 
     @Post('create')

@@ -5,7 +5,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { AssetListService } from '../asset-list/asset-list.service'
 import { StockTake } from './stock-take.schema'
 import { StockTakeItem } from './stock-take-item.schema'
-import { ListStockTakeDto, StockTakeForm, StockTakeItemDto, UpdateStockTakeForm } from './stock-take.dto'
+import { ListStockTakeDto, StockTakeForm, StockTakeItemDto, StockTakeItemDtoSubmit, UpdateStockTakeForm } from './stock-take.dto'
 
 @Injectable()
 export class StockTakeService {
@@ -69,7 +69,7 @@ export class StockTakeService {
 
         if (data) {
 
-            let stockTakeItems: any[] = await this.getStockTakeItem(_id)
+            const stockTakeItems: any[] = await this.getStockTakeItem(_id)
 
             return {
                 _id: data._id,
@@ -259,19 +259,23 @@ export class StockTakeService {
     //// stcok take item //////
 
 
-    async stockTakeItemSubmit(data: StockTakeItemDto) {
-        const { _id, ..._data } = data
+    async stockTakeItemSubmit(data: StockTakeItemDtoSubmit) {
+
+        const finalData = {
+            ...data,
+            checkTime: new Date()
+        }
 
         await this.actionRecordService.saveRecord({
             actionName: 'Submit Stock Take Item',
             actionMethod: 'POST',
             actionFrom: 'Stock Take Item',
-            actionData: data,
+            actionData: finalData,
             actionSuccess: 'Success',
             createdAt: new Date()
         })
 
-        const create = new this.stockTakeItemModel(_data)
+        const create = new this.stockTakeItemModel(finalData)
         return await create.save()
     }
 
@@ -279,10 +283,7 @@ export class StockTakeService {
         return await this.stockTakeItemModel.aggregate([
             {
                 $match: {
-                    stockTakeId,
-                    $and: [
-                        { myField: { $type: "object" } }
-                    ]
+                    stockTakeId
                 }
             },
             {

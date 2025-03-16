@@ -9,6 +9,15 @@ export interface StockTakeItemDto {
     remark?: string
 }
 
+export interface StockTakeItemDtoSubmit {
+    stockTakeId: string
+    assetId: string
+    assetCode: string
+    placeId: string
+    status: string
+    remark?: string
+}
+
 export interface StockTakeForm {
     actionName: string
     actionPlaceId: string

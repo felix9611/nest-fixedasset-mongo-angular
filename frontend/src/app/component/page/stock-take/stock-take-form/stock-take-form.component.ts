@@ -13,7 +13,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { FormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
 import { ActivatedRoute, Router } from '@angular/router'
-import { StockTakeFormEdit } from './interface'
+import { StockTakeFormEdit, StockTakeItemFromDto } from './interface'
 import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 
@@ -56,6 +56,16 @@ export class StockTakeFormComponent implements OnInit {
         _id: ''
     }
 
+    itemForm: StockTakeItemFromDto = {
+        stockTakeId: '',
+        assetId: '',
+        assetCode: '',
+        assetName: '',
+        placeId: '',
+        status: '',
+        remark: ''
+    }
+
     ngOnInit() {
         this.loadLocationList()
         this.route.queryParams.subscribe((x: any) => {
@@ -82,5 +92,50 @@ export class StockTakeFormComponent implements OnInit {
         } else {
             this.message.error(res.msg)
         }
+    }
+
+    async assetCodeChanged(event: any) {
+        if (event) {
+            const data = await getApiWithAuth(`/asset/asset-list/code/${event}`)
+            this.itemForm.assetId = data._id
+            this.itemForm.assetCode = data.assetCode
+            this.itemForm.assetName = data.assetName
+            this.itemForm.placeId = data.placeId
+            this.placeCheckStatus(data.placeId)
+        }
+    }
+
+
+    placeCheckStatus(placeIdRecord: string) {
+        if (placeIdRecord === this.editForm.actionPlaceId) {
+            this.itemForm.status = 'Exist'
+        } else {
+            this.itemForm.status = 'Wrong Location'
+        }
+
+    }
+
+    async submitItem() {
+        const finalData = {
+            stockTakeId: this.editForm._id,
+            assetId: this.itemForm.assetId,
+            assetCode: this.itemForm.assetCode,
+            placeId: this.itemForm.placeId,
+            status: this.itemForm.status,
+            remark: this.itemForm.remark
+        }
+
+        const res = await postApiWithAuth('/asset/stock-take/item-submit', finalData)
+
+        if (res._id) {
+            this.message.success('Added!')
+            this.getOne()
+        } else {
+            this.message.error('Ooops! something wrong! Please try again!')
+        }
+    }
+
+    dateFormat(data: string) {
+        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
 }

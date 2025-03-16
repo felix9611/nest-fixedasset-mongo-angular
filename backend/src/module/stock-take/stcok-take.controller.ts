@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { StockTakeService } from './stock-take.service'
 import { AuthGuard } from '../auth/AuthGuard'
-import { ListStockTakeDto, StockTakeForm, StockTakeItemDto, UpdateStockTakeForm } from './stock-take.dto'
+import { ListStockTakeDto, StockTakeForm, StockTakeItemDto, StockTakeItemDtoSubmit, UpdateStockTakeForm } from './stock-take.dto'
 
 
 @Controller('asset/stock-take')
@@ -48,7 +48,7 @@ export class StockTakeController {
 
     @Post('item-submit')
     @UseGuards(AuthGuard)
-    async stockTakeItemSubmit(data: StockTakeItemDto) {
+    async stockTakeItemSubmit(@Body() data: StockTakeItemDtoSubmit) {
         return await this.stockTakeService.stockTakeItemSubmit(data)
     }
 }

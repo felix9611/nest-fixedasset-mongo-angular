@@ -9,11 +9,21 @@ export interface StockTakeItemDto {
     remark?: string
 }
 
+export interface StockTakeItemFromDto {
+    stockTakeId: string
+    assetId: string
+    assetCode: string
+    assetName: string
+    placeId: string
+    status: string
+    remark?: string
+}
+
 export interface StockTakeFormEdit {
     actionName: string
     actionPlaceId: string
     remark?: string
-    stockTakeItems?: StockTakeItemDto[]
+    stockTakeItems: any
     createdTime: string
     finishTime?: string
     _id: string
