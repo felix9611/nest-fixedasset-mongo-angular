@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Router } from '@angular/router'
 import { NglModule } from 'ng-lightning'
@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms'
 import { UserStoreService } from '../../../../state/user.service'
 import { HttpService } from '../../../../tool/HttpService'
 import { callPostApi } from '../../../../tool/call-http'
-import { postApi } from '../../../../tool/httpRequest-public'
+import { getApiFromOutside, postApi } from '../../../../tool/httpRequest-public'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
 
@@ -18,17 +18,21 @@ import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
     constructor(
         private userStoreService: UserStoreService, 
         private router: Router,
         private httpService: HttpService,
         private message: NzMessageService
     ) {}
+    ngOnInit(): void {
+        this.getIpAdress()
+    }
 
     loginForm: any = {
         username: '',
-        password: ''
+        password: '',
+        ipAddress: ''
     }
 
     standalone = {
@@ -55,7 +59,13 @@ export class LoginComponent {
     cleanForm() {
         this.loginForm = {
             username: '',
-            password: ''
+            password: '',
+            ipAddress: ''
         }
+    }
+
+    async getIpAdress() {
+        const res = await getApiFromOutside('https://geolocation-db.com/json/')
+        this.loginForm.ipAddress = res.IPv4
     }
 }

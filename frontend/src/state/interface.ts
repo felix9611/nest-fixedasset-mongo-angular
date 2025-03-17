@@ -8,4 +8,5 @@ export interface UserInfo {
     email: string
     lastLogin?: string
     roleLists?: any[]
+    loginRecords?: any[]
 }

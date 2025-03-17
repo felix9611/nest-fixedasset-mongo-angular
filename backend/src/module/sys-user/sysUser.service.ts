@@ -9,6 +9,7 @@ import { hashPassword, salt } from 'src/tool/password-tools'
 import { SysRole } from '../sys-role/role.schame'
 import { SysRoleService } from '../sys-role/role.service'
 import { Department } from '../department/department.schame'
+import { LoginRecord } from './login-reocrd.schame'
 
 export type User = any
 
@@ -16,6 +17,7 @@ export type User = any
 export class SysUserService {
   constructor(
     @InjectModel(SysUser.name) private sysUserModel: Model<SysUser>,
+    @InjectModel(LoginRecord.name) private loginRecordModel: Model<LoginRecord>,
     private sysRoleService: SysRoleService
   ) {}
 
@@ -167,9 +169,14 @@ export class SysUserService {
         }
       },
       { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
-    ]).exec();
+    ]).exec()
+
+    const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1}).limit(15).exec()
   
-    return answer[0]
+    return {
+      ...answer[0],
+      loginRecords
+    }
   }
 
   async findOneUserAllData(username: string) {
@@ -230,6 +237,18 @@ export class SysUserService {
         updateAt: new Date()
       })
     }
+  }
+
+  async saveLoginRecord(username: string, ipAddress: string, loginStatus: string) {
+    const finalData = {
+      username,
+      loginTime: new Date(),
+      ipAddress,
+      loginStatus
+    }
+
+    const create = new this.loginRecordModel(finalData)
+    return await create.save()
   }
 
 }

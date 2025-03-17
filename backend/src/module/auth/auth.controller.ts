@@ -13,7 +13,7 @@ export class AuthController {
   @Public()
   @Post('login')
   async signIn(@Body() signInDto: any) {
-    return await this.authService.signIn(signInDto.username, signInDto.password)
+    return await this.authService.signIn(signInDto.username, signInDto.password, signInDto.ipAddress)
   }
 
   @Get('verify-token')

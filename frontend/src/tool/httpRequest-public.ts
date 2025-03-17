@@ -30,6 +30,17 @@ export const getApi = async (url: string) => {
     const content: any = await rawResponse.json()
     return content
 }
+export const getApiFromOutside = async (url: string, headers?: any) => {
+    const rawResponse = await fetch(url, {
+        method: 'GET',
+    /*    headers: {
+            'Content-Type': contentType
+        } */
+    })
+    const content: any = await rawResponse.json()
+    return content
+}
+
 
 export const deleteApi = async (url: string, data: any) => {
     const finalUrl = `${environment.apiUrl}${url}`

@@ -11,9 +11,11 @@ import { NzIconModule } from 'ng-zorro-antd/icon'
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { Observable, Observer } from 'rxjs'
 import { getBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
+import { NzTableModule } from 'ng-zorro-antd/table'
+import moment from 'moment'
 @Component({
     // selector: 'app-footer',
-    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule, NzIconModule, NzUploadModule],
+    imports: [CommonModule, NzFormModule, NzInputModule, FormsModule, NzModalModule, NzIconModule, NzUploadModule, NzTableModule],
     templateUrl: './user-info.component.html',
     styleUrl: './user-info.component.css',
 })
@@ -29,6 +31,7 @@ export class UserInfoComponent implements OnInit {
         roleIds: [],
         roleLists: [],
         email: '', 
+        loginRecords: []
     }
 
     resetPwForm: any = {
@@ -114,5 +117,9 @@ export class UserInfoComponent implements OnInit {
         } else {
             this.message.error('Ooops! Try again!')
         }
+    }
+
+    dateFormat(data: string) {
+        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
 }

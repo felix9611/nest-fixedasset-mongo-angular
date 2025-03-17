@@ -27,6 +27,7 @@ export class UserStoreService {
         roleIds: [],
         roleLists: [],
         email: '', 
+        loginRecords: []
     }
     private tokenSubject = new BehaviorSubject<string>(this.accessToken)
     private userSubject = new BehaviorSubject<UserInfo>(this.initialState)
@@ -76,6 +77,7 @@ export class UserStoreService {
             roleIds: [],
             roleLists: [],
             email: '',
+            loginRecords: []
 
         })
         localStorage.clear()
