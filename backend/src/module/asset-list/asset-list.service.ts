@@ -87,7 +87,21 @@ export class AssetListService {
             })
 
             const create = new this.assetListModel(finalData)
-            return create.save()
+            const res = await create.save()
+
+            if (res) {
+
+                if (_data.uploadAssetListFiles && _data.uploadAssetListFiles.length > 0) {
+                    await this.uploadFile(_data.uploadAssetListFiles, res._id.toString())
+                }
+
+
+                return res
+            } else {
+                return {
+                    msg: 'Oooops! Something wrong, please try again!'
+                }
+            }
         }
     }
 
@@ -121,7 +135,20 @@ export class AssetListService {
                 })
             }
 
-            return await this.assetListModel.updateOne({ _id}, finalData)
+            const res = await this.assetListModel.updateOne({ _id}, finalData)
+            if (res) {
+
+                if (_data.uploadAssetListFiles && _data.uploadAssetListFiles.length > 0) {
+                    await this.uploadFile(_data.uploadAssetListFiles, _id)
+                }
+
+
+                return res
+            } else {
+                return {
+                    msg: 'Oooops! Something wrong, please try again!'
+                }
+            }
 
         } else {
             await this.actionRecordService.saveRecord({

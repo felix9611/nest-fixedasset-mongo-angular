@@ -38,7 +38,7 @@ export interface CreateAssetDto {
     maintenancePeriodEnd?: string
     voucherNo?: string
     voucherUsedDate?: string
-    assetListFiles?: AssetListFileDto[]
+    uploadAssetListFiles?: AssetListFileDto[]
 }
 
 export interface UpdateAssetDto extends CreateAssetDto {
