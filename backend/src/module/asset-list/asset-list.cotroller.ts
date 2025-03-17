@@ -44,4 +44,10 @@ export class AssetListController {
     async listAndPageGet() {
         return await this.assetListService.listAllAsset()
     }
+
+    @Get('file-remove/:id')
+    @UseGuards(AuthGuard)
+    async removeFile(@Param() id: string) {
+        return await this.assetListService.voidFileById(id)
+    }
 }

@@ -95,7 +95,6 @@ export class AssetListService {
                     await this.uploadFile(_data.uploadAssetListFiles, res._id.toString())
                 }
 
-
                 return res
             } else {
                 return {
@@ -363,6 +362,49 @@ export class AssetListService {
             return files
         } else {
             return []
+        }
+    }
+
+    async voidFileById(_id: string) {
+        const check = await this.assetListFileModel.findOne({ _id })
+
+        if (check?.status === 1 ) {
+            await this.assetListModel.updateOne({ _id}, {
+                status: 0,
+                updateAt: new Date()
+            })
+    
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Asset(File)',
+                actionMethod: 'GET',
+                actionFrom: 'Asset(File)',
+                actionData: {
+                    _id,
+                    status: 0,
+                    updateAt: new Date()
+                },
+                actionSuccess: 'Success',
+                createdAt: new Date()
+            })
+
+            return {
+              msg: 'Void successfully!'
+            }
+        } else {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Asset(File)',
+                actionMethod: 'GET',
+                actionFrom: 'Asset(File)',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                msg: 'This file has been void! Please contact admin!'
+            }
         }
     }
 }
