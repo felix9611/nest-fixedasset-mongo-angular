@@ -142,7 +142,7 @@ export class MenuComponent implements OnInit{
                 {
                     label: 'Asset List',
                     icon: '',
-                    path: 'asset-list'
+                    path: 'asset-lists'
                 },
                 {
                     label: 'Create Asset',

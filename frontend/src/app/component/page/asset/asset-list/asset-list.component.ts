@@ -98,7 +98,7 @@ export class AssetListComponent {
     }
 
     openEdit(id: string) {
-        this.routeTo.navigate([`/asset-update/`], { queryParams: { id } })
+        this.routeTo.navigate([`/asset-update`], { queryParams: { id } })
     }
 
     goToCreate() {
@@ -106,7 +106,7 @@ export class AssetListComponent {
     }
 
     goToWriteOff() {
-        this.routeTo.navigate([`write-off/${this.handleId}`])
+        this.routeTo.navigate([`write-off`], { queryParams: { id: this.handleId }})
     }
 
     qrCodeDialog: boolean = false

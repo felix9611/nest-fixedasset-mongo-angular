@@ -16,6 +16,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { StockTakeFormEdit, StockTakeItemFromDto } from './interface'
 import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { MatButtonModule } from '@angular/material/button'
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
     standalone: true,
@@ -32,6 +34,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
         NzPaginationModule, 
         FormsModule,
         NzDatePickerModule,
+        MatIconModule, 
+        MatButtonModule
     ],
     templateUrl: './stock-take-form.component.html',
     styleUrl: './stock-take-form.component.css',
@@ -137,5 +141,9 @@ export class StockTakeFormComponent implements OnInit {
 
     dateFormat(data: string) {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+    }
+
+    backToList() {
+        this.routeTo.navigate([`/stock-takes`])
     }
 }

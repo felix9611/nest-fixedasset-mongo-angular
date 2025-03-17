@@ -17,6 +17,8 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { ActivatedRoute, Router } from '@angular/router'
 import { timer } from 'rxjs'
+import { MatButtonModule } from '@angular/material/button'
+import { MatIconModule } from '@angular/material/icon'
 
 @Component({
     // selector: 'app-footer',
@@ -33,7 +35,9 @@ import { timer } from 'rxjs'
         NzSelectModule,
         NzDatePickerModule,
         NzCheckboxModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        MatIconModule, 
+        MatButtonModule
     ],
     templateUrl: './asset-form.component.html',
     styleUrl: './asset-form.component.css',
@@ -219,6 +223,10 @@ export class AssetFormComponent implements OnInit {
             voucherUsedDate: '',
             assetListFiles: []
         }
+    }
+
+    backToList() {
+        this.routeTo.navigate([`/asset-lists`])
     }
 
 }

@@ -28,7 +28,7 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'asset-list',
+        path: 'asset-lists',
         component: AssetListComponent,
         canActivate: [AuthGuard]
     },
