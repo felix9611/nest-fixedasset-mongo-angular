@@ -3,25 +3,29 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AssetList } from './asset-list.schame'
-import { CreateAssetDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { AssetListFileDto, CreateAssetDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
+import { AssetListFile } from './asset-list-file.schame'
 
 
 @Injectable()
 export class AssetListService {
     constructor(
         @InjectModel(AssetList.name) private assetListModel: Model<AssetList>,
+        @InjectModel(AssetListFile.name) private assetListFileModel: Model<AssetListFile>,
         private actionRecordService: ActionRecordService,
         private invRecordService: InvRecordService
     ) {}
 
     async getById(_id: string) {
-        const res = await this.assetListModel.findOne({ _id })
+        const res: any = await this.assetListModel.findOne({ _id })
         if (res?.status === 0) {
             return {
                 msg: 'This asset maybe voided! Please contact admin!'
             }
         } else {
+            res.assetListFiles = await this.getListFiles(_id)
+
             return res
         }
     }
@@ -300,5 +304,38 @@ export class AssetListService {
     }
 
 
-    
+    async uploadFile(updateFiles: AssetListFileDto[], assetId: string) {
+        for (const file of updateFiles) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Upload Asset Files',
+                actionMethod: 'POST',
+                actionFrom: 'Asset(Files)',
+                actionData: {
+                    assetId,
+                    filename: file.fileName,
+                    fileType: file.fileType,
+                    status: 1
+                },
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
+            const create = new this.assetListFileModel({
+                ...file,
+                assetId,
+                status: 1
+            })
+            return create.save()
+        }
+    }
+
+    async getListFiles(assetId: string) {
+        const files = await this.assetListFileModel.find({ assetId, status: 1 })
+        
+        if (files.length > 0) {
+            return files
+        } else {
+            return []
+        }
+    }
 }

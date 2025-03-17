@@ -10,6 +10,7 @@ import { StockTake, StockTakeSchema } from './stock-take.schema'
 import { StockTakeItem, StockTakeItemSchema } from './stock-take-item.schema'
 import { StockTakeService } from './stock-take.service'
 import { StockTakeController } from './stcok-take.controller'
+import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-file.schame'
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { StockTakeController } from './stcok-take.controller'
             { name: StockTakeItem.name, schema: StockTakeItemSchema }, 
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: AssetList.name, schema: AssetListSchema },
+            { name: AssetListFile.name, schema: AssetListFileSchema },
             { name: InvRecord.name, schema: InvRecordSchema }
         ]), 
     ],

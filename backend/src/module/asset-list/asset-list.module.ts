@@ -8,11 +8,13 @@ import { LocationSchema, Location } from '../location/location.schame'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
+import { AssetListFile, AssetListFileSchema } from './asset-list-file.schame'
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: AssetList.name, schema: AssetListSchema }, 
+            { name: AssetListFile.name, schema: AssetListFileSchema },
             { name: ActionRecord.name, schema: ActionRecordSchema }, 
             { name: Location.name, schema: LocationSchema },
             { name: InvRecord.name, schema: InvRecordSchema }

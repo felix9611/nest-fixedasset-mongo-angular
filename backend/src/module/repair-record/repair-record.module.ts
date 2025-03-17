@@ -9,6 +9,7 @@ import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { RepairRecordController } from './repair-record.controller'
 import { RepairRecordService } from './repair-record.service'
+import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-file.schame'
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { RepairRecordService } from './repair-record.service'
             { name: RepairRecord.name, schema: RepairRecordSchema }, 
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: AssetList.name, schema: AssetListSchema },
+            { name: AssetListFile.name, schema: AssetListFileSchema },
             { name: InvRecord.name, schema: InvRecordSchema }
         ]), 
         RepairRecord

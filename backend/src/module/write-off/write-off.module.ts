@@ -11,12 +11,14 @@ import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
 import { LocationSchema, Location } from '../location/location.schame'
 import { LocationService } from '../location/location.service'
 import { WriteOffController } from './write-off.controller'
+import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-file.schame'
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             { name: WriteOff.name, schema: WriteOffSchema },
             { name: AssetList.name, schema: AssetListSchema }, 
+            { name: AssetListFile.name, schema: AssetListFileSchema }, 
             { name: ActionRecord.name, schema: ActionRecordSchema }, 
             { name: Location.name, schema: LocationSchema },
             { name: InvRecord.name, schema: InvRecordSchema }

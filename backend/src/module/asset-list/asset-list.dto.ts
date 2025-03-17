@@ -1,7 +1,9 @@
 export interface AssetListFileDto {
+    _id?: string
+    assetId?: string
     fileName: string
+    fileType: string
     base64: string
-    status: boolean
 }
 
 export interface CreateAssetDto {
