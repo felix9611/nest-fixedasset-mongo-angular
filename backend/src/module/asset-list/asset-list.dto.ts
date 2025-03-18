@@ -55,3 +55,21 @@ export interface ListAssetReqDto {
     placeIds?: string[]
     deptIds?: string[]
 }
+
+export interface DashboardReqDto {
+    dateType?: boolean
+    dateTypeValue?: 'YearMonth'
+    dataType?: boolean
+    dataTypeValue?: 'dept' | 'type' | 'location'
+    valueField: 'counts' | 'costs'
+    filter?: DashboardReqFilterDto
+}
+
+export interface DashboardReqFilterDto {
+    assetCode?: string
+    assetName?: string
+    typeIds?: string[]
+    placeIds?: string[]
+    deptIds?: string[]
+    purchaseDates?: string[]
+}

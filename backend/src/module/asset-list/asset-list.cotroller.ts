@@ -1,12 +1,16 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
-import { ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { DashboardReqDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { AssetListQueryService } from './asset-list-guery.service'
 
 @Controller('asset/asset-list')
 export class AssetListController {
 
-    constructor(private assetListService: AssetListService) {}
+    constructor(
+        private assetListService: AssetListService,
+        private assetListQueryService: AssetListQueryService
+    ) {}
 
     @Get('one/:id')
     @UseGuards(AuthGuard)
@@ -54,5 +58,11 @@ export class AssetListController {
     @UseGuards(AuthGuard)
     async loadFile(@Param('id') id: string) {
         return await this.assetListService.loadFileByAssetId(id)
+    }
+
+    @Post('chart-query')
+    @UseGuards(AuthGuard)
+    async chatQuery(@Body() query: DashboardReqDto) {
+        return await this.assetListQueryService.queryMakerForDateAndData(query)
     }
 }
