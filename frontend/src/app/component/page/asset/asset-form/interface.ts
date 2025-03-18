@@ -1,7 +1,7 @@
 export interface AssetListFileDto {
     fileName: string
     base64: string
-    status: boolean
+    fileType: string
 }
 
 export interface CreateAsset {
@@ -36,7 +36,8 @@ export interface CreateAsset {
     maintenancePeriodEnd?: string
     voucherNo?: string
     voucherUsedDate?: string
-    assetListFiles?: AssetListFileDto[]
+    assetListFiles?: any[]
+    uploadAssetListFiles?: AssetListFileDto[]
 }
 
 export interface AssetFormDto extends CreateAsset {

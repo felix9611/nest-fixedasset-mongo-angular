@@ -3,7 +3,7 @@
         [nzWidth]="widthInBox"
         [(nzVisible)]="isOpen" 
         (nzOnCancel)="closeDialog()"
-        (nzOnOk)="closeDialog()"
+        [nzFooter]="modalFooter"
         [nzCancelDisabled]="true"
         nzTitle="QR Tag"
         [nzOkLoading]="false"
@@ -15,6 +15,9 @@
                 
             </div>
         </ng-container>
+        <ng-template #modalFooter>
+            <button nz-button nzType="primary" (click)="closeDialog()">Close</button>
+        </ng-template>
     </nz-modal>
     
 </div>

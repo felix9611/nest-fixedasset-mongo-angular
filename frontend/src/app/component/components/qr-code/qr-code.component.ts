@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common'
 import { Component, ComponentFactoryResolver, EventEmitter, HostListener, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core'
 import { QRCodeComponent } from 'angularx-qrcode'
+import { NzButtonModule } from 'ng-zorro-antd/button'
 import { NzModalModule } from 'ng-zorro-antd/modal'
 
 @Component({
     selector: 'app-qrcode',
     standalone: true,
-    imports: [QRCodeComponent, NzModalModule, CommonModule],
+    imports: [NzButtonModule, QRCodeComponent, NzModalModule, CommonModule],
     templateUrl: './qr-code.component.html',
     styleUrls: ['./qr-code.component.scss']
 })

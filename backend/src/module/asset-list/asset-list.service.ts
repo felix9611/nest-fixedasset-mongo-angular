@@ -368,27 +368,30 @@ export class AssetListService {
     async voidFileById(_id: string) {
         const check = await this.assetListFileModel.findOne({ _id })
 
-        if (check?.status === 1 ) {
-            await this.assetListModel.updateOne({ _id}, {
+        if (check) {
+            const res =await this.assetListFileModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
             })
     
-            await this.actionRecordService.saveRecord({
-                actionName: 'Void Asset(File)',
-                actionMethod: 'GET',
-                actionFrom: 'Asset(File)',
-                actionData: {
-                    _id,
-                    status: 0,
-                    updateAt: new Date()
-                },
-                actionSuccess: 'Success',
-                createdAt: new Date()
-            })
-
-            return {
-              msg: 'Void successfully!'
+            if (res) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Asset(File)',
+                    actionMethod: 'GET',
+                    actionFrom: 'Asset(File)',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+    
+                return {
+                    finished: true,
+                    msg: 'Void successfully!'
+                }
             }
         } else {
             await this.actionRecordService.saveRecord({
@@ -406,5 +409,9 @@ export class AssetListService {
                 msg: 'This file has been void! Please contact admin!'
             }
         }
+    }
+
+    async loadFileByAssetId(assetId: string) {
+        return this.assetListFileModel.find({ assetId, status: 1}).exec()
     }
 }

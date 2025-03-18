@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
-import { create } from 'domain'
-import { CreateAssetDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
 
 @Controller('asset/asset-list')
 export class AssetListController {
@@ -47,7 +46,13 @@ export class AssetListController {
 
     @Get('file-remove/:id')
     @UseGuards(AuthGuard)
-    async removeFile(@Param() id: string) {
+    async removeFile(@Param('id') id: string) {
         return await this.assetListService.voidFileById(id)
+    }
+
+    @Get('load-file/:id')
+    @UseGuards(AuthGuard)
+    async loadFile(@Param('id') id: string) {
+        return await this.assetListService.loadFileByAssetId(id)
     }
 }

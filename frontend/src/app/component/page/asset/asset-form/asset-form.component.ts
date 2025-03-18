@@ -16,9 +16,14 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { ActivatedRoute, Router } from '@angular/router'
-import { timer } from 'rxjs'
+import { debounceTime, Observable, Observer, Subject, timer } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
+import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
+import { NzIconModule } from 'ng-zorro-antd/icon'
+import { uploadImgToBase64 } from '../../../../../tool/imageUpload'
+import { FileViewComponent } from '../../../components/file-view-dialog/file-view-dialog.component'
+// import { UploadComponentComponent } from '../../../components/upload-component/upload-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -37,7 +42,12 @@ import { MatIconModule } from '@angular/material/icon'
         NzCheckboxModule,
         NzInputNumberModule,
         MatIconModule, 
-        MatButtonModule
+        MatButtonModule, 
+        NzUploadModule,
+        NzButtonModule, 
+        NzIconModule,
+        NzModalModule,
+        FileViewComponent
     ],
     templateUrl: './asset-form.component.html',
     styleUrl: './asset-form.component.css',
@@ -48,7 +58,15 @@ export class AssetFormComponent implements OnInit {
         private route: ActivatedRoute, 
         private routeTo: Router,
         private message: NzMessageService
-    ) {}
+    ) {
+        this.changeEvent$.pipe(debounceTime(300)).subscribe(event => {
+            this.preAction(event.file.originFileObj);
+        })
+    }
+
+    
+
+    private changeEvent$ = new Subject<NzUploadChangeParam>()
 
     editForm: AssetFormDto = {
         _id: '',
@@ -84,12 +102,15 @@ export class AssetFormComponent implements OnInit {
         maintenancePeriodEnd: '',
         voucherNo: '',
         voucherUsedDate: '',
-        assetListFiles: []
+        assetListFiles: [],
+        uploadAssetListFiles: []
     }
 
     taxInformation: boolean = false
 
     theId: any = ''
+
+    fileUpdloadList: any = []
 
 
     ngOnInit() {
@@ -113,8 +134,53 @@ export class AssetFormComponent implements OnInit {
         this.loadTaxInfoList()
     }
 
+    beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
+        new Observable((observer: Observer<boolean>) => {
+        const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+        if (!isJpgOrPng) {
+            this.message.error('You can only upload JPG or PNGfile!')
+            observer.complete()
+       //     return
+        }
+        const isLt2M = file.size! / 1024 / 1024 < 3
+        if (!isLt2M) {
+                this.message.error('Image must smaller than 3MB!')
+             //   observer.complete()
+  //      return
+        }
+    
+        observer.next(isJpgOrPng && isLt2M)
+        observer.complete()
+    })
+
+    finalFileList: any[] = []
+    handleChange(event: any) {
+        switch(event.type) {
+            case 'start':
+                this.changeEvent$.next(event)
+            break
+
+            case 'removed':
+                this.finalFileList = this.finalFileList.filter(f => f.fileName !== event.file.originFileObj.name)
+            break
+        }
+        console.log(event.type)
+        console.log(this.finalFileList)
+        
+    }
+
+    async preAction(fileObj: any) {
+        const response: any = await uploadImgToBase64(fileObj)
+        this.finalFileList.push({
+            fileName: fileObj.name,
+            fileType: fileObj.type,
+            base64: response.data
+        })
+    }
+
     async getOne() {
         this.editForm = await getApiWithAuth(`/asset/asset-list/one/${ this.theId}`)
+        console.log(this.editForm, 'k')
     }
 
     typeLists: any[] = []
@@ -175,6 +241,7 @@ export class AssetFormComponent implements OnInit {
 
     async submitForm() {
         const url = this.editForm._id ? '/asset/asset-list/update' : '/asset/asset-list/create'
+        this.editForm.uploadAssetListFiles = this.finalFileList
 
         const res = await postApiWithAuth(url, this.editForm)
 
@@ -221,12 +288,22 @@ export class AssetFormComponent implements OnInit {
             maintenancePeriodEnd: '',
             voucherNo: '',
             voucherUsedDate: '',
-            assetListFiles: []
+            assetListFiles: [],
+            uploadAssetListFiles: []
         }
     }
 
     backToList() {
         this.routeTo.navigate([`/asset-lists`])
+    }
+
+    fileDialogVisible: boolean = false
+    openFileDialog() {
+        this.fileDialogVisible = true
+    }
+
+    closeFileDialog() {
+        this.fileDialogVisible = false
     }
 
 }
