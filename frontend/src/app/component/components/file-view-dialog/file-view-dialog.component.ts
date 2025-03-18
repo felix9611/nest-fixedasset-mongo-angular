@@ -13,11 +13,14 @@ import { MatIconModule } from '@angular/material/icon'
     templateUrl: './file-view-dialog.component.html',
     styleUrls: ['./file-view-dialog.component.scss']
 })
-export class FileViewComponent {
+export class FileViewComponent implements OnInit{
     constructor(
         private resolver: ComponentFactoryResolver,
         private message: NzMessageService
     ) {}
+    ngOnInit(): void {
+        this.loadingFile()
+    }
 
     @Input() fileList!: any
     @Input() fileNameKey!: string
@@ -41,9 +44,13 @@ export class FileViewComponent {
 
         if (res.finished) {
             this.message.success('Remove file success')
-            this.fileList = await getApiWithAuth(this.loadFileApi)
+            await this.loadingFile()
         } else {
             this.message.error(res.msg)
         }
+    }
+
+    async loadingFile() {
+        this.fileList = await getApiWithAuth(this.loadFileApi)
     }
 }

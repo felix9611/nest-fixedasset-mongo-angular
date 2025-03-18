@@ -369,7 +369,7 @@ export class AssetListService {
         const check = await this.assetListFileModel.findOne({ _id })
 
         if (check) {
-            const res =await this.assetListFileModel.updateOne({ _id}, {
+            const res = await this.assetListFileModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
             })
