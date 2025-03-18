@@ -160,10 +160,6 @@ export class MenuComponent implements OnInit{
                     path: 'asset-list-all'
                 },
                 {
-                    label: 'Stock Take Report',
-                    icon: ''
-                },
-                {
                     label: 'Inventory Record',
                     icon: '',
                     path: 'inventory-record'
