@@ -4,19 +4,31 @@
             <div class="text-[2rem] hover:text-[#ff9200] px-3" (click)="backToList()">
                 <mat-icon cl aria-hidden="false" fontIcon="chevron_left"></mat-icon>
             </div>
-            <div class="text-center text-[2rem] font-bold">Stock Detail Form</div>
+            <div class="text-center text-[2rem] font-bold">
+                Stock Detail Form (
+                <span *ngIf="editForm.status === 2">
+                    Finish
+                </span>
+                <span *ngIf="editForm.status === 1">
+                    Active
+                </span>
+                <span *ngIf="editForm.status === 0">
+                    Cancel
+                </span>)
+            </div>
         </div>
         <form nz-form class="grid lg:grid-cols-4 p-2 gap-2">
             <nz-form-item>
                 <div class="px-1 w-[90px] flex items-center">Action Name</div>
                 <nz-form-control>
-                    <input class="w-[100%]" nz-input type="text" name="actionName" [(ngModel)]="editForm.actionName" />
+                    <input class="w-[100%]" nz-input type="text" name="actionName" [(ngModel)]="editForm.actionName" [disabled]="editForm.status !== 1" />
                   </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <div class="px-1 w-[60px] flex items-center">Location</div>
                 <nz-form-control [nzSpan]="14">
                     <nz-select
+                        [disabled]="editForm.status !== 1"
                         class="w-full h-full" 
                         name="actionPlaceId" 
                         [(ngModel)]="editForm.actionPlaceId"  
@@ -51,7 +63,7 @@
             <nz-form-item class="lg:col-span-4">
                 <div class="px-1 w-[90px] flex items-center">Remark</div>
                 <nz-form-control>
-                    <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark"></textarea>
+                    <textarea nz-input id="remark" name="remark" [(ngModel)]="editForm.remark" [disabled]="editForm.status !== 1"></textarea>
                   </nz-form-control>
             </nz-form-item>
         </form>
@@ -64,7 +76,7 @@
             </div>
         </div>
         <div class="grid lg:grid-cols-4 py-5">
-            <div>
+            <div *ngIf="editForm.status === 1">
                 <form nz-form class="p-2 gap-2">
                     <nz-form-item>
                         <div class="px-1 w-[90px] flex items-center">Asset Code</div>
@@ -115,7 +127,7 @@
                     </div>
                 </div>
             </div>
-            <div class="lg:col-span-3">
+            <div [class]="`lg:col-span-${editForm.status === 1 ? '3' : '4'}`">
                 <nz-table
                     class="px-2"
                     [nzData]="editForm.stockTakeItems"

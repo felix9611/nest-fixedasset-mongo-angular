@@ -57,8 +57,9 @@ export class StockTakeFormComponent implements OnInit {
         createdTime: '',
         finishTime: '',
         createBy: '',
-        _id: ''
-    }
+        _id: '',
+        status: 0
+      }
 
     itemForm: StockTakeItemFromDto = {
         stockTakeId: '',

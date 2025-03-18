@@ -28,4 +28,5 @@ export interface StockTakeFormEdit {
     finishTime?: string
     _id: string
     createBy: string
+    status: number
 }

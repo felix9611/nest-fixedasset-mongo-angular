@@ -65,7 +65,7 @@ export class StockTakeService {
 
 
     async getOneStockTake(_id: string) {
-        const data = await this.stockTakeModel.findOne({ _id, status: { $in: [1, 2] } })
+        const data = await this.stockTakeModel.findOne({ _id })
 
         if (data) {
 
@@ -79,7 +79,8 @@ export class StockTakeService {
                 createdTime: data.createdTime,
                 finishTime: data.finishTime,
                 createBy: data.createBy,
-                stockTakeItems
+                stockTakeItems,
+                status: data.status
             }
 
         } else {
