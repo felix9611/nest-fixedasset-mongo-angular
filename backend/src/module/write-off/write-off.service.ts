@@ -143,8 +143,9 @@ export class WriteOffService {
             },
             { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            { $skip: skip },
             { $limit: limit },
-        ]).skip(skip).exec()
+        ]).exec()
 
         const total = await this.writeOffModel.find(finalFilter).countDocuments()
 

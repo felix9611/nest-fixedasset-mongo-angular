@@ -239,10 +239,9 @@ export class StockTakeService {
                 }
             },
             { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
-            {
-                $limit: limit
-            }
-        ]).skip(skip).exec()
+            { $skip: skip },
+            { $limit: limit },
+        ]).exec()
 
         const total = await this.stockTakeItemModel.find(finalFilter).countDocuments()
     

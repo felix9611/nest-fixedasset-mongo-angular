@@ -228,8 +228,10 @@ export class RepairRecordService {
                   as: 'assetlist'
                 }
             },
-            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } }
-        ]).skip(skip).exec()
+            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
+            { $skip: skip },
+            { $limit: limit },  
+        ]).exec()
 
         const total = await this.repairRecordModel.aggregate([
             {
@@ -258,8 +260,7 @@ export class RepairRecordService {
                 $facet: {
                   counts: [{ $count: 'total' }], 
                   data: [ 
-                    { $sort: { _id: -1 } }, 
-                    { $limit: 10 }
+                    { $sort: { _id: -1 } }
                   ]
                 }
             }

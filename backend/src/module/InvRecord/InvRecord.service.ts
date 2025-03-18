@@ -75,10 +75,9 @@ export class InvRecordService {
             { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$placeFromData', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$placeToData', preserveNullAndEmptyArrays: true } },
-            {
-                $limit: limit
-            }
-        ]).skip(skip).exec()
+            { $skip: skip },
+            { $limit: limit },
+        ]).exec()
 
         const total = await this.invRecordModel.find(finalFilter).countDocuments()
 
