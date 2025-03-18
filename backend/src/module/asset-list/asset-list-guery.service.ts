@@ -3,7 +3,7 @@ import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { Model } from 'mongoose'
 import { AssetList } from './asset-list.schame'
 import { InjectModel } from '@nestjs/mongoose'
-import { DashboardReqDto } from './asset-list.dto'
+import { DashboardReqDto, DashboardReqFilterDto } from './asset-list.dto'
 
 @Injectable()
 export class AssetListQueryService {
@@ -115,10 +115,19 @@ export class AssetListQueryService {
 
     async queryMakerForDateAndData(query: DashboardReqDto) {
 
-        const { dataType, dataTypeValue, dateType, dateTypeValue, valueField } = query
+        const { dataType, dataTypeValue, dateType, dateTypeValue, valueField, filter } = query
 
         let dataTypeObj: any = {}
         let dateTypeObj: any = {}
+
+        const filters = filter ? this.getFilter(filter) : {}
+
+        const finalFilter = {
+            $match: {
+                status: 1,
+                ...filters
+            }
+        }
 
         if (dataType === true) {
             
@@ -175,54 +184,28 @@ export class AssetListQueryService {
 
 
         const finalQuery: any = [
+            finalFilter,
             finalLookUp,
             finalUnwind,
             finalGroupBy,
             dateType ? { $sort: dateTypeObj.sort } : {},
             finalFields,
-            
         ]
 
 
-        return await this.assetListModel.aggregate(finalQuery).exec()
+        return  await this.assetListModel.aggregate(finalQuery).exec()
     }
 
-    async getBudgetSummary(query: DashboardReqDto) {
-        return await this.assetListModel.aggregate([
-            {
-                $lookup: {
-                    from: "assettypes",       
-                    localField: "typeId",
-                    foreignField: "id",
-                    as: "assetType"
-                }
-            },
-            {
-                $unwind: { path: '$assetType', preserveNullAndEmptyArrays: true }
-            },
-              {
-                $group: {
-                  _id: {
-                    yearMonth: { 
-                      $dateToString: { format: "%Y-%m", date: "$buy_date" }
-                    },
-                    typeName: "$assetTypeData.type_name"
-                  },
-                  costs: { $sum: "$cost" }
-                }
-              },
-              {
-                $sort: { "_id.yearMonth": 1 }
-              },
-              {
-                $project: {
-                  _id: 0,
-                  yearMonth: "$_id.yearMonth",
-                  typeName: "$_id.typeName",
-                  costs: 1
-                }
-            }
-        ])
-          
+    getFilter(query: DashboardReqFilterDto) {
+        
+        const { typeIds, placeIds, deptIds, purchaseDates } = query
+
+        return {  
+            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDates: { $gte: purchaseDates[0], $lte: purchaseDates[1] }} : {},
+            ... deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
+            ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds } } : {},
+            ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds } } : {},
+            
+        }
     }
 }
