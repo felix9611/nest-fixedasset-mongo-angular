@@ -20,6 +20,7 @@ import { AssetListAllComponent } from './page/asset/asset-list-all/asset-list-al
 import { RepairRecordListComponent } from './page/asset/repair-record-list/repair-record-list.component'
 import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
 import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
+import { DashboardComponent } from './page/dashboard/dashboard.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -45,6 +46,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'asset-update',
         component: AssetFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'dashboard',
+        component: DashboardComponent,
         canActivate: [AuthGuard]
     },
     {
