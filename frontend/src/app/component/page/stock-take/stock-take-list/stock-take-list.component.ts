@@ -47,6 +47,9 @@ export class StockTakeListComponent implements OnInit{
 
     dataLists: any[] = []
     totals: number = 0
+    handleId: string = ''
+    finishDialogVisible: boolean = false
+    cancelDialogVisible: boolean = false
 
     editForm: StockTakeForm = {
         actionName: '',
@@ -102,5 +105,49 @@ export class StockTakeListComponent implements OnInit{
 
     getToDetail(id: string) {
         this.routeTo.navigate([`/stock-take-form`], { queryParams: { id } })
+    }
+
+    openFinishDialog(id: string) {
+        this.handleId = id
+        this.finishDialogVisible = true
+    }
+
+    closeFinishDialog() {
+        this.handleId = ''
+        this.finishDialogVisible = false
+    }
+
+    openCancelDialog(id: string) {
+        this.handleId = id
+        this.cancelDialogVisible = true
+    }
+
+    closeCancelDialog() {
+        this.handleId = ''
+        this.cancelDialogVisible = false
+    }
+
+    async finshForm() {
+        const res = await getApiWithAuth(`/asset/stock-take/finish/${this.handleId}`)
+        if (res.finished) {
+            this.message.success(res.msg)
+            this.loadStockTakeLists()
+            this.closeFinishDialog()
+        } else {
+            this.message.error(res.msg)
+            this.closeFinishDialog()
+        }
+    }
+
+    async cancelForm() {
+        const res = await getApiWithAuth(`/asset/stock-take/void/${this.handleId}`)
+        if (res.finished) {
+            this.message.success(res.msg)
+            this.loadStockTakeLists()
+            this.closeFinishDialog()
+        } else {
+            this.message.error(res.msg)
+            this.closeFinishDialog()
+        }
     }
 }

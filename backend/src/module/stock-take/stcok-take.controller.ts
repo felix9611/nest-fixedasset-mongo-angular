@@ -37,7 +37,7 @@ export class StockTakeController {
     @Get('finish/:id')
     @UseGuards(AuthGuard)
     async finishById(@Param('id') id: string, @Req() req: any) {
-        return await this.stockTakeService.finishOrVoid(id, 1, req.user.username)
+        return await this.stockTakeService.finishOrVoid(id, 2, req.user.username)
     }
 
     @Post('list')
