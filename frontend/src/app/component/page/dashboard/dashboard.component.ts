@@ -13,11 +13,22 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { DashboardReqDto, DashboardReqFilterDto } from './interface'
 import { CanvasChartComponent } from '../../components/chart/chart.component'
 import { transformData } from './function' 
-import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts'
+import { NzSelectModule } from 'ng-zorro-antd/select'
 
 @Component({
     standalone: true,
-    imports: [CanvasJSAngularChartsModule, CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, CanvasChartComponent],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        CanvasChartComponent,
+        NzSelectModule
+    ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css',
 })
@@ -29,8 +40,35 @@ export class DashboardComponent implements OnInit {
         this.getByTypeAndDateOfCount()
         this.getByTotalCost()
         this.getByTotalCount()
-        // throw new Error('Method not implemented.')
+        this.loadTypeList()
+        this.loadDeptList()
+        this.loadLocationList()
     }
+
+    typeLists: any[] = []
+    async loadTypeList() {
+        this.typeLists = await getApiWithAuth('/asset/type/getAll')
+    }
+
+    deptLists: any[] = []
+    async loadDeptList() {
+        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+    }
+
+    placeLists: any[] = []
+    async loadLocationList() {
+        this.placeLists = await getApiWithAuth('/base/location/getAll')
+    }
+
+    async runSearch() {
+        await this.getByDeptAndDateOfCosts()
+        await this.getByDeptAndDateOfCount()
+        await this.getByTypeAndDateOfCosts()
+        await this.getByTypeAndDateOfCount()
+        await this.getByTotalCost()
+        await this.getByTotalCount()
+    }
+
 
 
     globalFilter: DashboardReqFilterDto = {}
@@ -60,8 +98,10 @@ export class DashboardComponent implements OnInit {
         this.deptAndDateInCostLoading = true
     }
 
-    deptAndDateInCount: any[] = []
+    deptAndDateInCountLoading: boolean = false
+    deptAndDateInCount: any = {}
     async getByDeptAndDateOfCount() {
+        this.deptAndDateInCountLoading = false
         const dataQuery: DashboardReqDto = {
             dateType: true,
             dateTypeValue: 'YearMonth',
@@ -71,6 +111,16 @@ export class DashboardComponent implements OnInit {
         }
 
         const res = await this.runQueryData(dataQuery)
+        this.deptAndDateInCount = {
+            data: transformData(res, 'stackedColumn', true, 'deptName', 'count', 'yearMonth'),
+            axisY: {
+                title: "Counts"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.deptAndDateInCountLoading = true
     }
 
     typeAndDateInCost: any[] = []

@@ -76,7 +76,6 @@ export class AssetListComponent {
         this.placeLists = await getApiWithAuth('/base/location/getAll')
     }
 
-
     async loadAssetListLists() {
         const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
         this.dataLists = res.lists

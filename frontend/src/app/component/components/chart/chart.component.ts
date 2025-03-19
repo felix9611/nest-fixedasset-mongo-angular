@@ -11,10 +11,8 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts'
 })
 export class CanvasChartComponent implements OnInit {
 
-    @Input() chartData: any = []
+    @Input() chartData: any = {}
     @Output() chartDataChange = new EventEmitter<any>()
-
-    @Input() axisYString: string = ''
 
     constructor() {
     }
