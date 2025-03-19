@@ -58,9 +58,9 @@ export interface ListAssetReqDto {
 
 export interface DashboardReqDto {
     dateType?: boolean
-    dateTypeValue?: 'YearMonth'
+    dateTypeValue?: 'YearMonth' | 'none'
     dataType?: boolean
-    dataTypeValue?: 'dept' | 'type' | 'location'
+    dataTypeValue?: 'dept' | 'type' | 'location' | 'none'
     valueField: 'counts' | 'costs'
     filter?: DashboardReqFilterDto
 }

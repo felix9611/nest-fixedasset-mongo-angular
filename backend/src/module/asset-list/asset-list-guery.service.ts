@@ -21,9 +21,9 @@ export class AssetListQueryService {
                 pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
                 as: 'assettype'
             },
-            unwind: { path: '$assetType', preserveNullAndEmptyArrays: true },
+            unwind: { path: '$assettype', preserveNullAndEmptyArrays: true },
             groupBy: {
-                typeName: "$assetType.typeName"
+                typeName: "$assettype.typeName"
             },
             project: {
                 typeName: "$_id.typeName"
@@ -113,6 +113,58 @@ export class AssetListQueryService {
         }
     }
 
+    async queryMakerForData(query: DashboardReqDto) {
+
+        const { dateType, dateTypeValue, valueField, filter } = query
+        let dateTypeObj: any = {}
+
+        const filters = filter ? this.getFilter(filter) : {}
+
+        const finalFilter = {
+            $match: {
+                status: 1,
+                ...filters
+            }
+        }
+
+        if (dateType === true) {
+            switch (dateTypeValue) {
+                case 'YearMonth':
+                    dateTypeObj = this.getGroupByYearMonth()
+                break
+            }
+        }
+
+        const valueObj = this.getGroupByUnit()
+
+        const finalGroupBy: any = {
+            $group: {
+                _id: {
+                    ...dateType ? dateTypeObj.groupBy : {},
+                },
+                ...valueObj && valueObj[valueField] ? valueObj[valueField].groupBy : null
+            }
+        }
+
+        const finalFields: any = {
+            $project: {
+                _id: 0,
+                ...dateType ? dateTypeObj.project : {},
+                ...valueObj && valueObj[valueField] ? valueObj[valueField].project : {}
+            }
+        }
+
+
+        const finalQuery: any = [
+            finalFilter,
+            finalGroupBy,
+            finalFields,
+        ]
+
+
+        return await this.assetListModel.aggregate(finalQuery).exec()
+    }
+
     async queryMakerForDateAndData(query: DashboardReqDto) {
 
         const { dataType, dataTypeValue, dateType, dateTypeValue, valueField, filter } = query
@@ -157,17 +209,17 @@ export class AssetListQueryService {
         const valueObj = this.getGroupByUnit()
 
         const finalLookUp: any = 
-            dataTypeObj.lookUp ? { $lookup: dataTypeObj.lookUp } : null
+            dataType ? { $lookup: dataTypeObj.lookUp } : {}
         
         const finalUnwind: any = 
-            dataTypeObj.unwind ? { $unwind: dataTypeObj.unwind } : null
+            dataType ? { $unwind: dataTypeObj.unwind } : {}
         
 
         const finalGroupBy: any = {
             $group: {
                 _id: {
                     ...dateType ? dateTypeObj.groupBy : {},
-                    ...dataTypeObj.groupBy ? dataTypeObj.groupBy : {},
+                    ...dataType ? dataTypeObj.groupBy : {},
                 },
                 ...valueObj && valueObj[valueField] ? valueObj[valueField].groupBy : null
             }
@@ -177,7 +229,7 @@ export class AssetListQueryService {
             $project: {
                 _id: 0,
                 ...dateType ? dateTypeObj.project : {},
-                ...dataTypeObj.project ? dataTypeObj.project : {},
+                ...dataType ? dataTypeObj.project : {},
                 ...valueObj && valueObj[valueField] ? valueObj[valueField].project : {}
             }
         }
@@ -193,7 +245,7 @@ export class AssetListQueryService {
         ]
 
 
-        return  await this.assetListModel.aggregate(finalQuery).exec()
+        return await this.assetListModel.aggregate(finalQuery).exec()
     }
 
     getFilter(query: DashboardReqFilterDto) {

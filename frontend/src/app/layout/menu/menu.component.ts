@@ -177,7 +177,8 @@ export class MenuComponent implements OnInit{
         },
         {
             label: 'Dashboard',
-            icon: 'dashboard'
+            icon: 'dashboard',
+            path: 'dashboard'
         }
     ]
 }
