@@ -79,13 +79,15 @@ export class AssetListQueryService {
                     $concat: [
                       { $toString: "$_id.year" },
                       "-",
-                      {
-                        $cond: {
-                          if: { $lt: ["$_id.month", 10] },
-                          then: { $concat: ["0", { $toString: "$_id.month" }] },
-                          else: { $toString: "$_id.month" }
+                        {
+                            $arrayElemAt: [
+                                [
+                                    "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                                ],
+                            '$_id.month'
+                        ]
                         }
-                      }
                     ]
                 }  
             }
