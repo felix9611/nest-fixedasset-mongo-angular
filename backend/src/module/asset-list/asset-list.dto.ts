@@ -54,6 +54,7 @@ export interface ListAssetReqDto {
     typeIds?: string[]
     placeIds?: string[]
     deptIds?: string[]
+    purchaseDates?: string[]
 }
 
 export interface DashboardReqDto {

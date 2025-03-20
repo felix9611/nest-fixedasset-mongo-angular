@@ -167,7 +167,7 @@ export class BudgetService {
                 ... name ? {budgetName: { $regex: name, $options: 'i' }}: {},
                 ... deptId ? { deptId: { $in: deptId } } : {},
                 ... placeId ? { placeId: { $in: placeId } } : {},
-                ... date && date?.length > 0 ? { budgetFrom: { $gte: date[0], $lte: date[1] } } : {},
+                ... date && date?.length > 0 ? { budgetFrom: { $gte: new Date(date[0]), $lte: new Date(date[1]) } } : {},
                 status: 1
             }
     

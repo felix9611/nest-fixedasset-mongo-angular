@@ -25,8 +25,8 @@ export class AssetList extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
     placeId: Types.ObjectId
 
-    @Prop({ type: SchemaTypes.Date})
-    purchaseDate: string
+    @Prop({ type: SchemaTypes.Date, set: (val: string | Date) => new Date(val),})
+    purchaseDate: Date
 
     @Prop({ type: SchemaTypes.String })
     description: string

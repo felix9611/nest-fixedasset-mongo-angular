@@ -14,6 +14,7 @@ import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { QRcodeComponent } from '../../../components/qr-code/qr-code.component'
 import { RepairRecordCreateComponent } from '../repair-record-create/repair-record-create.component'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 
 @Component({
     // selector: 'app-footer',
@@ -29,7 +30,8 @@ import { RepairRecordCreateComponent } from '../repair-record-create/repair-reco
         NzInputModule, 
         NzPaginationModule,
         QRcodeComponent,
-        RepairRecordCreateComponent
+        RepairRecordCreateComponent,
+        NzDatePickerModule,
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',

@@ -210,12 +210,13 @@ export class AssetListService {
 
     async listPage(request: ListAssetReqDto) {
 
-        const { page, limit, assetCode, assetName, typeIds, placeIds, deptIds } = request
+        const { page, limit, assetCode, assetName, typeIds, placeIds, deptIds, purchaseDates } = request
 
         const skip = (page - 1) * limit
 
         const filters = {
             status: 1,
+            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDate: { $gte: new Date(purchaseDates[0]), $lte: new Date(purchaseDates[1]) }} : {},
             ...assetCode ? { assetCode } : {},
             ...assetName?  { assetName: { $regex: assetName, $options: 'i' } } : {},
             ...typeIds && typeIds?.length > 0 ? { typeId: { $in: typeIds} } : {},

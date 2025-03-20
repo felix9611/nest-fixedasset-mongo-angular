@@ -1,12 +1,23 @@
 <div class="bg-white px-[2rem]">
     <div class="p-1  lg:p-6">
         <div class="flex gap-2 py-5">
+            <div>
+                <nz-range-picker
+                    nzSize="large"
+                    class="h-full"
+                    name="date"
+                    [nzShowTime]="{ nzFormat: 'HH:mm' }"
+                    nzFormat="yyyy-MM-dd HH:mm:ss"
+                    [(ngModel)]="searchForm.purchaseDates"
+                ></nz-range-picker>
+            </div>
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" name="assetCode" placeholder="Input Asset Code" [(ngModel)]="searchForm.assetCode" />
             </div>
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" name="assetName" placeholder="Input Asset Name" [(ngModel)]="searchForm.assetName" />
             </div>
+            
             <div class="w-[150px] h-full">
                 <nz-select
                     nzSize="large"

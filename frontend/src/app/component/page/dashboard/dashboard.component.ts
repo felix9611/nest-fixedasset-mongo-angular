@@ -154,6 +154,7 @@ export class DashboardComponent implements OnInit {
         }
 
         const res = await this.runQueryData(dataQuery)
+        console.log(transformData(res, 'stackedColumn', true, 'typeName', 'costs', ['year', 'monthString']))
         this.typeAndDateInCost = {
             data: transformData(res, 'stackedColumn', true, 'typeName', 'costs', ['year', 'monthString']),
             axisY: {

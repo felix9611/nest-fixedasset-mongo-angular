@@ -283,7 +283,7 @@ export class AssetListQueryService {
         const { typeIds, placeIds, deptIds, purchaseDates } = query
 
         return {  
-            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDate: { $gte: purchaseDates[0], $lte: purchaseDates[1] }} : {},
+            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDate: { $gte: new Date(purchaseDates[0]), $lte: new Date(purchaseDates[1]) }} : {},
             ... deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
             ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds } } : {},
             ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds } } : {},
