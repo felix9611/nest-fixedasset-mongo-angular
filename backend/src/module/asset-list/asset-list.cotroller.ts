@@ -63,12 +63,12 @@ export class AssetListController {
     @Post('chart-query-data')
     @UseGuards(AuthGuard)
     async chatQueryDate(@Body() query: DashboardReqDto) {
-        return await this.assetListQueryService.queryMakerForDateAndData(query)
+        return await this.assetListQueryService.queryMakerForData(query)
     }
 
     @Post('chart-query-date')
     @UseGuards(AuthGuard)
     async chatQueryData(@Body() query: DashboardReqDto) {
-        return await this.assetListQueryService.queryMakerForData(query)
+        return await this.assetListQueryService.queryMakerForDateAndData(query)
     }
 }

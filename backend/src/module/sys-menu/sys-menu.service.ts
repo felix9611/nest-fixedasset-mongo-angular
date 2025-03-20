@@ -2,13 +2,175 @@ import { Injectable } from '@nestjs/common'
 import { Model } from 'mongoose'
 import { SysMenu } from './sys-menu.schame'
 import { InjectModel } from '@nestjs/mongoose'
+import { SysMenuDto, SysMenuList, UpdateSysMenuDto } from './sys-menu.dto'
+import { ActionRecordService } from '../action-record/actionRecord.service'
 
 
 @Injectable()
 export class SysMenuService {
   constructor(
-    @InjectModel(SysMenu.name) private sysMenuModel: Model<SysMenu>
+      @InjectModel(SysMenu.name) private sysMenuModel: Model<SysMenu>,
+      private actionRecordService: ActionRecordService
   ) {}
+
+  async create(createData: UpdateSysMenuDto) {
+    let { mainId, name, _id, ..._data } = createData
+
+    const checkData = await this.sysMenuModel.findOne({ name,  })
+
+    if (checkData) {
+      await this.actionRecordService.saveRecord({
+          actionName: 'Create System Menu',
+          actionMethod: 'POST',
+          actionFrom: 'System Menu',
+          actionData: createData,
+          actionSuccess: 'FAILURE',
+          createdAt: new Date()
+      })
+
+      return {
+          msg: 'This System Menu already exist!'
+      }
+    } else {
+
+
+      const finalData = {
+        ..._data,
+        name,
+        mainId,
+        status: 1,
+        createdAt: new Date()
+      }
+
+      await this.actionRecordService.saveRecord({
+        actionName: 'Create System Menu',
+        actionMethod: 'POST',
+        actionFrom: 'System Menu',
+        actionData: createData,
+        actionSuccess: 'Success',
+        createdAt: new Date()
+      })
+
+      const create = new this.sysMenuModel(finalData)
+      return await create.save()
+    }
+  }
+
+  async update(updateData: UpdateSysMenuDto) {
+    const { _id, ...data } = updateData
+
+    const checkData = await this.sysMenuModel.findOne({ _id })
+
+    if (checkData?.status === 0) {
+      await this.actionRecordService.saveRecord({
+          actionName: 'Update System Menu',
+          actionMethod: 'POST',
+          actionFrom: 'System Menu',
+          actionData: updateData,
+          actionSuccess: 'FAILURE',
+          createdAt: new Date()
+      })
+
+      return {
+          msg: 'This System Menu has been invalidated! Please contact admin!'
+      }
+    } else {
+      const finalData = {
+        ...data,
+          updatedAt: new Date()
+      }
+
+      await this.actionRecordService.saveRecord({
+          actionName: 'Update System Menu',
+          actionMethod: 'POST',
+          actionFrom: 'System Menu',
+          actionData: finalData,
+          actionSuccess: 'Sussess',
+          createdAt: new Date()
+      })
+
+      return await this.sysMenuModel.updateOne({ _id}, finalData)
+    }
+  }
+
+  async getOneById(_id: string) {
+    const data = await this.sysMenuModel.findOne({ _id, status: 1})
+
+    if (data) {
+      return data
+    } else {
+      return {
+        msg: 'This System Menu has been invalidated! Please contact admin!'
+      }
+    }
+  }
+
+  async invalidate(_id: string) {
+    const checkData = await this.sysMenuModel.findOne({ _id })
+
+    if (checkData?.status === 0) {
+
+        await this.actionRecordService.saveRecord({
+            actionName: 'Void System Menu',
+            actionMethod: 'GET',
+            actionFrom: 'System Menu',
+            actionData: {
+                _id
+            },
+            actionSuccess: 'FAILURE',
+            createdAt: new Date()
+        })
+
+        return {
+            msg: 'This System Menu has been invalidated! Please contact admin!'
+        }
+    } else {
+        const res = await this.sysMenuModel.updateOne({ _id}, {
+            status: 0,
+            updateAt: new Date()
+        })
+    
+        if (res.modifiedCount === 1) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void System Menu',
+                actionMethod: 'GET',
+                actionFrom: 'System Menu',
+                actionData: {
+                    _id,
+                    status: 0,
+                    updateAt: new Date()
+                },
+                actionSuccess: 'Success',
+                createdAt: new Date()
+            })
+
+
+            return {
+              msg: 'Invalidate successfully!'
+            }
+        } else {
+            return {
+              msg: 'Ooops! Something went wrong! Please try again!'
+            }
+        }
+    }
+  }
+
+  async listAllMenu(query: SysMenuList) {
+    return await this.sysMenuModel.find(
+      {
+        name: { $regex: query.name, $options: 'i'}
+      }
+    ).exec()
+  }
+
+  async getTreeAllMenuById(ids: string[]) {
+    const items = await this.sysMenuModel.find({ status: 1, _id: { $in: ids} }).exec()
+
+    const final = this.nestItems(items)
+
+    return final
+  }
 
   async getTreeAllMenu() {
     const items = await this.sysMenuModel.find({ status: 1 }).exec()
@@ -19,8 +181,8 @@ export class SysMenuService {
   }
 
   nestItems(items: any[]) {
-    const map = new Map<number, any>(); // Store items by ID
-    const roots: any[] = []; // Store top-level items
+    const map = new Map<number, any>() // items by ID
+    const roots: any[] = [] // Top-level
   
     // First, populate the map
     items.forEach(item => map.set(item.id, { ...item, children: [] }))

@@ -142,7 +142,7 @@ export class AssetListQueryService {
 
     async queryMakerForData(query: DashboardReqDto) {
 
-        const { dateType, dateTypeValue, valueField, filter } = query
+        const { dataType, dataTypeValue, valueField, filter } = query
         let dateTypeObj: any = {}
 
         const filters = filter ? this.getFilter(filter) : {}
@@ -154,13 +154,21 @@ export class AssetListQueryService {
             }
         }
 
-        if (dateType === true) {
-            switch (dateTypeValue) {
-                case 'YearMonth':
-                    dateTypeObj = this.getGroupByYearMonth()
+        let dataTypeObj: any = {}
+
+        if (dataType === true) {
+            
+            switch (dataTypeValue) {
+                case 'dept':
+                    dataTypeObj = this.getGroupByDept()
                 break
-                case 'YearQuarter':
-                    dateTypeObj = this.getGroupByYearQuarter()
+
+                case 'type':
+                    dataTypeObj = this.getGroupByType()
+                break
+
+                case 'location':
+                    dataTypeObj = this.getGroupByLocations()
                 break
             }
         }
@@ -170,7 +178,7 @@ export class AssetListQueryService {
         const finalGroupBy: any = {
             $group: {
                 _id: {
-                    ...dateType ? dateTypeObj.groupBy : {},
+                    ...dataType ? dataTypeObj.groupBy : {},
                 },
                 ...valueObj && valueObj[valueField] ? valueObj[valueField].groupBy : null
             }
@@ -179,7 +187,7 @@ export class AssetListQueryService {
         const finalFields: any = {
             $project: {
                 _id: 0,
-                ...dateType ? dateTypeObj.project : {},
+                ...dataType ? dataTypeObj.project : {},
                 ...valueObj && valueObj[valueField] ? valueObj[valueField].project : {}
             }
         }

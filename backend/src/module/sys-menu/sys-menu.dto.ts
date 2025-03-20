@@ -7,6 +7,14 @@ export interface SysMenuDto {
     type: number
 }
 
+export interface UpdateSysMenuDto extends SysMenuDto {
+    _id: string
+}
+
+export interface SysMenuList {
+    name: string
+}
+
 
 export interface SysMenuTree extends SysMenuDto {
     childrens: SysMenuTree[]
