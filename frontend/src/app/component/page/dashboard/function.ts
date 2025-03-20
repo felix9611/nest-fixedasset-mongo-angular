@@ -1,15 +1,50 @@
-export function transformData(rawData: any[], chartType: string, showInLegend: boolean, keyName: string, valueName: string, dateKeyName: string): any[] {
-    const dataMap: Record<string, { name: string; type: string; showInLegend: boolean ;dataPoints: { label: string; y: number }[] }> = {}
+const monthMap: Record<string, number> = {
+  "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5,
+  "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11
+}
+
+export function transformData(rawData: any[], chartType: string, showInLegend: boolean, keyName: string, valueName: string, dateKeyName: string[]): any[] {
+  const monthMap: Record<string, number> = {
+      "Jan": 0, "Feb": 1, "Mar": 2, "Apr": 3, "May": 4, "Jun": 5,
+      "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11
+  };
+
+  const dataMap: Record<string, { name: string; type: string; showInLegend: boolean ; xValueType: string, dataPoints: { x: number, y: number }[] }> = {}
+
+  rawData.forEach((data: any) => {
+    if (!data[dateKeyName[0]] || !data[dateKeyName[1]] || data[valueName] === 0) return;
+    
+    if (!dataMap[data[keyName]]) {
+      dataMap[data[keyName]] = { name: data[keyName], type: chartType, showInLegend: showInLegend, xValueType: "dateTime", dataPoints: [] };
+    }
+
+    const year = parseInt(data[dateKeyName[0]], 10);
+    const month = monthMap[data[dateKeyName[1]]];
+    
+    dataMap[data[keyName]].dataPoints.push({ x: new Date(year, month).getTime(), y: data[valueName] });
+  });
+
+  return Object.values(dataMap);
+}
+
+/*
+export function transformData(rawData: any[], chartType: string, showInLegend: boolean, keyName: string, valueName: string, dateKeyName: string[]): any[] {
+    const dataMap: Record<string, { name: string; type: string; showInLegend: boolean ; xValueType: string, dataPoints: { label: string; y: number }[] }> = {}
 
     rawData.forEach((data: any) => {
-      if (!data[dateKeyName] || data[valueName] === 0) return
+      if (!data[dateKeyName[0]] ||!data[dateKeyName[1]] || data[valueName] === 0) return
       
       if (!dataMap[data[keyName]]) {
-        dataMap[data[keyName]] = { name: data[keyName], type: chartType , showInLegend: showInLegend, dataPoints: [] }
+        dataMap[data[keyName]] = { name: data[keyName], type: chartType , showInLegend: showInLegend, xValueType: "dateTime", dataPoints: [] }
       }
       
-      dataMap[data[keyName]].dataPoints.push({ label: data[dateKeyName], y: data[valueName] })
+      dataMap[data[keyName]].dataPoints.push({ label: `${data[dateKeyName[0]]} - ${data[dateKeyName[1]]}`, y: data[valueName] })
+    })
+
+    Object.values(dataMap).forEach(series => {
+      series.dataPoints.sort((a: any, b: any) => a.x - b.x);
     });
   
     return Object.values(dataMap)
   }
+    */

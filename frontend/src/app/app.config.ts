@@ -13,7 +13,7 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { provideHttpClient } from '@angular/common/http'
-
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
@@ -22,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()), 
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
+    provideCharts(withDefaultRegisterables()),
     providePrimeNG({
       theme: {
         preset: Aura

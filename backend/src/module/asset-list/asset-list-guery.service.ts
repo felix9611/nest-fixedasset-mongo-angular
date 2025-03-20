@@ -4,6 +4,7 @@ import { Model } from 'mongoose'
 import { AssetList } from './asset-list.schame'
 import { InjectModel } from '@nestjs/mongoose'
 import { DashboardReqDto, DashboardReqFilterDto } from './asset-list.dto'
+import { groupBy } from 'rxjs'
 
 @Injectable()
 export class AssetListQueryService {
@@ -75,19 +76,43 @@ export class AssetListQueryService {
             },
             sort: { "_id.year": 1, "_id.month": 1 },
             project: {
-                yearMonth: {
+                year: { $toString: "$_id.year" },
+                month: { $toString: "$_id.month" },
+                monthString: {
+                    "$arrayElemAt": [
+                        [
+                            "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                        ],
+                        "$_id.month"
+                    ]
+                }
+            }
+        }
+    }
+
+    getGroupByYearQuarter() {
+        return {
+            groupBy: {
+                year: { $year: "$purchaseDate" },
+                quarter: {
+                    $switch: {
+                        branches: [
+                            { "case": { "$lte": [{ "$month": "$purchaseDate" }, 3] }, "then": "Q1" },
+                            { "case": { "$lte": [{ "$month": "$purchaseDate" }, 6] }, "then": "Q2" },
+                            { "case": { "$lte": [{ "$month": "$purchaseDate" }, 9] }, "then": "Q3" },
+                            { "case": { "$lte": [{ "$month": "$purchaseDate" }, 12] }, "then": "Q4" }
+                        ]
+                    }
+                }
+            },
+            sort: { "_id.year": 1 },
+            project: {
+                yearQuarter: {
                     $concat: [
                       { $toString: "$_id.year" },
                       "-",
-                        {
-                            $arrayElemAt: [
-                                [
-                                    "", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-                                ],
-                            '$_id.month'
-                        ]
-                        }
+                      { $toString: "$_id.quarter" }
                     ]
                 }  
             }
@@ -133,6 +158,9 @@ export class AssetListQueryService {
             switch (dateTypeValue) {
                 case 'YearMonth':
                     dateTypeObj = this.getGroupByYearMonth()
+                break
+                case 'YearQuarter':
+                    dateTypeObj = this.getGroupByYearQuarter()
                 break
             }
         }
@@ -255,7 +283,7 @@ export class AssetListQueryService {
         const { typeIds, placeIds, deptIds, purchaseDates } = query
 
         return {  
-            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDates: { $gte: purchaseDates[0], $lte: purchaseDates[1] }} : {},
+            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDate: { $gte: purchaseDates[0], $lte: purchaseDates[1] }} : {},
             ... deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
             ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds } } : {},
             ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds } } : {},

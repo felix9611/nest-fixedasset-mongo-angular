@@ -14,6 +14,7 @@ import { DashboardReqDto, DashboardReqFilterDto } from './interface'
 import { CanvasChartComponent } from '../../components/chart/chart.component'
 import { transformData } from './function' 
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 
 @Component({
     standalone: true,
@@ -27,7 +28,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
         NzInputModule, 
         NzPaginationModule, 
         CanvasChartComponent,
-        NzSelectModule
+        NzSelectModule,
+        NzDatePickerModule,
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css',
@@ -38,6 +40,8 @@ export class DashboardComponent implements OnInit {
         this.getByDeptAndDateOfCount()
         this.getByTypeAndDateOfCosts()
         this.getByTypeAndDateOfCount()
+        this.getByPlaceAndDateOfCount()
+        this.getByPlaceAndDateOfCosts()
         this.getByTotalCost()
         this.getByTotalCount()
         this.loadTypeList()
@@ -65,6 +69,8 @@ export class DashboardComponent implements OnInit {
         await this.getByDeptAndDateOfCount()
         await this.getByTypeAndDateOfCosts()
         await this.getByTypeAndDateOfCount()
+        await this.getByPlaceAndDateOfCount()
+        await this.getByPlaceAndDateOfCosts()
         await this.getByTotalCost()
         await this.getByTotalCount()
     }
@@ -86,10 +92,17 @@ export class DashboardComponent implements OnInit {
         }
 
         const res = await this.runQueryData(dataQuery)
+        
         this.deptAndDateInCost = {
-            data: transformData(res, 'stackedColumn', true, 'deptName', 'costs', 'yearMonth'),
+            data: transformData(res, 'stackedColumn', true, 'deptName', 'costs', ['year', 'monthString']),
+            animationEnabled: true,
             axisY: {
                 title: "Amount (HKD)"
+            },
+            axisX: {
+                title: "Year - Month",
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
             },
             toolTip: {
                 shared: true
@@ -112,9 +125,14 @@ export class DashboardComponent implements OnInit {
 
         const res = await this.runQueryData(dataQuery)
         this.deptAndDateInCount = {
-            data: transformData(res, 'stackedColumn', true, 'deptName', 'count', 'yearMonth'),
+            data: transformData(res, 'stackedColumn', true, 'deptName', 'count', ['year', 'monthString']),
             axisY: {
                 title: "Counts"
+            },
+            axisX: {
+                title: "Year - Month",
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
             },
             toolTip: {
                 shared: true
@@ -123,8 +141,10 @@ export class DashboardComponent implements OnInit {
         this.deptAndDateInCountLoading = true
     }
 
-    typeAndDateInCost: any[] = []
+    typeAndDateInCostLoading: boolean = false
+    typeAndDateInCost: any = {}
     async getByTypeAndDateOfCosts() {
+        this.typeAndDateInCostLoading = true
         const dataQuery: DashboardReqDto = {
             dateType: true,
             dateTypeValue: 'YearMonth',
@@ -133,11 +153,28 @@ export class DashboardComponent implements OnInit {
             valueField: 'costs'
         }
 
-        this.typeAndDateInCost = await this.runQueryData(dataQuery)
+        const res = await this.runQueryData(dataQuery)
+        this.typeAndDateInCost = {
+            data: transformData(res, 'stackedColumn', true, 'typeName', 'costs', ['year', 'monthString']),
+            axisY: {
+                title: "Amount (HKD)"
+            },
+            axisX: {
+                title: "Year - Month",
+                valueFormatString: "YYYY - MMM",
+                xValueType: "dateTime"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.typeAndDateInCostLoading = true
     }
 
-    typeAndDateInCount: any[] = []
+    typeAndDateInCountLoading: boolean = false
+    typeAndDateInCount: any = {}
     async getByTypeAndDateOfCount() {
+        this.typeAndDateInCountLoading = false
         const dataQuery: DashboardReqDto = {
             dateType: true,
             dateTypeValue: 'YearMonth',
@@ -146,7 +183,68 @@ export class DashboardComponent implements OnInit {
             valueField: 'counts'
         }
 
-        this.typeAndDateInCount = await this.runQueryData(dataQuery)
+        const res = await this.runQueryData(dataQuery)
+        this.typeAndDateInCount = {
+            data: transformData(res, 'stackedColumn', true, 'typeName', 'count', ['year', 'monthString']),
+            axisY: {
+                title: "Amount (HKD)"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.typeAndDateInCountLoading = true
+    }
+
+    placeAndDateInCountLoading: boolean = false
+    placeAndDateInCount: any = {}
+    async getByPlaceAndDateOfCount() {
+        this.placeAndDateInCountLoading = false
+        const dataQuery: DashboardReqDto = {
+            dateType: true,
+            dateTypeValue: 'YearMonth',
+            dataType: true,
+            dataTypeValue: 'location',
+            valueField: 'counts'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        this.placeAndDateInCount = {
+            data: transformData(res, 'stackedColumn', true, 'placeName', 'count', ['year', 'monthString']),
+            axisY: {
+                title: "Counts"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        console.log(this.placeAndDateInCount, 'this.placeAndDateInCount')
+        this.placeAndDateInCountLoading = true
+    }
+
+    placeAndDateInCostsLoading: boolean = false
+    placeAndDateInCosts: any = {}
+    async getByPlaceAndDateOfCosts() {
+        this.placeAndDateInCostsLoading = false
+        const dataQuery: DashboardReqDto = {
+            dateType: true,
+            dateTypeValue: 'YearMonth',
+            dataType: true,
+            dataTypeValue: 'location',
+            valueField: 'costs'
+        }
+
+        const res = await this.runQueryData(dataQuery)
+        this.placeAndDateInCosts = {
+            data: transformData(res, 'stackedColumn', true, 'placeName', 'costs', ['year', 'monthString']),
+            axisY: {
+                title: "Amount (HKD)"
+            },
+            toolTip: {
+                shared: true
+            }
+        }
+        this.placeAndDateInCostsLoading = true
     }
 
     

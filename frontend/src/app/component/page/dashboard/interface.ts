@@ -7,7 +7,7 @@ export interface DashboardReqFilterDto {
 
 export interface DashboardReqDto {
     dateType?: boolean
-    dateTypeValue?: 'YearMonth' | 'none'
+    dateTypeValue?: 'YearMonth' | 'YearQuarter' | 'none'
     dataType?: boolean
     dataTypeValue?: 'dept' | 'type' | 'location'
     valueField: 'counts' | 'costs'
