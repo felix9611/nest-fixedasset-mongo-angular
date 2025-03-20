@@ -14,8 +14,8 @@ export class SysRole extends BaseSchema {
     @Prop({ type: SchemaTypes.String})
     remark?: string
 
-    @Prop({ type: SchemaTypes.Number})
-    meunIds?: number[]
+    @Prop({ type: SchemaTypes.Mixed })
+    menuIds?: any
 
     @Prop({ type: SchemaTypes.Boolean, required: true })
     read: boolean

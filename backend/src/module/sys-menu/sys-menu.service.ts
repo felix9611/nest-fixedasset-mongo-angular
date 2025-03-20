@@ -204,20 +204,28 @@ export class SysMenuService {
     return answer
   }
 
+
   async getTreeAllMenuById(ids: string[]) {
-    const result: any = await this.sysMenuModel.find({ status: 1, _id: { $in: ids} }).exec()
+    const result: any = await this.sysMenuModel.find({ status: 1, _id: { $in: ids}, mainId:{ $in: ids} }).exec()
     const plainResult = result.map(doc => doc.toObject())
     const final = this.buildSortedTree(plainResult)
 
     return final
   }
 
-  async getTreeAllMenu() {
-    const result: any = await this.sysMenuModel.find({ status: 1 }).exec()
-    const plainResult = result.map(doc => doc.toObject())
-    const final = this.buildSortedTree(plainResult)
-
-    return final
+  async getAllMenu() {
+    return await this.sysMenuModel.aggregate([
+      {
+        $match: {
+          status: 1
+        }
+      },
+      {
+        $sort: {
+          sort: 1
+        }
+      }
+    ]).exec()
   }
 
   buildSortedTree(data: any[]) {
@@ -254,5 +262,38 @@ export class SysMenuService {
     return tree
   } 
 
+  buildSortedTreeShort(data: any[]) {
+    const map = new Map<string, any>()
+    const tree: any[] = []
+  
+    // Initialize Map with full item data and empty children array
+    data.forEach(item => {
+      map.set(String(item._id), { title: item.name, key: item._id, children: [] }) // Ensure _id is a string
+    });
+  
+    // Build tree structure by linking children
+    data.forEach(item => {
+      const parentId = String(item.mainId) // Ensure mainId is also a string
+      if (parentId && map.has(parentId)) {
+        map.get(parentId)!.children!.push(map.get(String(item._id))!)
+      } else {
+        tree.push(map.get(String(item._id))!)
+      }
+    })
+  
+    // Recursive function to sort tree nodes
+    function sortTree(nodes: any[]) {
+      nodes.sort((a, b) => a.sort - b.sort) // Sort at the current level
+      nodes.forEach(node => {
+        if (node.childrens && node.childrens.length > 0) {
+          sortTree(node.childrens) // Recursively sort children
+        }
+      })
+    }
+  
+    sortTree(tree) // Sort root level and all nested levels
+  
+    return tree
+  }
   
 }

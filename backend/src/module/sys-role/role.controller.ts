@@ -19,6 +19,12 @@ export class SysRoleController {
         return await this.sysRoleService.update(updateDto)
     }
 
+    @Post('update-permission')
+    @UseGuards(AuthGuard)
+    async updateRoleMenuPermission(@Body() updateDto: { id: string, menuIds: any }) {
+        return await this.sysRoleService.updateRoleMenuPermission(updateDto.id, updateDto.menuIds)
+    }
+
     @Get('one/:id')
     @UseGuards(AuthGuard)
     async getOneById(@Param('id') id: string) {

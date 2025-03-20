@@ -34,6 +34,11 @@
                         <td>
                             <div class="flex gap-3">
                                 <div 
+                                    (click)="openMenuDialog(data._id)" 
+                                    class="w-[160px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                    Meun Permission
+                                </div>
+                                <div 
                                     (click)="getOneData(data._id)" 
                                     class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
                                     Edit
@@ -122,6 +127,28 @@
         >
             <ng-container *nzModalContent>
                 Are you sure to confirm delete this asset type?
+            </ng-container>
+        </nz-modal>
+
+        <nz-modal
+            [(nzVisible)]="menuDialog" 
+            nzTitle="Meun Permission"
+            (nzOnCancel)="closeMenuDialog()"
+            (nzOnOk)="handleMeunPermission()"
+        >
+            <ng-container *nzModalContent>
+                <nz-tree
+                    #nzTreeComponent
+                    [nzData]="menuItems"
+                    nzCheckable
+                    [nzCheckedKeys]="selectedMenusIds"
+                    [nzExpandedKeys]="defaultMenusIds"
+                    [nzSelectedKeys]="menusIdsExpandedKeys"
+                    (nzClick)="menuItemClick($event)"
+                    (nzContextMenu)="menuItemClick($event)"
+                    (nzCheckboxChange)="menuItemCheck($event)"
+                    (nzExpandChange)="menuItemCheck($event)"
+                ></nz-tree>
             </ng-container>
         </nz-modal>
     </div>

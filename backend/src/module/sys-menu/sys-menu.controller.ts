@@ -37,10 +37,10 @@ export class SysMenuController {
         return this.menuService.listAllMenu(req)
     }
 
-    @Get('tree-menu')
+    @Get('all-menu')
     @UseGuards(AuthGuard)
     async getTreeMenu() {
-        return this.menuService.getTreeAllMenu()
+        return this.menuService.getAllMenu()
     }
 
     @Post('user/tree-menu')

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
@@ -13,15 +13,29 @@ import { RoleForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
+import { buildTreeForUI } from './function'
+import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [NzCheckboxModule, CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [
+        NzTreeModule, 
+        NzCheckboxModule, 
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule
+    ],
     templateUrl: './role.component.html',
     styleUrl: './role.component.css',
 })
 export class RoleComponent implements OnInit{
+    @ViewChild('nzTreeComponent', { static: false }) nzTreeComponent!: NzTreeComponent
     constructor(
         private message: NzMessageService
     ) {}
@@ -52,6 +66,7 @@ export class RoleComponent implements OnInit{
 
     ngOnInit() {
         this.loadSysRoleLists()
+        this.loadAllMenuItems()
     }
 
     async submitForm() {
@@ -131,6 +146,73 @@ export class RoleComponent implements OnInit{
         this.editForm = res
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    selectedMenusIds: any = []
+    defaultMenusIds: any = []
+    menusIdsExpandedKeys: any = []
+
+    menuItems: any[] = []
+    menuDialog: boolean = false
+    handleId: string = ''
+
+    handleMenuItemsIds: any = []
+
+    async loadAllMenuItems() {
+        const data = await getApiWithAuth('/sys/menu/all-menu')
+        this.menuItems = buildTreeForUI(data)
+        console.log(this.menuItems, 'test')
+    }
+
+    async openMenuDialog(id: string) {
+        this.menuDialog = true
+        this.handleId = id
+
+        const url = `/sys/role/one/${id}`
+
+        const res: any = await getApiWithAuth(url)
+
+        this.selectedMenusIds = res.menuIds
+     //   this.defaultMenusIds = res.menuIds
+    }
+
+    closeMenuDialog() {
+        this.menuDialog = false
+    }
+
+    async handleMeunPermission() {
+        const res = await postApiWithAuth('/sys/role/update-permission', {
+            id: this.handleId,
+            menuIds: this.selectedMenusIds
+        })
+        if (res.msg) {
+            this.message.error(res.msg)
+        } else if (res.matchedCount === 1 || !res.msg) {
+            this.handleMenuItemsIds = []
+            this.handleId = ''
+
+            this.message.success('Save successful!')
+            this.closeMenuDialog()
+            this.loadSysRoleLists()
+        }
+    }
+
+
+    menuItemClick(event: NzFormatEmitEvent) {
+        console.log(event)
+    }
+
+    menuItemCheck(event: NzFormatEmitEvent) {
+        console.log(event)
+        if (event.node?.isChecked === false) {
+            this.selectedMenusIds = this.selectedMenusIds.filter((item: string) => item !== event.node?.key)
+        } else {
+            this.selectedMenusIds.push(event.node?.key)
+        }
+    }
+
+    menuItemSelect(keys: string[]): void {
+        console.log(keys, this.nzTreeComponent.getSelectedNodeList());
     }
 
 }

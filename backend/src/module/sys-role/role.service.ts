@@ -99,6 +99,44 @@ export class SysRoleService {
         }
     }
 
+    async updateRoleMenuPermission(_id: string, menuIds: any) {
+        const checkData = await this.sysRoleModel.findOne({ _id })
+        if (checkData) {
+            const finalData = {
+                menuIds,
+                updatedAt: new Date()
+            }
+
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Role',
+                actionMethod: 'POST',
+                actionFrom: 'Role',
+                actionData: finalData,
+                actionSuccess: 'Sussess',
+                createdAt: new Date()
+            })
+
+            return await this.sysRoleModel.updateOne({ _id}, finalData)
+
+        } else {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Update Role',
+                actionMethod: 'POST',
+                actionFrom: 'Role',
+                actionData: {
+                    menuIds,
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                msg: 'This role has been invalidated! Please contact admin!'
+            }
+        }
+    }
+
     async invalidateRole(_id: string) {
         const checkData = await this.sysRoleModel.findOne({ _id })
 
