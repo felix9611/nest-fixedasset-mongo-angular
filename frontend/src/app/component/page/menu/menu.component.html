@@ -1,0 +1,15 @@
+<div class="bg-white px-[2rem]">
+    <div class="p-1  lg:p-6">
+        <div class="flex gap-2 py-5">
+            <div class="w-[150px]">
+                <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name" [(ngModel)]="searchForm.name" />
+            </div>
+            <div (click)="loadSysMenuLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+                Search
+            </div>
+            <div class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+                Create
+            </div>
+        </div>
+    </div>
+</div>

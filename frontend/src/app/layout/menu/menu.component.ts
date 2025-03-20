@@ -84,7 +84,8 @@ export class MenuComponent implements OnInit{
                 },
                 {
                     label: 'Menu',
-                    icon: ''
+                    icon: '',
+                    path: 'menu'
                 },
                 {
                     label: 'Department',

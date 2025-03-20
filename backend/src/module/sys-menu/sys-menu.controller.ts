@@ -48,4 +48,10 @@ export class SysMenuController {
     async getTreeMenuById(@Body() data: { ids: string[] }) {
         return this.menuService.getTreeAllMenuById(data.ids)
     }
+
+    @Get('main-item')
+    @UseGuards(AuthGuard)
+    async listAllMainIdMenu() {
+        return this.menuService.listAllMainIdMenu()
+    }
 }

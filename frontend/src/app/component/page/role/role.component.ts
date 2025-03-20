@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
@@ -21,7 +21,7 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
     templateUrl: './role.component.html',
     styleUrl: './role.component.css',
 })
-export class RoleComponent {
+export class RoleComponent implements OnInit{
     constructor(
         private message: NzMessageService
     ) {}

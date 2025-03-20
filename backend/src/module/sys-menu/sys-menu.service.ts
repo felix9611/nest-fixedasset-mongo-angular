@@ -156,6 +156,29 @@ export class SysMenuService {
     }
   }
 
+  async listAllMainIdMenu() {
+    return await this.sysMenuModel.aggregate([
+      {
+        $match: { mainId: 0, type: 0 } // WHERE mainId = 0 AND type = 0
+      },
+      {
+        $group: {
+          _id: { mainId: '$mainId', name: '$name' }, // GROUP BY mainId, name
+          _idValue: { $first: '$_id' } // Keep a unique _id
+        }
+      },
+      {
+        $project: {
+          _id: '$_idValue',
+          mainId: '$_id.mainId',
+          name: '$_id.name'
+        }
+      }
+    ])
+
+
+  }
+
   async listAllMenu(query: SysMenuList) {
     return await this.sysMenuModel.find(
       {

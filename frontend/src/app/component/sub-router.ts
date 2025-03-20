@@ -21,6 +21,7 @@ import { RepairRecordListComponent } from './page/asset/repair-record-list/repai
 import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-take-list.component'
 import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
 import { DashboardComponent } from './page/dashboard/dashboard.component'
+import { MenuListComponent } from './page/menu/menu.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -116,6 +117,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'stock-take-form',
         component: StockTakeFormComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'menu',
+        component: MenuListComponent,
         canActivate: [AuthGuard]
     },
     {
