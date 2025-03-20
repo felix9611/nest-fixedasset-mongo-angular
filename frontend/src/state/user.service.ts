@@ -4,7 +4,7 @@ import { UserInfo } from './interface'
 import { Router } from '@angular/router'
 import { LocalStorageService } from './LocalStorageService'
 import { HttpService } from '../tool/HttpService'
-import { getApiWithAuth } from '../tool/httpRequest-auth'
+import { getApiWithAuth, postApiWithAuth } from '../tool/httpRequest-auth'
 // import { CartStateFace, Promotion, CartFace } from './interfaceType'
 
 @Injectable({
@@ -29,10 +29,13 @@ export class UserStoreService {
         email: '', 
         loginRecords: []
     }
+    private userMenu: any[] = []
     private tokenSubject = new BehaviorSubject<string>(this.accessToken)
     private userSubject = new BehaviorSubject<UserInfo>(this.initialState)
+    private menuSubject = new BehaviorSubject<any[]>(this.userMenu)
     user$ = this.userSubject.asObservable()
     token$ = this.tokenSubject.asObservable()
+    menu$ = this.menuSubject.asObservable()
 
     get user(): UserInfo {
         return this.userSubject.value
@@ -64,6 +67,10 @@ export class UserStoreService {
 
     setUser(info: UserInfo): void {
         this.userSubject.next(info)
+    }
+
+    setMenu(menu: any[]): void {
+        this.menuSubject.next(menu)
     }
     
 
@@ -101,5 +108,18 @@ export class UserStoreService {
         } else {
             return false
         }
+    }
+
+    async loadMenus() {
+        let menuIds: any = []
+        this.user$.subscribe(user => {
+            user.roleLists?.forEach(async (role: any) => {
+                
+                menuIds.push(...role.menuIds)
+                const data = await postApiWithAuth('/sys/menu/user/tree-menu', { ids: menuIds })
+                this.setMenu(data)
+            })
+        })
+        
     }
 }

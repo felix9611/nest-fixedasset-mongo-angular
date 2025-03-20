@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { TooltipModule } from 'primeng/tooltip'
 import path from 'path'
+import { UserStoreService } from '../../../state/user.service'
 
 @Component({
   selector: 'app-menu',
@@ -14,7 +15,7 @@ import path from 'path'
   styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit{
-    constructor(private router: Router) {
+    constructor(private router: Router, private userService: UserStoreService) {
      //   let currentRoute = this.router.url.split('?')[0]
 
     }
@@ -35,6 +36,9 @@ export class MenuComponent implements OnInit{
 
 
     ngOnInit() {
+        this.userService.menu$.subscribe(menuItems => {
+            this.menuItems = menuItems
+        })
     }
 
     activeParent: any = null

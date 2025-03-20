@@ -8,11 +8,11 @@
             <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
             <span class="ml-3 transition-opacity duration-300 text-white"
                 [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
-                {{ item.label }}
+                {{ item.name }}
             </span>
             
           </a>
-          <span *ngIf="item.childrens" class="flex justify-self-end items-center">{{ activeParent === item ? '▲' : '▼' }}</span>
+          <span *ngIf="item.childrens && item.childrens.length > 0" class="flex justify-self-end items-center">{{ activeParent === item ? '▲' : '▼' }}</span>
           
     </div>
 
@@ -26,7 +26,7 @@
             <mat-icon cl aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
               <span class="ml-3 transition-opacity duration-300 text-white"
                   [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
-              {{ child.label }}
+              {{ child.name }}
             </span>
           </a>
       </li>

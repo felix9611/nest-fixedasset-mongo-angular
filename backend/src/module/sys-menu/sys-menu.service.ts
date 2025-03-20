@@ -206,7 +206,10 @@ export class SysMenuService {
 
 
   async getTreeAllMenuById(ids: string[]) {
-    const result: any = await this.sysMenuModel.find({ status: 1, _id: { $in: ids}, mainId:{ $in: ids} }).exec()
+    const result: any = await this.sysMenuModel.find({ status: 1, $or: [
+      { _id: { $in: ids} },
+      { mainId:{ $in: ids}  }
+    ]}).exec()
     const plainResult = result.map(doc => doc.toObject())
     const final = this.buildSortedTree(plainResult)
 
