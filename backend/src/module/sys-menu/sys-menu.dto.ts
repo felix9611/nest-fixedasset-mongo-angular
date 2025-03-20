@@ -4,7 +4,7 @@ export interface SysMenuDto {
     icon: string
     path: string
     sort: number
-    type: number
+    type: string
 }
 
 export interface UpdateSysMenuDto extends SysMenuDto {

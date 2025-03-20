@@ -173,7 +173,7 @@ export class SysMenuService {
   async listAllMainIdMenu() {
     return await this.sysMenuModel.aggregate([
       {
-        $match: { mainId: '', type: 0 } // WHERE mainId = 0 AND type = 0
+        $match: { mainId: '' } // WHERE mainId = 0 AND type = 0
       },
       {
         $group: {
@@ -226,7 +226,7 @@ export class SysMenuService {
   
     // Initialize Map with full item data and empty children array
     data.forEach(item => {
-      map.set(String(item._id), { ...item, childrens: [] }) // Ensure _id is a string
+      map.set(String(item._id), { ...item, expand: false, childrens: [] }) // Ensure _id is a string
     });
   
     // Build tree structure by linking children

@@ -5,5 +5,5 @@ export interface MenuForm {
     icon: string
     path: string
     sort: number
-    type: number
+    type: string
 }

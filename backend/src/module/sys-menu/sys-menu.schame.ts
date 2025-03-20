@@ -20,8 +20,8 @@ export class SysMenu extends BaseSchema {
     @Prop({ type: SchemaTypes.Number, required: true })
     sort: number
 
-    @Prop({ type: SchemaTypes.Number, required: true })
-    type: number
+    @Prop({ type: SchemaTypes.String })
+    type: string
 }
 
 export const SysMenuSchema = SchemaFactory.createForClass(SysMenu)
