@@ -37,7 +37,6 @@ export class ActionRecordComponent {
         remark: ''
     }
 
-    okText: string = 'Create'
 
     dataLists: any[] = []
     totals: number = 0

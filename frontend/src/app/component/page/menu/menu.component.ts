@@ -156,6 +156,7 @@ export class MenuListComponent implements OnInit {
     }
 
     async getDataById(id: string) {
+        this.okText = 'Update'
         this.editForm = await getApiWithAuth(`/sys/menu/one/${id}`)
         this.editDialogVisible = true
     }
