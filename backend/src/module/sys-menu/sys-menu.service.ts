@@ -5,6 +5,20 @@ import { InjectModel } from '@nestjs/mongoose'
 import { SysMenuDto, SysMenuList, UpdateSysMenuDto } from './sys-menu.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 
+interface MenuItem {
+  _id: string;
+  createdAt: string;
+  status: number;
+  mainId: string;
+  name: string;
+  icon: string;
+  path: string;
+  sort: number;
+  type: number;
+  updatedAt: string;
+  __v: number;
+  children?: MenuItem[];
+}
 
 @Injectable()
 export class SysMenuService {
@@ -159,7 +173,7 @@ export class SysMenuService {
   async listAllMainIdMenu() {
     return await this.sysMenuModel.aggregate([
       {
-        $match: { mainId: 0, type: 0 } // WHERE mainId = 0 AND type = 0
+        $match: { mainId: '', type: 0 } // WHERE mainId = 0 AND type = 0
       },
       {
         $group: {
@@ -180,117 +194,65 @@ export class SysMenuService {
   }
 
   async listAllMenu(query: SysMenuList) {
-    return await this.sysMenuModel.find(
+    const result: any = await this.sysMenuModel.find(
       {
         name: { $regex: query.name, $options: 'i'}
       }
     ).exec()
+    const plainResult = result.map(doc => doc.toObject())
+    const answer = this.buildSortedTree(plainResult)
+    return answer
   }
 
   async getTreeAllMenuById(ids: string[]) {
-    const items = await this.sysMenuModel.find({ status: 1, _id: { $in: ids} }).exec()
-
-    const final = this.nestItems(items)
+    const result: any = await this.sysMenuModel.find({ status: 1, _id: { $in: ids} }).exec()
+    const plainResult = result.map(doc => doc.toObject())
+    const final = this.buildSortedTree(plainResult)
 
     return final
   }
 
   async getTreeAllMenu() {
-    const items = await this.sysMenuModel.find({ status: 1 }).exec()
-
-    const final = this.nestItems(items)
+    const result: any = await this.sysMenuModel.find({ status: 1 }).exec()
+    const plainResult = result.map(doc => doc.toObject())
+    const final = this.buildSortedTree(plainResult)
 
     return final
   }
 
-  nestItems(items: any[]) {
-    const map = new Map<number, any>() // items by ID
-    const roots: any[] = [] // Top-level
+  buildSortedTree(data: any[]) {
+    const map = new Map<string, any>()
+    const tree: any[] = []
   
-    // First, populate the map
-    items.forEach(item => map.set(item.id, { ...item, children: [] }))
-  
-    // Then, build the hierarchy
-    items.forEach(item => {
-      if (item.mainId === 0) {
-        roots.push(map.get(item._id)!)
-      } else {
-        const parent = map.get(item.mainId)
-        if (parent) {
-          parent.children!.push(map.get(item._id)!)
-        }
-      }
-    })
-  
-    this.sortItems(roots)
-    return roots
-  }
-
-  sortItems(items: any[]) {
-    items.sort((a, b) => a.sort - b.sort)
-    items.forEach(item => {
-      if (item.childrens!.length > 0) {
-        this.sortItems(item.childrens!)
-      } else {
-        delete item.childrens // Remove empty children arrays
-      }
-    })
-  }
-}
-/*
-
-type Item = {
-  _id: number;
-  mainId: number;
-  name: string;
-  sort: number;
-  children?: Item[];
-};
-
-function nestItems(items: Item[]): Item[] {
-  const map = new Map<number, Item>(); // Store items by ID
-  const roots: Item[] = []; // Store top-level items
-
-  // First, populate the map
-  items.forEach(item => map.set(item.id, { ...item, children: [] }));
-
-  // Then, build the hierarchy
-  items.forEach(item => {
-    if (item.mainId === 0) {
-      roots.push(map.get(item._id)!);
-    } else {
-      const parent = map.get(item.mainId);
-      if (parent) {
-        parent.children!.push(map.get(item._id)!);
-      }
-    }
-  });
-
-  // Sort recursively
-  function sortItems(items: Item[]) {
-    items.sort((a, b) => a.sort - b.sort);
-    items.forEach(item => {
-      if (item.children!.length > 0) {
-        sortItems(item.children!);
-      } else {
-        delete item.children; // Remove empty children arrays
-      }
+    // Initialize Map with full item data and empty children array
+    data.forEach(item => {
+      map.set(String(item._id), { ...item, childrens: [] }) // Ensure _id is a string
     });
-  }
+  
+    // Build tree structure by linking children
+    data.forEach(item => {
+      const parentId = String(item.mainId) // Ensure mainId is also a string
+      if (parentId && map.has(parentId)) {
+        map.get(parentId)!.childrens!.push(map.get(String(item._id))!)
+      } else {
+        tree.push(map.get(String(item._id))!)
+      }
+    })
+  
+    // Recursive function to sort tree nodes
+    function sortTree(nodes: any[]) {
+      nodes.sort((a, b) => a.sort - b.sort) // Sort at the current level
+      nodes.forEach(node => {
+        if (node.childrens && node.childrens.length > 0) {
+          sortTree(node.childrens) // Recursively sort children
+        }
+      })
+    }
+  
+    sortTree(tree) // Sort root level and all nested levels
+  
+    return tree
+  } 
 
-  sortItems(roots);
-  return roots;
+  
 }
-
-// Test data
-const data: Item[] = [
-  { id: 1, mainId: 0, name: "Tongs", sort: 1 },
-  { id: 2, mainId: 1, name: "Dogs", sort: 2 },
-  { id: 3, mainId: 1, name: "Cats", sort: 1 },
-  { id: 4, mainId: 0, name: "home", sort: 2 },
-];
-
-console.log(JSON.stringify(nestItems(data), null, 2));
-
-
-*/

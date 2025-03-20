@@ -5,13 +5,13 @@ import { BaseSchema } from '../base/baseSchema'
 export type SysMenuDocument = HydratedDocument<SysMenu>
 @Schema()
 export class SysMenu extends BaseSchema {
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     mainId: string
 
     @Prop({ type: SchemaTypes.String, required: true })
     name: string
 
-    @Prop({ type: SchemaTypes.String})
+    @Prop({ type: SchemaTypes.String })
     icon: string
 
     @Prop({ type: SchemaTypes.String })
