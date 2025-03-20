@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { DashboardReqDto, DashboardReqFilterDto } from './interface'
 import { CanvasChartComponent } from '../../components/chart/chart.component'
-import { transformData } from './function' 
+import { transformData, transformDataNoDate } from './function' 
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 
@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'costs'
         }
 
-        const res = await this.runQueryData(dataQuery)
+        const res = await this.runQueryDate(dataQuery)
         
         this.deptAndDateInCost = {
             data: transformData(res, 'stackedColumn', true, 'deptName', 'costs', ['year', 'monthString']),
@@ -123,7 +123,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'counts'
         }
 
-        const res = await this.runQueryData(dataQuery)
+        const res = await this.runQueryDate(dataQuery)
         this.deptAndDateInCount = {
             data: transformData(res, 'stackedColumn', true, 'deptName', 'count', ['year', 'monthString']),
             axisY: {
@@ -153,7 +153,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'costs'
         }
 
-        const res = await this.runQueryData(dataQuery)
+        const res = await this.runQueryDate(dataQuery)
         console.log(transformData(res, 'stackedColumn', true, 'typeName', 'costs', ['year', 'monthString']))
         this.typeAndDateInCost = {
             data: transformData(res, 'stackedColumn', true, 'typeName', 'costs', ['year', 'monthString']),
@@ -184,7 +184,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'counts'
         }
 
-        const res = await this.runQueryData(dataQuery)
+        const res = await this.runQueryDate(dataQuery)
         this.typeAndDateInCount = {
             data: transformData(res, 'stackedColumn', true, 'typeName', 'count', ['year', 'monthString']),
             axisY: {
@@ -209,7 +209,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'counts'
         }
 
-        const res = await this.runQueryData(dataQuery)
+        const res = await this.runQueryDate(dataQuery)
         this.placeAndDateInCount = {
             data: transformData(res, 'stackedColumn', true, 'placeName', 'count', ['year', 'monthString']),
             axisY: {
@@ -235,7 +235,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'costs'
         }
 
-        const res = await this.runQueryData(dataQuery)
+        const res = await this.runQueryDate(dataQuery)
         this.placeAndDateInCosts = {
             data: transformData(res, 'stackedColumn', true, 'placeName', 'costs', ['year', 'monthString']),
             axisY: {
@@ -259,7 +259,8 @@ export class DashboardComponent implements OnInit {
             valueField: 'counts'
         }
 
-        this.typeCount = await this.runQueryDate(dataQuery)
+        const res = await this.runQueryData(dataQuery)
+        console.log(transformDataNoDate(res, 'bar', true, 'typeName', 'count'))
     }
 
     typeCost: any[] = []
@@ -272,7 +273,7 @@ export class DashboardComponent implements OnInit {
             valueField: 'costs'
         }
 
-        this.typeCost = await this.runQueryDate(dataQuery)
+        this.typeCost = await this.runQueryData(dataQuery)
     }
 
     async runQueryData(dataQuery: DashboardReqDto) {

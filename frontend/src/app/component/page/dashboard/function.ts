@@ -27,24 +27,17 @@ export function transformData(rawData: any[], chartType: string, showInLegend: b
   return Object.values(dataMap);
 }
 
-/*
-export function transformData(rawData: any[], chartType: string, showInLegend: boolean, keyName: string, valueName: string, dateKeyName: string[]): any[] {
-    const dataMap: Record<string, { name: string; type: string; showInLegend: boolean ; xValueType: string, dataPoints: { label: string; y: number }[] }> = {}
+export function transformDataNoDate(rawData: any[], chartType: string, showInLegend: boolean, keyName: string, valueName: string): any[] {
 
-    rawData.forEach((data: any) => {
-      if (!data[dateKeyName[0]] ||!data[dateKeyName[1]] || data[valueName] === 0) return
-      
-      if (!dataMap[data[keyName]]) {
-        dataMap[data[keyName]] = { name: data[keyName], type: chartType , showInLegend: showInLegend, xValueType: "dateTime", dataPoints: [] }
-      }
-      
-      dataMap[data[keyName]].dataPoints.push({ label: `${data[dateKeyName[0]]} - ${data[dateKeyName[1]]}`, y: data[valueName] })
-    })
 
-    Object.values(dataMap).forEach(series => {
-      series.dataPoints.sort((a: any, b: any) => a.x - b.x);
-    });
-  
-    return Object.values(dataMap)
-  }
-    */
+  let dataMap: any = { type: chartType, showInLegend: showInLegend, dataPoints: [] }
+
+  rawData.forEach((data: any) => {
+    if (data[valueName] === 0) return;
+    
+
+    dataMap.dataPoints.push({ x: data[keyName], y: data[valueName] });
+  });
+
+  return [dataMap]
+}
