@@ -239,7 +239,7 @@ export class SysRoleService {
         return await this.sysRoleModel.findOne({ name, code, status: 1})
     }
 
-    async loadRoleWithMenu(roleIds: string[]) {
+    async loadRoleWithMenu(roleIds: any) {
         const objectIds = roleIds.map(id => {
             if (id && Types.ObjectId.isValid(id)) {
                 return new Types.ObjectId(id);
@@ -283,19 +283,25 @@ export class SysRoleService {
             {
                 $addFields: {
                     "menuLists": {
-                        $map: {
-                            input: "$menuLists",
-                            as: "menu",
-                            in: {
-                                $mergeObjects: [
-                                    "$$menu",
-                                    {
-                                        read: "$read",
-                                        write: "$write",
-                                        delete: "$delete",
-                                        update: "$update"
+                        $cond: {
+                            if: { $eq: ["$menuLists", []] },
+                            then: [],
+                            else: {
+                                $map: {
+                                    input: "$menuLists",
+                                    as: "menu",
+                                    in: {
+                                        $mergeObjects: [
+                                            "$$menu",
+                                            {
+                                                read: "$read",
+                                                write: "$write",
+                                                delete: "$delete",
+                                                update: "$update"
+                                            }
+                                        ]
                                     }
-                                ]
+                                }
                             }
                         }
                     }

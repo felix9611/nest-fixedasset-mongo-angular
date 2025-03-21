@@ -15,7 +15,7 @@ export class SysRole extends BaseSchema {
     remark?: string
 
     @Prop({ type: SchemaTypes.Mixed })
-    menuIds?: any
+    menuIds: any
 
     @Prop({ type: SchemaTypes.Boolean })
     read: boolean
