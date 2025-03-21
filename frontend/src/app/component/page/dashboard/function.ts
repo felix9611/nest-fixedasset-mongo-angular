@@ -9,7 +9,7 @@ export function transformData(rawData: any[], chartType: string, showInLegend: b
       "Jul": 6, "Aug": 7, "Sep": 8, "Oct": 9, "Nov": 10, "Dec": 11
   };
 
-  const dataMap: Record<string, { name: string; type: string; showInLegend: boolean ; xValueType: string, dataPoints: { x: number, y: number }[] }> = {}
+  const dataMap: Record<string, { name: string; type: string; showInLegend: boolean ; xValueType?: string, dataPoints: { x: number, y: number }[] }> = {}
 
   rawData.forEach((data: any) => {
     if (!data[dateKeyName[0]] || !data[dateKeyName[1]] || data[valueName] === 0) return;
