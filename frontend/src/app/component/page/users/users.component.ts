@@ -15,6 +15,8 @@ import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { imgToBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
 import { Observable, Observer } from 'rxjs'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     // selector: 'app-footer',
@@ -37,8 +39,29 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 export class UsersComponent {
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'User', 'users')
+                    
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+            console.log(this.userRightInside, 'answer')
+        })
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
+
 
     searchForm: any = {
         page: 1,

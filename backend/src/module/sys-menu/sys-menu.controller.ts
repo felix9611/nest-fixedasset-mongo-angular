@@ -46,7 +46,7 @@ export class SysMenuController {
     @Post('user/tree-menu')
     @UseGuards(AuthGuard)
     async getTreeMenuById(@Body() data: { ids: string[] }) {
-        return this.menuService.getTreeAllMenuById(data.ids)
+        return await this.menuService.getTreeAllMenuById(data.ids)
     }
 
     @Get('main-item')

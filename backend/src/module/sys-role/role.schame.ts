@@ -17,16 +17,16 @@ export class SysRole extends BaseSchema {
     @Prop({ type: SchemaTypes.Mixed })
     menuIds?: any
 
-    @Prop({ type: SchemaTypes.Boolean, required: true })
+    @Prop({ type: SchemaTypes.Boolean })
     read: boolean
 
-    @Prop({ type: SchemaTypes.Boolean, required: true })
+    @Prop({ type: SchemaTypes.Boolean })
     write: boolean
 
-    @Prop({ type: SchemaTypes.Boolean, required: true })
+    @Prop({ type: SchemaTypes.Boolean })
     delete: boolean
 
-    @Prop({ type: SchemaTypes.Boolean, required: true })
+    @Prop({ type: SchemaTypes.Boolean })
     update: boolean
 }
 

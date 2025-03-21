@@ -216,6 +216,44 @@ export class SysMenuService {
     return final
   }
 
+
+  async getTreeAllMenuRoleById(ids: string[], roleIds: string[]) {
+    const result: any = await this.sysMenuModel.aggregate([
+      {
+        $match: { 
+          status: 1, 
+            $or: [
+            { _id: { $in: ids} },
+            { mainId:{ $in: ids}  }
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: 'sysroles',
+          let: { idStr: { $toObjectId: '$_id' }, mainId: "$mainId" },
+          pipeline: [
+            {
+              $match: {
+                _id: { $in: roleIds },
+                $expr: {
+                  $or: [
+                    { $in: ['$$idStr', '$menuIds'] },
+                    { $in: ['$$mainId', '$menuIds'] },
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'role'
+        }
+      },
+      { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } }
+    ]).exec()
+
+    return result
+  }
+
   async getAllMenu() {
     return await this.sysMenuModel.aggregate([
       {

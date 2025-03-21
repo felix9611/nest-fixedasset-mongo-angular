@@ -24,18 +24,21 @@ export class UserStoreService {
         accessToken: '',
         avatarBase64: '',
         deptId: 0,
-        roleIds: [],
+        roles: [],
         roleLists: [],
         email: '', 
         loginRecords: []
     }
     private userMenu: any[] = []
+    private userMenuRole: any[] = []
     private tokenSubject = new BehaviorSubject<string>(this.accessToken)
     private userSubject = new BehaviorSubject<UserInfo>(this.initialState)
     private menuSubject = new BehaviorSubject<any[]>(this.userMenu)
+    private menuRoleSubject = new BehaviorSubject<any[]>(this.userMenu)
     user$ = this.userSubject.asObservable()
     token$ = this.tokenSubject.asObservable()
     menu$ = this.menuSubject.asObservable()
+    menuRole$ = this.menuRoleSubject.asObservable()
 
     get user(): UserInfo {
         return this.userSubject.value
@@ -72,6 +75,10 @@ export class UserStoreService {
     setMenu(menu: any[]): void {
         this.menuSubject.next(menu)
     }
+
+    setMenuRole(menuRole: any[]): void {
+        this.menuRoleSubject.next(menuRole)
+    }
     
 
     logout(): void {
@@ -81,7 +88,7 @@ export class UserStoreService {
             accessToken: '',
             avatarBase64: '',
             deptId: 0,
-            roleIds: [],
+            roles: [],
             roleLists: [],
             email: '',
             loginRecords: []
@@ -122,4 +129,12 @@ export class UserStoreService {
         })
         
     }
+
+    async loadMenuRoles() {
+        this.user$.subscribe(async user => {
+            const data = await postApiWithAuth('/sys/role/list-permission', { roleIds: user.roles })
+            this.setMenuRole(data)
+        })
+    }
+
 }
