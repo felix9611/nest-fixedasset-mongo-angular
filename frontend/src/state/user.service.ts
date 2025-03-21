@@ -30,12 +30,15 @@ export class UserStoreService {
         loginRecords: []
     }
     private userMenu: any[] = []
+    private userMenuRole: any[] = []
     private tokenSubject = new BehaviorSubject<string>(this.accessToken)
     private userSubject = new BehaviorSubject<UserInfo>(this.initialState)
     private menuSubject = new BehaviorSubject<any[]>(this.userMenu)
+    private menuRoleSubject = new BehaviorSubject<any[]>(this.userMenu)
     user$ = this.userSubject.asObservable()
     token$ = this.tokenSubject.asObservable()
     menu$ = this.menuSubject.asObservable()
+    menuRole$ = this.menuRoleSubject.asObservable()
 
     get user(): UserInfo {
         return this.userSubject.value
@@ -71,6 +74,10 @@ export class UserStoreService {
 
     setMenu(menu: any[]): void {
         this.menuSubject.next(menu)
+    }
+
+    setMenuRole(menuRole: any[]): void {
+        this.menuRoleSubject.next(menuRole)
     }
     
 
@@ -122,4 +129,18 @@ export class UserStoreService {
         })
         
     }
+
+    async loadMenuRoles() {
+        let menuIds: any = []
+        this.user$.subscribe(user => {
+            user.roleLists?.forEach(async (role: any) => {
+                
+                menuIds.push(...role.menuIds)
+                const data = await postApiWithAuth('/sys/menu/user/menu-role-permission', { ids: menuIds })
+                this.setMenuRole(data)
+            })
+        })
+        
+    }
+
 }

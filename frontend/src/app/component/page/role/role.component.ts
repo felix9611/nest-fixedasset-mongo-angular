@@ -15,6 +15,9 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { buildTreeForUI } from './function'
 import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { UserStoreService } from '../../../../state/user.service'
+import { read, write } from 'fs'
+import { update } from 'plotly.js-dist-min'
 
 @Component({
     // selector: 'app-footer',
@@ -37,7 +40,8 @@ import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } f
 export class RoleComponent implements OnInit{
     @ViewChild('nzTreeComponent', { static: false }) nzTreeComponent!: NzTreeComponent
     constructor(
-        private message: NzMessageService
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
     ) {}
 
     searchForm: any = {
