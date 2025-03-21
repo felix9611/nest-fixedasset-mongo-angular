@@ -18,6 +18,7 @@ import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } f
 import { UserStoreService } from '../../../../state/user.service'
 import { read, write } from 'fs'
 import { update } from 'plotly.js-dist-min'
+import { findMenuItem } from '../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -42,7 +43,27 @@ export class RoleComponent implements OnInit{
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
-    ) {}
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Role', 'role')
+            
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+            console.log(this.userRightInside, 'answer')
+        })
+        
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         page: 1,
@@ -71,6 +92,7 @@ export class RoleComponent implements OnInit{
     ngOnInit() {
         this.loadSysRoleLists()
         this.loadAllMenuItems()
+       
     }
 
     async submitForm() {
@@ -99,9 +121,13 @@ export class RoleComponent implements OnInit{
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadSysRoleLists()
-
-            
         }
+    }
+
+    async loadAllMenuItems() {
+        const data = await getApiWithAuth('/sys/menu/all-menu')
+        this.menuItems = buildTreeForUI(data)
+        console.log(this.menuItems, 'test')
     }
 
     async loadSysRoleLists() {
@@ -162,11 +188,7 @@ export class RoleComponent implements OnInit{
 
     handleMenuItemsIds: any = []
 
-    async loadAllMenuItems() {
-        const data = await getApiWithAuth('/sys/menu/all-menu')
-        this.menuItems = buildTreeForUI(data)
-        console.log(this.menuItems, 'test')
-    }
+
 
     async openMenuDialog(id: string) {
         this.menuDialog = true

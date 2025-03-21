@@ -24,7 +24,7 @@ export class UserStoreService {
         accessToken: '',
         avatarBase64: '',
         deptId: 0,
-        roleIds: [],
+        roles: [],
         roleLists: [],
         email: '', 
         loginRecords: []
@@ -88,7 +88,7 @@ export class UserStoreService {
             accessToken: '',
             avatarBase64: '',
             deptId: 0,
-            roleIds: [],
+            roles: [],
             roleLists: [],
             email: '',
             loginRecords: []
@@ -131,16 +131,10 @@ export class UserStoreService {
     }
 
     async loadMenuRoles() {
-        let menuIds: any = []
-        this.user$.subscribe(user => {
-            user.roleLists?.forEach(async (role: any) => {
-                
-                menuIds.push(...role.menuIds)
-                const data = await postApiWithAuth('/sys/menu/user/menu-role-permission', { ids: menuIds })
-                this.setMenuRole(data)
-            })
+        this.user$.subscribe(async user => {
+            const data = await postApiWithAuth('/sys/role/list-permission', { roleIds: user.roles })
+            this.setMenuRole(data)
         })
-        
     }
 
 }

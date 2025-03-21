@@ -49,12 +49,6 @@ export class SysMenuController {
         return await this.menuService.getTreeAllMenuById(data.ids)
     }
 
-    @Post('user/menu-role-permission')
-    @UseGuards(AuthGuard)
-    async getTreeMenuRoleById(@Body() data: { ids: string[] }) {   
-        return await this.menuService.getTreeAllMenuRoleById(data.ids)
-    }
-
     @Get('main-item')
     @UseGuards(AuthGuard)
     async listAllMainIdMenu() {

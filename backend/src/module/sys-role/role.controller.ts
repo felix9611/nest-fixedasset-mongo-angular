@@ -49,4 +49,10 @@ export class SysRoleController {
         return this.sysRoleService.listPageRole(req)
     }
     
+    @Post('list-permission')
+    @UseGuards(AuthGuard)
+    async listPermission(@Body() req: { roleIds: any }) {
+        return this.sysRoleService.loadRoleWithMenu(req.roleIds)
+    }
+
 }

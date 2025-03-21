@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { SysRole } from './role.schame'
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateSysRoleDto, ListRoleRequestDto, UpdateSysRoleDto } from './role.dto';
 import { ActionRecordService } from '../action-record/actionRecord.service';
@@ -237,5 +237,70 @@ export class SysRoleService {
 
     async checkRoleExist(name: string, code: string) {
         return await this.sysRoleModel.findOne({ name, code, status: 1})
+    }
+
+    async loadRoleWithMenu(roleIds: string[]) {
+        const objectIds = roleIds.map(id => {
+            if (id && Types.ObjectId.isValid(id)) {
+                return new Types.ObjectId(id);
+            }
+            throw new Error(`Invalid ObjectId: ${id}`);
+        })
+    
+        return await this.sysRoleModel.aggregate([
+            {
+                $match: {
+                    _id: { $in: objectIds }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'sysmenus', // Make sure this matches your DB collection name
+                    let: {
+                        menuIds: {
+                            $map: {
+                                input: '$menuIds',
+                                as: 'menuId',
+                                in: { $cond: [{ $ne: ['$$menuId', ''] }, { $toObjectId: '$$menuId' }, null] }
+                            }
+                        }
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $or: [
+                                        { $in: ['$_id', '$$menuIds'] },  // Match _id in menuIds
+                                        { $and: [{ $ne: ['$mainId', ''] }, { $in: [{ $toObjectId: '$mainId' }, '$$menuIds'] } ] }  // Match mainId as string directly
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'menuLists'
+                }
+            },
+            {
+                $addFields: {
+                    "menuLists": {
+                        $map: {
+                            input: "$menuLists",
+                            as: "menu",
+                            in: {
+                                $mergeObjects: [
+                                    "$$menu",
+                                    {
+                                        read: "$read",
+                                        write: "$write",
+                                        delete: "$delete",
+                                        update: "$update"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ])
     }
 }

@@ -217,7 +217,7 @@ export class SysMenuService {
   }
 
 
-  async getTreeAllMenuRoleById(ids: string[]) {
+  async getTreeAllMenuRoleById(ids: string[], roleIds: string[]) {
     const result: any = await this.sysMenuModel.aggregate([
       {
         $match: { 
@@ -235,6 +235,7 @@ export class SysMenuService {
           pipeline: [
             {
               $match: {
+                _id: { $in: roleIds },
                 $expr: {
                   $or: [
                     { $in: ['$$idStr', '$menuIds'] },

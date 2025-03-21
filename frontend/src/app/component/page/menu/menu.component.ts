@@ -80,7 +80,8 @@ export class MenuListComponent implements OnInit {
         icon: '',
         path: '',
         sort: 0,
-        type: ''
+        type: '',
+        menuIds: []
     }
 
     typeOptions = [
@@ -121,7 +122,8 @@ export class MenuListComponent implements OnInit {
             icon: '',
             path: '',
             sort: 0,
-            type: ''
+            type: '',
+            menuIds: []
         }
     }
 
@@ -143,7 +145,8 @@ export class MenuListComponent implements OnInit {
                 icon: '',
                 path: '',
                 sort: 0,
-                type: ''
+                type: '',
+                menuIds: []
             }
 
             this.message.success('Save successful!')

@@ -6,4 +6,5 @@ export interface MenuForm {
     path: string
     sort: number
     type: string
+    menuIds: string[]
 }
