@@ -13,6 +13,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     standalone: true,
@@ -34,12 +36,33 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 })
 export class MenuListComponent implements OnInit {
     constructor(
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'User', 'users')
+                                    
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+            console.log(this.userRightInside, 'answer')
+        })
+    }
 
     ngOnInit(): void {
         this.loadSysMenuLists()
         this.loadMainItemLists()
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
     }
 
     listOfData = [

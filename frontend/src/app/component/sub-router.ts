@@ -80,7 +80,7 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'department',
+        path: 'departments',
         component: DepartmentComponent,
         canActivate: [AuthGuard]
     },
