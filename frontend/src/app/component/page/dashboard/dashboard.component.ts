@@ -42,8 +42,8 @@ export class DashboardComponent implements OnInit {
         this.getByTypeAndDateOfCount()
         this.getByPlaceAndDateOfCount()
         this.getByPlaceAndDateOfCosts()
-        this.getByTotalCost()
-        this.getByTotalCount()
+   //     this.getByTotalCost()
+  //      this.getByTotalCount()
         this.loadTypeList()
         this.loadDeptList()
         this.loadLocationList()
@@ -71,8 +71,8 @@ export class DashboardComponent implements OnInit {
         await this.getByTypeAndDateOfCount()
         await this.getByPlaceAndDateOfCount()
         await this.getByPlaceAndDateOfCosts()
-        await this.getByTotalCost()
-        await this.getByTotalCount()
+//        await this.getByTotalCost()
+  //      await this.getByTotalCount()
     }
 
 
