@@ -1,10 +1,10 @@
-<div class="text-center text-black font-600 text-[1.1rem] py-8">
+<div class="text-center text-black font-600 text-[1.1rem] py-8" style="background-image: url('background3.jpg');">
     <div class="bg-cover w-screen min-h-screen">
         <div class="grid md:grid-cols-3 gap-3 p-10">
-            <div class="md:grid-cols-2 lg:my-[15rem]">
+            <div class="md:grid-cols-2 lg:my-[8rem]">
                 <div>
                     <div
-                        class="text-center font-bold text-[3rem] md:text-[3rem] lg:text-[3.5rem] xl:text-[4rem] xs:[text-shadow:_0_15px_30px_rgb(99_102_241_/_0.8)]  [text-shadow:_0_8px_10px_rgb(99_102_241_/_0.8)] hover:[text-shadow:_0_10px_15px_#b5edff]"
+                        class="text-center font-bold text-[3rem] md:text-[3rem] lg:text-[3rem] xl:text-[3rem] xs:[text-shadow:_0_15px_30px_rgb(99_102_241_/_0.8)]  [text-shadow:_0_8px_10px_rgb(99_102_241_/_0.8)] hover:[text-shadow:_0_10px_15px_#b5edff]"
                     >
                         Fixed Asset Management
                     </div>
@@ -17,7 +17,7 @@
             </div>
             <div class="my-[10.5rem]">
                 <div class="bg-white bg-opacity-80 p-6 rounded-x rounded-3xl shadow-lg">
-                    <form #loginFormRef="ngForm" (ngSubmit)="login()" class="grid grid-cols-1 gap-3">
+                    <form #loginFormRef="ngForm" class="grid grid-cols-1 gap-3">
 
                         <input 
                             id="username" 
@@ -44,14 +44,14 @@
 
                         <div class="grid grid-cols-2 gap-5 py-5">
                             <button 
-                                type="submit" 
+                                (click)="login()"
                                 [disabled]="loginFormRef.invalid"
-                                class="p-3 bg-[#b5b5b5] bg-opacity-30 hover:bg-opacity-100 rounded-lg text-blue-800 font-bold"
+                                class="p-3 bg-[#cfcfcf] hover:bg-[#b5b5b5] rounded-lg text-blue-800 font-bold"
                             >Login</button>
                             <button 
                                 type="button" 
                                 (click)="loginForm = { username: '', password: '' }"
-                                class="p-3 bg-[#b5b5b5] bg-opacity-30 hover:bg-opacity-100 rounded-lg text-blue-800 font-bold"
+                                class="p-3 bg-[#cfcfcf] hover:bg-[#b5b5b5] rounded-lg text-blue-800 font-bold"
                             >Reset</button>
                         </div>
                     
