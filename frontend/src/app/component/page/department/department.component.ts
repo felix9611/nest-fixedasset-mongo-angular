@@ -12,6 +12,8 @@ import moment from 'moment'
 import { DepartmentForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { UserStoreService } from '../../../../state/user.service'
+import { findMenuItem } from '../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -22,8 +24,29 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 })
 export class DepartmentComponent {
     constructor(
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+        const answer = findMenuItem(data, 'User', 'users')
+                            
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+            console.log(this.userRightInside, 'answer')
+        })
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         page: 1,
