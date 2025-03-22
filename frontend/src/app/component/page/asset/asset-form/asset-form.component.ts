@@ -69,6 +69,7 @@ export class AssetFormComponent implements OnInit {
             const answer = findMenuItem(data, 'Asset List', 'asset-lists')
                                                     
             this.userRightInside = {
+                read: answer.read,
                 write: answer.write,
                 update: answer.update
             }
@@ -76,6 +77,7 @@ export class AssetFormComponent implements OnInit {
     }
 
     userRightInside: any = {
+        read: false,
         write: false,
         update: false
     }
