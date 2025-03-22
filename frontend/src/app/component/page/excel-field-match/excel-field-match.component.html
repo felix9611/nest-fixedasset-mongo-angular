@@ -65,7 +65,7 @@
         ></nz-pagination>
 
         <nz-modal 
-            nzWidth="700px"
+            nzWidth="800px"
             [(nzVisible)]="editFormDialog" 
             (nzOnCancel)="closeDialog()"
             (nzOnOk)="submitForm()"
@@ -75,20 +75,20 @@
             <ng-container *nzModalContent>
                 <form nz-form>
                     <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Function Code</nz-form-label>
-                      <nz-form-control [nzSpan]="14">
+                      <nz-form-label [nzSpan]="4" nzFor="email">Function Code</nz-form-label>
+                      <nz-form-control>
                         <input nz-input type="text" id="functionCode" name="functionCode" [(ngModel)]="editForm.functionCode" />
                       </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Function Name</nz-form-label>
-                      <nz-form-control [nzSpan]="14">
+                      <nz-form-label [nzSpan]="4" nzFor="email">Function Name</nz-form-label>
+                      <nz-form-control>
                         <input nz-input type="text" id="functionName" name="functionName" [(ngModel)]="editForm.functionName" />
                       </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="type">Type</nz-form-label>
-                        <nz-form-control [nzSpan]="14">
+                        <nz-form-label [nzSpan]="4" nzFor="type">Type</nz-form-label>
+                        <nz-form-control>
                             <nz-select
                                 class="w-full h-full" 
                                 name="placeId" 
@@ -102,8 +102,8 @@
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSpan]="6" nzFor="type">Field Seting</nz-form-label>
-                        <nz-form-control [nzSpan]="14">
+                        <nz-form-label [nzSpan]="4" nzFor="type">Field Seting</nz-form-label>
+                        <nz-form-control>
                             <nz-table
                                 [nzData]="editForm.fieldLists"
                                 #dataTable
