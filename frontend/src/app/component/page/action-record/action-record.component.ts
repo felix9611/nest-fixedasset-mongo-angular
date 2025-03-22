@@ -1,17 +1,17 @@
 import { Component } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
-import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzButtonModule } from 'ng-zorro-antd/button'
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
+import { NzModalModule } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
 import { DepartmentForm } from './interface'
-import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     // selector: 'app-footer',
@@ -22,8 +22,20 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 })
 export class ActionRecordComponent {
     constructor(
-        private message: NzMessageService
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'User', 'users')
+                                            
+            this.userRightInside = {
+                read: answer.read
+            }
+        })
+    }
+
+    userRightInside: any = {
+        read: false
+    }
 
     searchForm: any = {
         page: 1,

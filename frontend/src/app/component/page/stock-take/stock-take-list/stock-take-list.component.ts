@@ -15,6 +15,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { StockTakeForm } from './interface'
+import { findMenuItem } from '../../../tool-function'
+import { UserStoreService } from '../../../../../state/user.service'
 
 @Component({
     standalone: true,
@@ -37,12 +39,32 @@ import { StockTakeForm } from './interface'
 export class StockTakeListComponent implements OnInit{
     constructor(
         private message: NzMessageService,
-        private routeTo: Router
-    ) {}
+        private routeTo: Router,
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'User', 'users')
+                                                    
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+            console.log(this.userRightInside, 'answer')
+        })
+    }
 
     ngOnInit(): void {
         this.loadLocationList()
         this.loadStockTakeLists()
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
     }
 
     dataLists: any[] = []
