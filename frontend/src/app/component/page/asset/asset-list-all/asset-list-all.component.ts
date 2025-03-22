@@ -12,6 +12,8 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -32,10 +34,21 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 })
 export class AssetListAllComponent {
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService, 
+        private userStoreService: UserStoreService,
         private routeTo: Router
-    ) {}
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'User', 'users')
+                                                            
+            this.userRightInside = {
+                read: answer.read
+            }
+        })
+    }
+
+    userRightInside: any = {
+        read: false
+    }
 
     searchForm: any = {
         page: 1,
