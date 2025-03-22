@@ -22,6 +22,7 @@ import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-
 import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
 import { DashboardComponent } from './page/dashboard/dashboard.component'
 import { MenuListComponent } from './page/menu/menu.component'
+import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -52,6 +53,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'excel-field-matchs',
+        component: ExcelFieldMatchComponent,
         canActivate: [AuthGuard]
     },
     {
