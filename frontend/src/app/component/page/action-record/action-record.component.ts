@@ -25,7 +25,7 @@ export class ActionRecordComponent {
         private userStoreService: UserStoreService
     ) {
         this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'User', 'users')
+            const answer = findMenuItem(data, 'Action Log', 'action-record')
                                             
             this.userRightInside = {
                 read: answer.read

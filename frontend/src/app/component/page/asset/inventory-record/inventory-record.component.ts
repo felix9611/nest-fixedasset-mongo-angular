@@ -39,7 +39,7 @@ export class InventoryRecordListComponent {
         private userStoreService: UserStoreService
     ) {
         this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'User', 'users')
+            const answer = findMenuItem(data, 'Inventory Record', 'inventory-record')
                                                     
             this.userRightInside = {
                 read: answer.read

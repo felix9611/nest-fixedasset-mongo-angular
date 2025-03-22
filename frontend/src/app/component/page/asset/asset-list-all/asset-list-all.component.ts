@@ -38,7 +38,7 @@ export class AssetListAllComponent {
         private routeTo: Router
     ) {
         this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'User', 'users')
+            const answer = findMenuItem(data, 'Asset List Report', 'asset-list-all')
                                                             
             this.userRightInside = {
                 read: answer.read

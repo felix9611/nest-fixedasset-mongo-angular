@@ -15,6 +15,8 @@ import { CanvasChartComponent } from '../../components/chart/chart.component'
 import { transformData, transformDataNoDate } from './function' 
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { UserStoreService } from '../../../../state/user.service'
+import { findMenuItem } from '../../tool-function'
 
 @Component({
     standalone: true,
@@ -35,6 +37,22 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
     styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
+    constructor(
+            private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Dashboard', 'dashboard')
+                                    
+            this.userRightInside = {
+                read: answer.read
+            }
+        })
+    }
+
+    userRightInside = {
+        read: false
+    }
+
     ngOnInit(): void {
         this.getByDeptAndDateOfCosts()
         this.getByDeptAndDateOfCount()

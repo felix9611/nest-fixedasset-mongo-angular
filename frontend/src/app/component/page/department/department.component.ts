@@ -29,7 +29,7 @@ export class DepartmentComponent {
     ) {
 
         this.userStoreService.menuRole$.subscribe((data: any) => {
-        const answer = findMenuItem(data, 'User', 'users')
+        const answer = findMenuItem(data, 'Department', 'departments')
                             
             this.userRightInside = {
                 read: answer.read,
