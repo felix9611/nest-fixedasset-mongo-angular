@@ -39,7 +39,7 @@ export class AssetTypeComponent {
     ) {
 
         this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'User', 'users')
+            const answer = findMenuItem(data, 'Asset Type', 'asset-type')
                                             
             this.userRightInside = {
                 read: answer.read,
