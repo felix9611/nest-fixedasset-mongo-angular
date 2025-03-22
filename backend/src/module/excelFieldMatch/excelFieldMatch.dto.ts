@@ -14,3 +14,10 @@ export interface ExcelFieldMatchCreate {
 export interface ExcelFieldMatchUpdate extends ExcelFieldMatchCreate {
     _id: string
 }
+
+export interface ExcelFieldMatchListRequestDto {
+    page: number
+    limit: number
+    name?: string
+    type?: string
+}
