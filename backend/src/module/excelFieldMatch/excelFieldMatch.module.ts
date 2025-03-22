@@ -4,6 +4,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.schame'
 import { ExcelFieldMatch, ExcelFieldMatchSchema } from './excelFieldMatch.schema'
 import { ExcelFieldMatchService } from './excelFieldMatch.service'
+import { ExcelFieldMatchController } from './excelFieldMatch.controller'
 
 @Module({
     imports: [
@@ -14,6 +15,6 @@ import { ExcelFieldMatchService } from './excelFieldMatch.service'
     ],
     providers: [ActionRecordService, ExcelFieldMatchService],
     exports: [],
-    controllers: []
+    controllers: [ExcelFieldMatchController]
 })
 export class ExcelFieldMatchModule {}
