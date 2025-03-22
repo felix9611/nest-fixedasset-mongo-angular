@@ -14,6 +14,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     // selector: 'app-footer',
@@ -37,8 +39,27 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 export class BudgetComponent {
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+                
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Budget', 'budget')
+                                                
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+        })
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         date: [],

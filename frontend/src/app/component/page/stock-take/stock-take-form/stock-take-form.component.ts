@@ -18,6 +18,8 @@ import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     standalone: true,
@@ -44,8 +46,28 @@ export class StockTakeFormComponent implements OnInit {
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+                                            
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+            console.log(this.userRightInside, 'answer')
+        })
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     theId: any = ''
 

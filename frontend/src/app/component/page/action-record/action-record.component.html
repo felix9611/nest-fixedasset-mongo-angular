@@ -1,5 +1,5 @@
 <div class="bg-white px-[2rem]">
-    <div class="p-1  lg:p-6">
+    <div class="p-1  lg:p-6" *ngIf="userRightInside.read">
         <nz-table
                 [nzData]="dataLists"
                 #dataTable

@@ -11,6 +11,8 @@ import moment from 'moment'
 import { CodeTypeForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     // selector: 'app-footer',
@@ -22,8 +24,27 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 export class CodeTypeComponent {
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+        
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Code Type', 'code-type')
+                                        
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+        })
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         page: 1,

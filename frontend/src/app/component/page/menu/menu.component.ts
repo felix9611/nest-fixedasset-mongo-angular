@@ -41,7 +41,7 @@ export class MenuListComponent implements OnInit {
     ) {
 
         this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'User', 'users')
+            const answer = findMenuItem(data, 'Menu', 'menu')
                                     
             this.userRightInside = {
                 read: answer.read,

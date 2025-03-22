@@ -19,6 +19,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { timer } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -47,8 +49,26 @@ export class WriteOffFormComponent implements OnInit {
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
+                                                             
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+        })
+    }
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     editForm: AssetFormDto = {
         _id: '',

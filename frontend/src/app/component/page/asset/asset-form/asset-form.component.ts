@@ -23,6 +23,8 @@ import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { uploadImgToBase64 } from '../../../../../tool/imageUpload'
 import { FileViewComponent } from '../../../components/file-view-dialog/file-view-dialog.component'
+import { findMenuItem } from '../../../tool-function'
+import { UserStoreService } from '../../../../../state/user.service'
 // import { UploadComponentComponent } from '../../../components/upload-component/upload-component.component'
 
 @Component({
@@ -57,14 +59,26 @@ export class AssetFormComponent implements OnInit {
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
-        private message: NzMessageService
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
     ) {
         this.changeEvent$.pipe(debounceTime(300)).subscribe(event => {
             this.preAction(event.file.originFileObj);
         })
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
+                                                    
+            this.userRightInside = {
+                write: answer.write,
+                update: answer.update
+            }
+        })
     }
 
-    
+    userRightInside: any = {
+        write: false,
+        update: false
+    }
 
     private changeEvent$ = new Subject<NzUploadChangeParam>()
 

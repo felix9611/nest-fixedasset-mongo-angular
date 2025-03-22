@@ -13,6 +13,8 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -34,10 +36,20 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 })
 export class InventoryRecordListComponent {
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService, 
-        private routeTo: Router
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Inventory Record', 'inventory-record')
+                                                    
+            this.userRightInside = {
+                read: answer.read
+            }
+        })
+    }
+
+    userRightInside: any = {
+        read: false
+    }
 
     searchForm: any = {
         page: 1,
