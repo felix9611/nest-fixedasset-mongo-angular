@@ -17,6 +17,8 @@ import { UpdateRepairRecordDto } from './interface'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { timer } from 'rxjs'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -41,9 +43,26 @@ import { timer } from 'rxjs'
 export class RepairRecordListComponent {
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService, 
-        private routeTo: Router
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Repair Record', 'repair-records')
+                                                     
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+        })
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         page: 1,

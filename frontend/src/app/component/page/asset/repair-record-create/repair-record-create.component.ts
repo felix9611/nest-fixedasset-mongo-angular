@@ -47,9 +47,7 @@ export class RepairRecordCreateComponent implements OnInit {
         private route: ActivatedRoute, 
         private routeTo: Router,
         private message: NzMessageService
-    ) {
-         
-    }
+    ) {}
 
     editForm: AssetFormDto = {
         _id: '',

@@ -8,13 +8,14 @@ import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzFormModule } from 'ng-zorro-antd/form'
 import moment from 'moment'
-import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { QRcodeComponent } from '../../../components/qr-code/qr-code.component'
 import { RepairRecordCreateComponent } from '../repair-record-create/repair-record-create.component'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -38,14 +39,31 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 })
 export class AssetListComponent {
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService, 
-        private routeTo: Router
-    ) {}
+        private routeTo: Router,
+        private userStoreService: UserStoreService
+    ) {
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
+                                                    
+            this.userRightInside = {
+                read: answer.read,
+                write: answer.write,
+                update: answer.update,
+                delete: answer.delete
+            }
+        })
+    }
 
     searchForm: any = {
         page: 1,
         limit: 10
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
     }
 
 

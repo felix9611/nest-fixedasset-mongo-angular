@@ -47,7 +47,6 @@ export class AssetTypeComponent {
                 update: answer.update,
                 delete: answer.delete
             }
-            console.log(this.userRightInside, 'answer')
         })
 
     }
