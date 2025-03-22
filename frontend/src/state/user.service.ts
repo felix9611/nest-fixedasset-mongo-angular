@@ -3,17 +3,14 @@ import { BehaviorSubject } from 'rxjs'
 import { UserInfo } from './interface'
 import { Router } from '@angular/router'
 import { LocalStorageService } from './LocalStorageService'
-import { HttpService } from '../tool/HttpService'
 import { getApiWithAuth, postApiWithAuth } from '../tool/httpRequest-auth'
-// import { CartStateFace, Promotion, CartFace } from './interfaceType'
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserStoreService {
     constructor(
-        private localStorageService: LocalStorageService,
-        private httpService: HttpService
+        private localStorageService: LocalStorageService
     ) {}
 
     router = inject(Router)
@@ -94,6 +91,8 @@ export class UserStoreService {
             loginRecords: []
 
         })
+        this.menuSubject.next([])
+        this.menuRoleSubject.next([])
         localStorage.clear()
         this.tokenSubject.next('')
         this.toLoginPage()
