@@ -2,6 +2,7 @@
 
 <h1>Fixed Asset Management System</h1>
 <p><strong>Nest.js & Angular | Cloud-based Web Application for Asset Management</strong></p>
+<p>Current version: V1.0 Branch </p>
 
 <h2>🌟 Project Overview</h2>
 <p>This is a full-stack <strong>Fixed Asset Management System</strong> built with <strong>Spring Boot</strong> and <strong>Vue.js</strong>, designed for managing fixed assets within facilities. The system includes:</p>
