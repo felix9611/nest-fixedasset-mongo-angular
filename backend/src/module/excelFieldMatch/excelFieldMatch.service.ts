@@ -35,4 +35,48 @@ export class ExcelFieldMatchService {
             }
         }
     }
+
+    async invalidate(_id: string) {
+        const checkData = await this.excelFieldMatchModel.findOne({ _id })
+
+        if (checkData?.status === 0) {
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Excel Field Match',
+                actionMethod: 'GET',
+                actionFrom: 'Excel Field Match',
+                actionData: {
+                    _id
+                },
+                actionSuccess: 'FAILURE',
+                createdAt: new Date()
+            })
+
+            return {
+                msg: 'This RECORD has been invalidated! Please contact admin!'
+            }
+        } else {
+                await this.excelFieldMatchModel.updateOne({ _id}, {
+                    status: 0,
+                    updateAt: new Date()
+                })
+        
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Void Excel Field Match',
+                    actionMethod: 'GET',
+                    actionFrom: 'Excel Field Match',
+                    actionData: {
+                        _id,
+                        status: 0,
+                        updateAt: new Date()
+                    },
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+
+                return {
+                  msg: 'Invalidate successfully!'
+                }
+
+        }
+    }
 }
