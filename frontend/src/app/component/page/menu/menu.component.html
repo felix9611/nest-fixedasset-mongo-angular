@@ -25,7 +25,8 @@
             <tbody>
                 @for (data of dataLists; track data) {
                 <tr>
-                    <td [(nzExpand)]="data.expand"></td>
+                    <td *ngIf="data.childrens.length === 0"></td>
+                    <td *ngIf="data.childrens.length > 0" [(nzExpand)]="data.expand"></td>
                     <td>{{ data.name }}</td>
                     <td>{{ data.icon }}</td>
                     <td>{{ data.path }}</td>
