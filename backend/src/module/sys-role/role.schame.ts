@@ -27,6 +27,9 @@ export class SysRole extends BaseSchema {
     delete: boolean
 
     @Prop({ type: SchemaTypes.Boolean })
+    upload: boolean
+
+    @Prop({ type: SchemaTypes.Boolean })
     update: boolean
 }
 

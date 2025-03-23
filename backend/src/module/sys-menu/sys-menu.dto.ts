@@ -5,6 +5,8 @@ export interface SysMenuDto {
     path: string
     sort: number
     type: string
+    excelFunctionCode: string
+    excelFunctionName: string
 }
 
 export interface UpdateSysMenuDto extends SysMenuDto {
