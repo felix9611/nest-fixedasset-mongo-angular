@@ -20,10 +20,10 @@
             <div *ngIf="userRightInside.write" (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
                 Create
             </div>
-            <div *ngIf="userRightInside.write" (click)="downloadTemplateExcel()" class="w-[200px] border-1 border-[#D17600] text-center px-1 py-2 rounded-lg">
+            <div *ngIf="userRightInside.upload" (click)="downloadTemplateExcel()" class="w-[200px] border-1 border-[#D17600] text-center px-1 py-2 rounded-lg">
                 Download Excel Template
             </div>
-            <div *ngIf="userRightInside.write" (click)="openUploadDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+            <div *ngIf="userRightInside.upload" (click)="openUploadDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
                 Upload
             </div>
         </div>

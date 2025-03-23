@@ -104,7 +104,9 @@ export class MenuListComponent implements OnInit {
         path: '',
         sort: 0,
         type: '',
-        menuIds: []
+        menuIds: [],
+        excelFunctionCode: '',
+        excelFunctionName: ''
     }
 
     typeOptions = [
@@ -146,7 +148,9 @@ export class MenuListComponent implements OnInit {
             path: '',
             sort: 0,
             type: '',
-            menuIds: []
+            menuIds: [],
+            excelFunctionCode: '',
+            excelFunctionName: ''
         }
     }
 
@@ -169,7 +173,9 @@ export class MenuListComponent implements OnInit {
                 path: '',
                 sort: 0,
                 type: '',
-                menuIds: []
+                menuIds: [],
+                excelFunctionCode: '',
+                excelFunctionName: ''
             }
 
             this.message.success('Save successful!')

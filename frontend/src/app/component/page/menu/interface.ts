@@ -6,5 +6,7 @@ export interface MenuForm {
     path: string
     sort: number
     type: string
+    excelFunctionCode: string
+    excelFunctionName: string
     menuIds: string[]
 }

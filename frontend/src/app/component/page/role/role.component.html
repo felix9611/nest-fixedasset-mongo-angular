@@ -71,7 +71,7 @@
             [(nzVisible)]="editFormDialog" 
             (nzOnCancel)="closeDialog()"
             (nzOnOk)="submitForm()"
-            nzTitle="Asset Type Form"
+            nzTitle="System Role Form"
             [nzOkText]="okText"
         >
             <ng-container *nzModalContent>
@@ -110,6 +110,12 @@
                         <nz-form-label [nzSpan]="6" nzFor="email">Update</nz-form-label>
                         <nz-form-control [nzSpan]="14">
                             <label nz-checkbox id="update" name="update" [(ngModel)]="editForm.update"></label>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="6" nzFor="email">Upload</nz-form-label>
+                        <nz-form-control [nzSpan]="14">
+                            <label nz-checkbox id="upload" name="upload" [(ngModel)]="editForm.upload"></label>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>

@@ -80,6 +80,7 @@ export class RoleComponent implements OnInit{
         write: false,
         delete: false,
         update: false,
+        upload: false
     }
 
     okText: string = 'Create'
@@ -118,6 +119,7 @@ export class RoleComponent implements OnInit{
                 write: false,
                 delete: false,
                 update: false,
+                upload: false
             }
 
             this.message.success('Save successful!')

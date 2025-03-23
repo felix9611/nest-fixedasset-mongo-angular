@@ -117,11 +117,23 @@
                     <nz-form-item>
                         <div class="px-1 w-[105px] flex items-center">Type</div>
                             <nz-form-control>
-                                <nz-radio-group [(ngModel)]="editForm.type" nzName="type">
-                                    @for (o of typeOptions; track o.value) {
-                                      <label nz-radio [nzValue]="o.value">{{ o.label }}</label>
+                                <nz-select name="type" [(ngModel)]="editForm.type"  nzPlaceHolder="Please select">
+                                    @for (o of typeOptions; track o) {
+                                      <nz-option [nzLabel]="o.label" [nzValue]="o.value"></nz-option>
                                     }
-                                </nz-radio-group>
+                                </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Excel Function Code</div>
+                        <nz-form-control>
+                            <input nz-input type="text" id="excelFunctionCode" name="excelFunctionCode" [(ngModel)]="editForm.excelFunctionCode" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <div class="px-1 w-[105px] flex items-center">Excel Function Name</div>
+                        <nz-form-control>
+                            <input nz-input type="text" id="excelFunctionName" name="excelFunctionName" [(ngModel)]="editForm.excelFunctionName" />
                         </nz-form-control>
                     </nz-form-item>
                 </form>

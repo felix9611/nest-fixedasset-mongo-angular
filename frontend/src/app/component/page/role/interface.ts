@@ -8,4 +8,5 @@ export interface RoleForm {
     write: boolean
     delete: boolean
     update: boolean
+    upload: boolean
 }

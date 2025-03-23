@@ -7,6 +7,7 @@ export interface CreateSysRoleDto {
     write: boolean
     delete: boolean
     update: boolean
+    upload: boolean
 }
 
 export interface UpdateSysRoleDto extends CreateSysRoleDto{

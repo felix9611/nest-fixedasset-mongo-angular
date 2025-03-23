@@ -22,6 +22,12 @@ export class SysMenu extends BaseSchema {
 
     @Prop({ type: SchemaTypes.String })
     type: string
+
+    @Prop({ type: SchemaTypes.String })
+    excelFunctionCode: string
+
+    @Prop({ type: SchemaTypes.String })
+    excelFunctionName: string
 }
 
 export const SysMenuSchema = SchemaFactory.createForClass(SysMenu)
