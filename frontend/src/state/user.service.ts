@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 import { UserInfo } from './interface'
 import { Router } from '@angular/router'
-import { LocalStorageService } from './LocalStorageService'
+import { LocalStorageService } from './localStorage.service'
 import { getApiWithAuth, postApiWithAuth } from '../tool/httpRequest-auth'
 
 @Injectable({

@@ -9,7 +9,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { AssetListFile, AssetListFileSchema } from './asset-list-file.schame'
-import { AssetListQueryService } from './asset-list-guery.service'
+import { AssetListQueryService } from './asset-list-query.service'
 
 @Module({
     imports: [

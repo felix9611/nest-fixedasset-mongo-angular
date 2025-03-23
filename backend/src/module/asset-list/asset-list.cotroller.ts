@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/comm
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { DashboardReqDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
-import { AssetListQueryService } from './asset-list-guery.service'
+import { AssetListQueryService } from './asset-list-query.service'
 
 @Controller('asset/asset-list')
 export class AssetListController {
