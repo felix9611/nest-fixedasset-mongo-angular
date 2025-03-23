@@ -1,42 +1,48 @@
-const XLSX = require('xlsx')
-const XLSXS = require('xlsx-style')
+// import * as XLSXS from 'xlsx-style'
+import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
 import { NzUploadFile } from 'ng-zorro-antd/upload'
 
-export function readExcelFile(file: NzUploadFile) {
-    return new Promise((resolve: any, reject :any) => {
-        const types = file.name.split('.')[1]
-        const fileType = [
-            'xlsx',
-            'xls',
-            'csv'
-        ].some((item) => item == types )
+export function readExcelFile(file: any) {
+  return new Promise((resolve: any, reject: any) => {
+    // check if real file
+    const realFile: File | undefined = file.originFileObj || file.raw || file
+    if (!(realFile instanceof Blob)) {
+      return reject(new Error('Invalid file format. File must be a Blob or File.'))
+    }
 
-        if (!fileType) {
-            return reject({ message: 'Format not is Excel!!'})
-        }
+    // get file type / sub name
+    const extension = realFile.name.split('.').pop()?.toLowerCase()
+    const allowedTypes = ['xlsx', 'xls', 'csv']
 
-        const reader = new FileReader()
-        const result: any = []
-        reader.onload = function (e) {
-            const data = e.target?.result
-            const wb = XLSX.read(data, {
-                type: 'binary'
-            })
-            wb.SheetNames.forEach((sheetName: string) =>{
-                result.push({
-                  sheetName,
-                  sheet: XLSX.utils.sheet_to_json(wb.Sheets[sheetName])
-                })
-                resolve(result.length > 1 ? result[0]: result[0].sheet)
-            })
-        }
-        reader.onerror = function(error : any) {
-            return reject(error)
-          }
-        reader.readAsArrayBuffer(file.response.Blob)
-    })
+    if (!allowedTypes.includes(extension!)) {
+      return reject({ message: 'Format not supported! Only Excel files are allowed.' });
+    }
+
+    const reader: FileReader = new FileReader()
+    const result: any = []
+
+    reader.onload = (e: any) => {
+      const data = e.target?.result
+      const wb = XLSX.read(data, { type: 'array' })
+
+      wb.SheetNames.forEach((sheetName: string) => {
+        result.push({
+          sheetName,
+          sheet: XLSX.utils.sheet_to_json(wb.Sheets[sheetName])
+        })
+      })
+
+      resolve(result.length > 1 ? result[0] : result[0].sheet)
+    };
+
+    reader.onerror = (error: any) => reject(error)
+
+    // reading doc
+    reader.readAsArrayBuffer(realFile)
+  })
 }
+
 
 export function formatJson (header: any, filterVal: any, jsonData: any) {
     const updatedArray = jsonData.map((obj: any) => {
@@ -70,7 +76,7 @@ export function formatJson (header: any, filterVal: any, jsonData: any) {
 }
   
 export function formatJsonToSheet(filterVal: any, jsonData: any) {
-    return jsonData.map(v => filterVal.map( j => {
+    return jsonData.map((v: any) => filterVal.map((j: any) => {
       return v[j]
     }))
 }
@@ -98,8 +104,8 @@ export function downloadTempExcelFile(
     XLSX.utils.sheet_add_aoa(ws, [], { origin: 'A2' })
     let wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
-    const wopts = { bookType: 'xlsx', bookSST: false , type: 'binary' }
-    const fileEx = XLSXS.write(wb, wopts)
+    const wopts: any = { bookType: 'xlsx', bookSST: false , type: 'binary' }
+    const fileEx = XLSX.write(wb, { ...wopts })
     saveAs(new Blob([s2ab(fileEx)],{type:""}), fileName)
   }
   export function saveJsonToExcel(
@@ -129,9 +135,8 @@ export function downloadTempExcelFile(
     XLSX.utils.sheet_add_aoa(ws, dataSet, { origin: 'A2' })
     let wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
-    const wopts = { bookType: 'xlsx', bookSST: false , type: 'binary' }
-    const fileEx = XLSXS.write(wb, wopts)
-    // const fileEx = XLSX.writeFile(wb, fileName)
+    const wopts: any = { bookType: 'xlsx', bookSST: false , type: 'binary' }
+    const fileEx = XLSX.write(wb, { ...wopts })
     saveAs(new Blob([s2ab(fileEx)],{type:""}), fileName)
 }
   
