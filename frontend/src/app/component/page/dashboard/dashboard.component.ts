@@ -62,6 +62,7 @@ export class DashboardComponent implements OnInit {
         this.getByPlaceAndDateOfCosts()
         this.getByPlaceCosts()
         this.getByTypeCosts()
+        this.getByDeptCosts()
    //     this.getByTotalCost()
   //      this.getByTotalCount()
         this.loadTypeList()
@@ -95,6 +96,7 @@ export class DashboardComponent implements OnInit {
         await this.getByTypeAndDateOfCosts()
         await this.getByPlaceCosts()
         await this.getByTypeCosts()
+        await this.getByDeptCosts()
 //        await this.getByTotalCost()
   //      await this.getByTotalCount()
     }
@@ -347,6 +349,35 @@ export class DashboardComponent implements OnInit {
             ]
         }
         this.typeInCostsLoading = true
+        
+    }
+
+    deptInCostsLoading: boolean = false
+    deptInCosts: any = {}
+    async getByDeptCosts() {
+        this.deptInCostsLoading = false
+        const dataQuery: DashboardReqDto = {
+            dateType: false,
+            dateTypeValue: 'none',
+            dataType: true,
+            dataTypeValue: 'dept',
+            valueField: 'costs'
+        }
+        const res = await this.runQueryData(dataQuery)
+        const data = transformDataPointsOnly(res, 'deptName', 'costs')
+        this.deptInCosts = {
+            animationEnabled: true,
+            data: [
+                {
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: '$##0.00\"\"',
+                    indexLabel: "{label} {y}",
+                    dataPoints: data
+                }
+            ]
+        }
+        this.deptInCostsLoading = true
         
     }
 

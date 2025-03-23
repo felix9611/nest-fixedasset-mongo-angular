@@ -95,4 +95,9 @@
         </div>
     </div>
 
+    <div class="p-2 shawdow-lg border-2 border-[#A9A9A9] rounded-lg">
+        <div class="font-bold">Costs by Type</div>
+        <app-chart class="w-[100%]" *ngIf="deptInCostsLoading" [(chartData)]="deptInCosts" />
+    </div>
+
 </div>
