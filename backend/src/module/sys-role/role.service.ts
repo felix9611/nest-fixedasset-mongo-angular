@@ -297,7 +297,8 @@ export class SysRoleService {
                                                 read: "$read",
                                                 write: "$write",
                                                 delete: "$delete",
-                                                update: "$update"
+                                                update: "$update",
+                                                upload: "$upload"
                                             }
                                         ]
                                     }

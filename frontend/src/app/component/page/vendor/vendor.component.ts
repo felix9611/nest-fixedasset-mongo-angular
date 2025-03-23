@@ -31,14 +31,16 @@ export class VendorComponent {
     ) {
         this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Vendor', 'vendor')
-                            
+
+            this.excelFileSetting.code = answer.excelFunctionCode                 
             this.userRightInside = {
                 read: answer.read,
                 write: answer.write,
                 update: answer.update,
-                delete: answer.delete
+                delete: answer.delete,
+                upload: answer.upload
             }
-            console.log(this.userRightInside, 'answer')
+            this.preLoadExcelSetting()
         })
     }
 
@@ -46,7 +48,12 @@ export class VendorComponent {
         read: false,
         write: false,
         update: false,
-        delete: false
+        delete: false,
+        upload: false
+    }
+
+    excelFileSetting: any = {
+        code: ''
     }
 
     searchForm: any = {
@@ -81,13 +88,13 @@ export class VendorComponent {
 
     ngOnInit() {
         this.loadVendorLists()
-        this.preLoadExcelSetting()
+        
     }
 
     dbFieldList: string[] = []
     excelFieldList: string[] = []
     async preLoadExcelSetting() {
-        const res = await getApiWithAuth('/sys/excel-field-match/code/vendor')
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
