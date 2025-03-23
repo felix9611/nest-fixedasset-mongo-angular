@@ -13,11 +13,14 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
+import * as XLSX from 'xlsx'
+import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
+import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, NzUploadModule],
     templateUrl: './vendor.component.html',
     styleUrl: './vendor.component.css',
 })
@@ -78,6 +81,15 @@ export class VendorComponent {
 
     ngOnInit() {
         this.loadVendorLists()
+        this.preLoadExcelSetting()
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth('/sys/excel-field-match/code/vendor')
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 
     async submitForm() {
@@ -157,6 +169,37 @@ export class VendorComponent {
     cleanSearch() {
         this.searchForm = {}
         this.loadVendorLists()
+    }
+
+    upLoadDialog: boolean = false
+    openUploadDialog() {
+        this.upLoadDialog = true
+    }
+
+    closeUploadDialog() {
+        this.upLoadDialog = false
+    }
+
+    async uploadAction(file: any) {
+        const data = await readExcelFile(file.file)
+        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
+        
+        if (reData.length > 0 ) {
+            const res = await postApiWithAuth('/base/vendor/batch-create', reData)
+            if (res) {
+                this.message.success('In Uploading')
+                this.closeUploadDialog()
+            } else {
+                this.message.info('Oooops, may something is wrong, please try again!')
+            }
+            
+        } else {
+            this.message.error('Ooooops, may data is wrong, please check again.')
+        }
+    }
+
+    downloadTemplateExcel() {
+        downloadTempExcelFile(this.excelFieldList, 'vendors_template.xlsx')
     }
 
 }
