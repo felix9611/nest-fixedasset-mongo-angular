@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { DashboardReqDto, DashboardReqFilterDto } from './interface'
 import { CanvasChartComponent } from '../../components/chart/chart.component'
-import { transformData, transformDataNoDate } from './function' 
+import { transformData, transformDataNoDate, transformDataPointsOnly } from './function' 
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../state/user.service'
@@ -60,11 +60,14 @@ export class DashboardComponent implements OnInit {
         this.getByTypeAndDateOfCount()
         this.getByPlaceAndDateOfCount()
         this.getByPlaceAndDateOfCosts()
+        this.getByPlaceCosts()
+        this.getByTypeCosts()
    //     this.getByTotalCost()
   //      this.getByTotalCount()
         this.loadTypeList()
         this.loadDeptList()
         this.loadLocationList()
+        
     }
 
     typeLists: any[] = []
@@ -90,6 +93,8 @@ export class DashboardComponent implements OnInit {
         await this.getByPlaceAndDateOfCount()
         await this.getByPlaceAndDateOfCosts()
         await this.getByTypeAndDateOfCosts()
+        await this.getByPlaceCosts()
+        await this.getByTypeCosts()
 //        await this.getByTotalCost()
   //      await this.getByTotalCount()
     }
@@ -285,6 +290,64 @@ export class DashboardComponent implements OnInit {
             },
         }
         this.placeAndDateInCostsLoading = true
+    }
+
+    placeInCostsLoading: boolean = false
+    placeInCosts: any = {}
+    async getByPlaceCosts() {
+        this.placeInCostsLoading = false
+        const dataQuery: DashboardReqDto = {
+            dateType: false,
+            dateTypeValue: 'none',
+            dataType: true,
+            dataTypeValue: 'location',
+            valueField: 'costs'
+        }
+        const res = await this.runQueryData(dataQuery)
+        const data = transformDataPointsOnly(res, 'placeName', 'costs')
+        this.placeInCosts = {
+            animationEnabled: true,
+            data: [
+                {
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: '$##0.00\"\"',
+                    indexLabel: "{label} {y}",
+                    dataPoints: data
+                }
+            ]
+        }
+        this.placeInCostsLoading = true
+        
+    }
+
+    typeInCostsLoading: boolean = false
+    typeInCosts: any = {}
+    async getByTypeCosts() {
+        this.typeInCostsLoading = false
+        const dataQuery: DashboardReqDto = {
+            dateType: false,
+            dateTypeValue: 'none',
+            dataType: true,
+            dataTypeValue: 'type',
+            valueField: 'costs'
+        }
+        const res = await this.runQueryData(dataQuery)
+        const data = transformDataPointsOnly(res, 'typeName', 'costs')
+        this.typeInCosts = {
+            animationEnabled: true,
+            data: [
+                {
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: '$##0.00\"\"',
+                    indexLabel: "{label} {y}",
+                    dataPoints: data
+                }
+            ]
+        }
+        this.typeInCostsLoading = true
+        
     }
 
     async runQueryData(dataQuery: DashboardReqDto) {

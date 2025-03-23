@@ -1,14 +1,22 @@
 import { environment } from "../environments/environment.development"
 
-
 const contentType = 'application/json;charset=UTF-8'
+
+// localStorage on read in browser
+const getAccessToken = () => {
+    if (typeof window !== 'undefined' && localStorage) {
+        return localStorage.getItem('accessToken') || ''
+    }
+    return ''
+}
 
 export const postApiWithAuth = async (url: string, data: any) => {
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage && localStorage.getItem('accessToken')) {
-        const accessToken = localStorage.getItem('accessToken')
-        requestHeaders.append('Authorization', accessToken || '')
+
+    const accessToken = getAccessToken()
+    if (accessToken) {
+        requestHeaders.append('Authorization', accessToken)
     }
 
     const finalUrl = `${environment.apiUrl}${url}`
@@ -17,62 +25,57 @@ export const postApiWithAuth = async (url: string, data: any) => {
         headers: requestHeaders,
         body: JSON.stringify(data)
     })
-    const content: any = await rawResponse.json()
-    return content
+    return rawResponse.json()
 }
 
 export const getApiWithAuth = async (url: string) => {
-    const finalUrl = `${environment.apiUrl}${url}`
-
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage && localStorage.getItem('accessToken')) {
-        const accessToken = localStorage.getItem('accessToken')
-        requestHeaders.append('Authorization', accessToken || '')
+
+    const accessToken = getAccessToken()
+    if (accessToken) {
+        requestHeaders.append('Authorization', accessToken)
     }
 
+    const finalUrl = `${environment.apiUrl}${url}`
     const rawResponse = await fetch(finalUrl, {
         method: 'GET',
         headers: requestHeaders
     })
-    const content: any = await rawResponse.json()
-    return content
+    return rawResponse.json()
 }
 
 export const deleteApiWithAuth = async (url: string) => {
-    const finalUrl = `${environment.apiUrl}${url}`
-
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage && localStorage.getItem('accessToken')) {
-        const accessToken = localStorage.getItem('accessToken')
-        requestHeaders.append('Authorization', accessToken || '')
+
+    const accessToken = getAccessToken()
+    if (accessToken) {
+        requestHeaders.append('Authorization', accessToken)
     }
 
+    const finalUrl = `${environment.apiUrl}${url}`
     const rawResponse = await fetch(finalUrl, {
         method: 'DELETE',
         headers: requestHeaders
     })
-    const content: any = await rawResponse.json()
-    return content
+    return rawResponse.json()
 }
 
 export const putApiWithAuth = async (url: string, data: any) => {
     const requestHeaders = new Headers()
     requestHeaders.append('Content-Type', contentType)
-    if (localStorage && localStorage.getItem('accessToken')) {
-        const accessToken = localStorage.getItem('accessToken')
-        requestHeaders.append('Content-Type', accessToken || '')
+
+    const accessToken = getAccessToken()
+    if (accessToken) {
+        requestHeaders.append('Authorization', accessToken)
     }
 
     const finalUrl = `${environment.apiUrl}${url}`
     const rawResponse = await fetch(finalUrl, {
         method: 'PUT',
-        headers: {
-            'Content-Type': contentType
-        },
+        headers: requestHeaders,
         body: JSON.stringify(data)
     })
-    const content: any = await rawResponse.json()
-    return content
+    return rawResponse.json()
 }

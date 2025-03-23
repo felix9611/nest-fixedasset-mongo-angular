@@ -142,7 +142,9 @@ export class AssetListQueryService {
 
     async queryMakerForData(query: DashboardReqDto) {
 
-        const { dataType, dataTypeValue, valueField, filter } = query
+        const { dataType, dataTypeValue, dateType, dateTypeValue, valueField, filter } = query
+
+        let dataTypeObj: any = {}
         let dateTypeObj: any = {}
 
         const filters = filter ? this.getFilter(filter) : {}
@@ -153,8 +155,6 @@ export class AssetListQueryService {
                 ...filters
             }
         }
-
-        let dataTypeObj: any = {}
 
         if (dataType === true) {
             
@@ -173,11 +173,28 @@ export class AssetListQueryService {
             }
         }
 
+        if (dateType === true) {
+            switch (dateTypeValue) {
+                case 'YearMonth':
+                    dateTypeObj = this.getGroupByYearMonth()
+                break
+                
+            }
+        }
+
         const valueObj = this.getGroupByUnit()
+
+        const finalLookUp: any = 
+            dataType ? { $lookup: dataTypeObj.lookUp } : {}
+        
+        const finalUnwind: any = 
+            dataType ? { $unwind: dataTypeObj.unwind } : {}
+        
 
         const finalGroupBy: any = {
             $group: {
                 _id: {
+                    ...dateType ? dateTypeObj.groupBy : {},
                     ...dataType ? dataTypeObj.groupBy : {},
                 },
                 ...valueObj && valueObj[valueField] ? valueObj[valueField].groupBy : null
@@ -187,6 +204,7 @@ export class AssetListQueryService {
         const finalFields: any = {
             $project: {
                 _id: 0,
+                ...dateType ? dateTypeObj.project : {},
                 ...dataType ? dataTypeObj.project : {},
                 ...valueObj && valueObj[valueField] ? valueObj[valueField].project : {}
             }
@@ -195,6 +213,8 @@ export class AssetListQueryService {
 
         const finalQuery: any = [
             finalFilter,
+            finalLookUp,
+            finalUnwind,
             finalGroupBy,
             finalFields,
         ]
@@ -241,6 +261,7 @@ export class AssetListQueryService {
                 case 'YearMonth':
                     dateTypeObj = this.getGroupByYearMonth()
                 break
+                
             }
         }
 
