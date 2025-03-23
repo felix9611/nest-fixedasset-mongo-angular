@@ -42,5 +42,13 @@ export class VendorController {
     async listAndPage(@Body() req: ListVendorRequestDto) {
         return this.vendorService.listPageRole(req)
     }
+
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async batchCreate(@Body() createDatas: UpdateVendorDto[]) {
+        for (const data of createDatas) {
+            return await this.vendorService.create(data)
+        }
+    }
     
 }
