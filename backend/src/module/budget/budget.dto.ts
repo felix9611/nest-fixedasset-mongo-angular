@@ -1,3 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger'
+import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+
 export interface CreateBudgetDto {
     deptId: string
     placeId: string
@@ -25,4 +28,74 @@ export interface ListBudgetRequestDto {
     date?: string[]
     deptId?: string[]
     placeId: string[]
+}
+
+export class CreateBudgetBody {
+
+    @ApiProperty({ description: 'Dept Id' })
+    deptId: string
+
+    @ApiProperty({ description: 'Location Id' })
+    placeId: string
+
+    @ApiProperty({ description: 'Budget Name' })
+    budgetName: string
+
+    @ApiProperty({ description: 'Year' })
+    year: string
+
+    @ApiProperty({ description: 'Month' })
+    month: string
+
+    @ApiProperty({ description: 'Budget Amount' })
+    budgetAmount: number
+
+    @ApiProperty({ description: 'Budget Date Range From' })
+    budgetFrom: Date
+
+    @ApiProperty({ description: 'Budget Date Range To' })
+    budgetTo: string
+
+    @ApiProperty({ description: 'Budget Status' })
+    budgetStatus: string
+
+    @ApiProperty({ description: 'Remark' })
+    remark?: string
+
+    @ApiProperty({ description: 'Value Name' })
+    valueName: string
+
+    @ApiProperty({ description: 'Type for catelog' })
+    type: string
+}
+
+export class UpdateBudgetBody extends CreateBudgetBody {
+
+    @ApiProperty({ description: 'Data Id' })
+    _id: string
+}
+
+export class BudgetBody extends UpdateBudgetBody {
+
+    @ApiProperty({ description: 'Budget No, response only' })
+    budgetNo: string
+
+    @ApiProperty({ description: 'Created At' })
+    createdAt: string
+
+    @ApiProperty({ description: 'Updated At' })
+    updatedAt: string
+
+    @ApiProperty({ description: '1 = Active, 0 = inactive' })  
+    status: number
+}
+
+export class ListBudgetQuery extends CommonPageAndList {
+    @ApiProperty({ description: 'For search data keywords' })  
+    name: string
+}
+
+export class ListBudgetueryRes extends CommonPageAndListResponse {
+    @ApiProperty({ type: [BudgetBody], description: 'Data List' })
+    lists: BudgetBody[]
 }
