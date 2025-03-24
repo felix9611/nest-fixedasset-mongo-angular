@@ -1,7 +1,7 @@
 
 
 <h1>Fixed Asset Management System</h1>
-<p><strong>Nest.js & Angular | Cloud-based Web Application for Asset Management</strong></p>
+<p><strong>Nest.js & Angular SSR | Cloud-based Web Application for Asset Management</strong></p>
 <p>Current version: V1.0 Branch </p>
 
 <h2>🌟 Project Overview</h2>
@@ -12,26 +12,26 @@
   <li>Status monitoring and reporting</li>
 </ul>
 <p>The system is <strong>cloud-based</strong>, significantly reducing IT infrastructure costs and improving usability, with no installation required.</p>
-<!--
-<p>🔗 <strong><a href="https://felix-fixedasset.web.app/login" target="_blank">Online Demo</a></strong></p>
+
+<p>🔗 <strong><a href="https://fixedasset-prod-felix9611-d3fc9544.koyeb.app/login" target="_blank">Online Demo</a></strong></p>
 <p><strong>Username:</strong> <code>Demo</code><br>
 <strong>Password:</strong> <code>888888</code></p>
-<p><em>Note: Backend & Database hosted on Koyeb, Frontend on Firebase. Initial data load may take a few seconds. If cannot load the verification code, please click the "Reset" button.</em></p>
---><!--
+<p><em>Note: Backend hosted on AWS with Nginx, Frontend on Koyeb.</em></p>
+
 <h2>📸 Example Screenshots</h2>
---><!--
-<h3>Dashboard Overview</h3>
-<img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-1.png" alt="Dashboard Overview">
---><!--
-<h3>Asset List View</h3>
-<img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-2.png" alt="Asset List View">
---><!--
-<h3>Asset Maintenance Records</h3>
-<img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-3.png" alt="Maintenance Records">
---><!--
-<h3>Asset Write-Off Management</h3>
-<img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-4.png" alt="Write-Off Management">
--->
+
+<h3>Tax Information</h3>
+<img src="https://github.com/felix9611/nest-fixedasset-mongo-angular/blob/dev/image/fixedasset-1.png" alt="Dashboard Overview">
+
+<h3>Asset Form View</h3>
+<img src="https://github.com/felix9611/nest-fixedasset-mongo-angular/blob/dev/image/fixedasset-2.png" alt="Asset List View">
+
+<h3>User Info</h3>
+<img src="https://github.com/felix9611/nest-fixedasset-mongo-angular/blob/dev/image/fixedasset-3.png" alt="Maintenance Records">
+
+<h3>Dashboard</h3>
+<img src="https://github.com/felix9611/nest-fixedasset-mongo-angular/blob/dev/image/fixedasset-4.png" alt="Write-Off Management">
+
 <h2>🚀 Key Features</h2>
 <ul>
   <li><strong>Comprehensive Asset Management:</strong> Manage asset status, purchase records, maintenance schedules, and write-offs.</li>
@@ -63,6 +63,7 @@
   <li><strong>Asset Registration & Tracking:</strong> Record and track fixed assets with detailed status and information.</li>
   <li><strong>Expenditure & Maintenance Management:</strong> Log asset purchase, maintenance, and write-off records for better financial control.</li>
   <li><strong>Dynamic Reporting:</strong> Showing chart graphs and generate PDF and Excel reports for easy analysis and sharing.</li>
+  <li><strong>Role Permission:</strong> Unit by per role with menu page permission, customization user group(s) to actionable functions</li>
 </ul>
 
 <h2>📋 How to Run the Project</h2>
@@ -109,13 +110,17 @@ yarn start
 npm run build:uat or build:prod
 // or
 yarn build:uat or build:prod
+
+// Preview URL
+http://localhost:4200
 </code></pre>
-<!---
+
 <h2>🌐 Deployment</h2>
 <ul>
-  <li><strong>Backend:</strong> Koyeb (Spring Boot)</li>
-  <li><strong>Frontend:</strong> Firebase Hosting</li>
-</ul>-->
+  <li><strong>Database:</strong> Mongodb Atlas</li>
+  <li><strong>Backend:</strong> AWS runing in Linux & Nginx</li>
+  <li><strong>Frontend:</strong> Koyeb runing in Angualr SSR</li>
+</ul>
 
 <h2>📈 Business Impact</h2>
 <ul>
