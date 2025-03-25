@@ -61,5 +61,17 @@ export class DepartmentController {
     async listAndPage(@Body() req: ListDeptRequestDto) {
         return this.deptService.listPageRole(req)
     }
+
+    @ApiOperation({ summary: 'Batch Create Department' })
+    @ApiBody({ type: [CreateDeptBody] })
+    @ApiResponse({ description: 'If save successful', status: 201, type: DepartmentBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('batch-import')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: UpdateDeptBody[]) {
+        for (const createData of createDatas) {
+            return await this.deptService.create(createData)
+        }
+    }
     
 }

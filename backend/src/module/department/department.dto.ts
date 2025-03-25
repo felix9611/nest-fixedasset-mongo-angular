@@ -8,7 +8,7 @@ export interface CreateDeptDto {
 }
 
 export interface UpdateDeptDto extends CreateDeptDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListDeptRequestDto {

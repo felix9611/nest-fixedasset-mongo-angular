@@ -9,7 +9,7 @@ export interface AssetTypeCreateDto {
 }
 
 export interface AssetTypeUpdateDto extends AssetTypeCreateDto{
-    _id: string
+    _id?: string
 }
 
 export interface AssetTypeListSearchDto {

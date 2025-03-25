@@ -8,7 +8,7 @@ export interface CreateLocationDto {
 }
 
 export interface UpdateLocationDto extends CreateLocationDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListLocationRequestDto {

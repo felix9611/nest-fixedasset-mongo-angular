@@ -61,5 +61,17 @@ export class LocationController {
     async listAndPage(@Body() req: ListLocationRequestDto) {
         return this.locationService.listPageRole(req)
     }
+
+    @ApiOperation({ summary: 'batch-import' })
+    @ApiBody({ type: [CreateLocationBody] })
+    @ApiResponse({ description: 'If save successful', status: 201, type: LocationBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('batch-import')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: CreateLocationBody[]) {
+        for (const createData of createDatas) {
+            return await this.locationService.create(createData)
+        }
+    }
     
 }
