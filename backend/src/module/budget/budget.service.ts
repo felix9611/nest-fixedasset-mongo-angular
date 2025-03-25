@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Budget } from './budget.schame'
 import { Model } from 'mongoose'
-import { CreateBudgetDto, ListBudgetRequestDto, UpdateBudgetDto } from './budget.dto';
-import { ActionRecordService } from '../action-record/actionRecord.service';
+import { CreateBudgetDto, ListBudgetRequestDto, UpdateBudgetDto, UploadBudgetDto } from './budget.dto'
+import { ActionRecordService } from '../action-record/actionRecord.service'
+import { Department } from '../department/department.schame'
+import { Location } from '../location/location.schame'
 
 @Injectable()
 export class BudgetService {
     constructor(
         @InjectModel(Budget.name) private budgetModel: Model<Budget>,
+        @InjectModel(Location.name) private locationModel: Model<Location>,
+        @InjectModel(Department.name) private departmentModel: Model<Department>,
         private actionRecordService: ActionRecordService
     ) {}
 
@@ -254,5 +258,66 @@ export class BudgetService {
 
     getRandom10Digit(): string {
         return Math.floor(1000000000 + Math.random() * 9000000000).toString()
+    }
+
+    async importData(createDatas: UploadBudgetDto[]) {
+        for (const data of createDatas) {
+            let { 
+                deptCode, 
+                deptName, 
+                placeCode, 
+                placeName, 
+                budgetNo, 
+                budgetName, 
+                year, 
+                month, 
+                budgetAmount, 
+                budgetFrom, 
+                budgetTo, 
+                budgetStatus, 
+                remark 
+            } = data
+
+            if (typeof budgetAmount === 'string') {
+                if (budgetAmount.includes('%')) {
+                    budgetAmount = Number(budgetAmount.replace('%', '')) / 100
+                } else {
+                    budgetAmount = Number(budgetAmount) / 100
+                }
+            } else {
+                budgetAmount = Number(budgetAmount) / 100
+            }
+
+            let deptId, placeId
+            if (deptCode || deptName) {
+                const departmentData = await this.departmentModel.findOne({ $or: [{ deptCode }, { deptName }], status: 1 }).exec()
+                if (departmentData?._id) {
+                    deptId = departmentData._id.toString()
+                }
+            }
+
+            if (placeCode || placeName) {
+                const locationData = await this.locationModel.findOne({ $or: [{ placeCode }, { deptName }], status: 1 }).exec()
+                if (locationData?._id) {
+                    placeId = locationData._id.toString()
+                }
+            }
+
+            const finalData = {
+                deptId,
+                placeId,
+                budgetNo,
+                budgetName,
+                year,
+                month,
+                budgetAmount,
+                budgetFrom,
+                budgetTo,
+                budgetStatus,
+                remark
+            }
+
+            await this.create(finalData)
+        }
     }
 }
