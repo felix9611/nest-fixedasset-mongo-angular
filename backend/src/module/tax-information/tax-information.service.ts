@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { TaxInformation } from './tax-information.schame'
-import { UpdateDtoTaxInformation, TaxInformationListSearchDto } from './tax-information.dto'
+import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto } from './tax-information.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
@@ -250,5 +250,63 @@ export class TaxInformationService {
             lists
         }
 
+    }
+
+    async importData(importData: TaxInformationImportDto[]) {
+        for (const data of importData) {
+            let { taxType, taxCode, taxName, nationCode, nationName, countryCode, countryName, remark, taxRate, importRate } = data
+
+            if (typeof taxRate === 'string') {
+                if (taxRate.includes('%')) {
+                    taxRate = Number(taxRate.replace('%', '')) / 100
+                } else {
+                    taxRate = Number(taxRate) / 100
+                }
+            } else {
+                taxRate = Number(taxRate) / 100
+            }
+
+            if (typeof importRate === 'string') {
+                if (importRate.includes('%')) {
+                    importRate = Number(importRate.replace('%', '')) / 100
+                } else {
+                    importRate = Number(taxRate) / 100
+                }
+            } else {
+                importRate = Number(taxRate) / 100
+            }
+
+            const checkData = await this.findCheckData(taxCode, taxName, nationCode, nationName, countryCode, countryName)
+
+
+            if (checkData) {
+                await this.update({
+                    _id: checkData._id.toString(),
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
+            } else {
+                await this.create({
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
+            }
+        }
     }
 }
