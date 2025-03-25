@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AssetType } from './assetType.schame'
-import { AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto } from './assetType.dto'
+import { AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto, AssetTypeUploadDto } from './assetType.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
@@ -206,5 +206,28 @@ export class AssetTypeService {
             lists
         }
 
+    }
+
+    async importData(createDatas: AssetTypeUploadDto[]) {
+        for (const createData of createDatas) {
+            let { typeCode, typeName, remark, depreciationRate } = createData  
+            if (typeof depreciationRate === 'string') {
+                if (depreciationRate.includes('%')) {
+                    depreciationRate = Number(depreciationRate.replace('%', '')) / 100
+                } else {
+                    depreciationRate = Number(depreciationRate) / 100
+                }
+            } else {
+                depreciationRate = Number(depreciationRate) / 100
+            }
+
+            await this.create({
+                typeCode,
+                typeName,
+                remark,
+                depreciationRate
+            })
+            
+        }
     }
 }

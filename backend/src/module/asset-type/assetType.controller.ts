@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
 import { AssetTypeService } from './assetType.service'
-import { AssetTypeBody, AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto, AssetTypeQuery, CreateAssetTypeBody, ListAssetTypeQueryRes, UpdateAssetTypeBody } from './assetType.dto'
+import { AssetTypeBody, AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto, AssetTypeQuery, CreateAssetTypeBody, ListAssetTypeQueryRes, UpdateAssetTypeBody, ImportAssetTypeBody, AssetTypeUploadDto } from './assetType.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
@@ -59,5 +59,15 @@ export class AssetTypeController {
   @UseGuards(AuthGuard)
   async remove(@Param('id') id: string) {
     return this.assetTypeService.voidOne(id)
+  }
+
+  @ApiOperation({ summary: 'Import List of Asset Type' })
+  @ApiBody({ description: 'Create Asset Type', type: [ImportAssetTypeBody] })
+  @ApiResponse({ description: 'If save successful', status: 201, type: AssetTypeBody  })
+  @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+  @Post('batch-import')
+  @UseGuards(AuthGuard)
+  async importData(@Body() createDatas: AssetTypeUploadDto[]) {
+     return this.assetTypeService.importData(createDatas)
   }
 }

@@ -18,6 +18,28 @@ export interface AssetTypeListSearchDto {
     limit: number
 }
 
+export interface AssetTypeUploadDto {
+    typeCode: string
+    typeName: string
+    remark?: string
+    depreciationRate?: number | string
+}
+
+export class ImportAssetTypeBody {
+
+    @ApiProperty({ description: 'Type Code' })
+    typeCode: string
+
+    @ApiProperty({ description: 'Type Name' })
+    typeName: string
+
+    @ApiProperty({ description: 'Type for catelog' })
+    remark: string
+
+    @ApiProperty({ description: 'Item depreciation rate per year,  number or string' })
+    depreciationRate: any
+}
+
 export class CreateAssetTypeBody {
 
     @ApiProperty({ description: 'Type Code' })
