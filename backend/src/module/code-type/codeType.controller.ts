@@ -3,7 +3,7 @@ import { CreateCodeTypeBody, ListCodeTypeRequestDto, UpdateCodeTypeDto, CodeType
 import { AuthGuard } from '../auth/AuthGuard'
 import { CodeTypeService } from './codeType.service'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @ApiTags('Code Type')
 @Controller('base/code-type')
