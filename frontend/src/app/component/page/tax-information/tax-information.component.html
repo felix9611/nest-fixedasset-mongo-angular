@@ -38,8 +38,8 @@
                         <td>{{data.countryName}}</td>
                         <td>{{data.taxType}}</td>
                         <td>{{data.taxName}}</td>
-                        <td>{{data.taxRate}}%</td>
-                        <td>{{data.importRate ?? 0}}%</td>
+                        <td>{{data.taxRate * 100}}%</td>
+                        <td>{{data.importRate ? data.importRate* 100: 0}}%</td>
                         <td>{{  dateFormat(data.createdAt)  }}</td>
                         <td>{{  dateFormat(data.updatedAt)  }}</td>
                         <td>
