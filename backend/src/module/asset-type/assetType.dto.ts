@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface AssetTypeCreateDto {
     typeCode: string
@@ -9,7 +9,7 @@ export interface AssetTypeCreateDto {
 }
 
 export interface AssetTypeUpdateDto extends AssetTypeCreateDto{
-    _id: string
+    _id?: string
 }
 
 export interface AssetTypeListSearchDto {

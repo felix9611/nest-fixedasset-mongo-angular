@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/c
 import { AssetTypeService } from './assetType.service'
 import { AssetTypeBody, AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto, AssetTypeQuery, CreateAssetTypeBody, ListAssetTypeQueryRes, UpdateAssetTypeBody } from './assetType.dto'
 import { AuthGuard } from '../auth/AuthGuard'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 
 @Controller('asset/type')
