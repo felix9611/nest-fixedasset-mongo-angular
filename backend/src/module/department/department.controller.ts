@@ -3,7 +3,7 @@ import { DepartmentService } from './department.service';
 import { CreateDeptBody, DepartmentBody, ListDepartmentQuery, ListDepartmentQueryRes, ListDeptRequestDto, UpdateDeptBody, UpdateDeptDto } from './department.dto';
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @Controller('sys/department')
 export class DepartmentController {
