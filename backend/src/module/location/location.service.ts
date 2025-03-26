@@ -155,7 +155,7 @@ export class LocationService {
         }
     }
 
-    async listPageRole(request: ListLocationRequestDto) {
+    async listPage(request: ListLocationRequestDto) {
             const { page, limit, name } = request
     
             const skip = (page - 1) * limit

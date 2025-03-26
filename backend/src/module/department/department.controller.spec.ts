@@ -41,7 +41,7 @@ describe('DepartmentController', () => {
     describe('create', () => {
         it('should create a department successfully', async () => {
             const dto = { deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }
-            mockDepartmentService.create.mockResolvedValue(dto);
+            mockDepartmentService.create.mockResolvedValue(dto)
 
             const result = await controller.create(dto)
             expect(result).toEqual(dto)
@@ -103,6 +103,17 @@ describe('DepartmentController', () => {
             const result = await controller.importData(createDatas)
             expect(result).toEqual(createDatas[0])
             expect(mockDepartmentService.create).toHaveBeenCalledWith(createDatas[0])
+        })
+    })
+
+    describe('getOneById', () => {
+        it('should call service.getOneById and return the result', async () => {
+          const id = '123'
+          const result = { _id: '123', deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }
+          mockDepartmentService.getOneById.mockResolvedValue(result)
+    
+          expect(await controller.getOneById(id)).toEqual(result)
+          expect(mockDepartmentService.getOneById).toHaveBeenCalledWith(id)
         })
     })
 

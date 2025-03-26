@@ -41,7 +41,7 @@ describe('AssetTypeController', () => {
 
   describe('create', () => {
     it('should call service.create and return the result', async () => {
-      const dto = { typeCode: '001', typeName: 'Test Type' };
+      const dto = { typeCode: '001', typeName: 'Test Type', remark: '', depreciationRate: 0.5 };
       const result = { msg: 'Created successfully' };
       mockAssetTypeService.create.mockResolvedValue(result);
 
@@ -52,7 +52,7 @@ describe('AssetTypeController', () => {
 
   describe('update', () => {
     it('should call service.update and return the result', async () => {
-      const dto = { _id: '123', typeCode: '001', typeName: 'Updated Type' };
+      const dto = { _id: '123', typeCode: '001', typeName: 'Updated Type', remark: '', depreciationRate: 0.5 };
       const result = { msg: 'Updated successfully' };
       mockAssetTypeService.update.mockResolvedValue(result);
 
@@ -64,7 +64,7 @@ describe('AssetTypeController', () => {
   describe('getOneById', () => {
     it('should call service.getOneById and return the result', async () => {
       const id = '123';
-      const result = { _id: '123', typeCode: '001', typeName: 'Test Type' };
+      const result = { _id: '123', typeCode: '001', typeName: 'Test Type', remark: '', depreciationRate: 0.5 };
       mockAssetTypeService.getOneById.mockResolvedValue(result);
 
       expect(await controller.getOneById(id)).toEqual(result);
@@ -74,7 +74,7 @@ describe('AssetTypeController', () => {
 
   describe('getAll', () => {
     it('should call service.findAll and return the result', async () => {
-      const result = [{ _id: '123', typeCode: '001', typeName: 'Test Type' }];
+      const result = [{ _id: '123', typeCode: '001', typeName: 'Test Type', remark: '', depreciationRate: 0.5 }];
       mockAssetTypeService.findAll.mockResolvedValue(result);
 
       expect(await controller.getAll()).toEqual(result);
@@ -106,7 +106,7 @@ describe('AssetTypeController', () => {
 
   describe('importData', () => {
     it('should call service.importData and return the result', async () => {
-      const dto = [{ typeCode: '001', typeName: 'Test Type' }];
+      const dto = [{ typeCode: '001', typeName: 'Test Type', remark: '', depreciationRate: 0.5 }];
       const result = { msg: 'Imported successfully' };
       mockAssetTypeService.importData.mockResolvedValue(result);
 

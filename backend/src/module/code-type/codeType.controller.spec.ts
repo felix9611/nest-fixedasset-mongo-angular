@@ -69,8 +69,8 @@ describe('CodeTypeController', () => {
 
       expect(await controller.getOneById(id)).toEqual(result)
       expect(mockCodeTypeService.getOneById).toHaveBeenCalledWith(id)
-    });
-  });
+    })
+  })
 
   describe('removeById', () => {
     it('should call service.invalidateDepartment and return the result', async () => {
