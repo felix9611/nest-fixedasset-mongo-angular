@@ -5,7 +5,7 @@
 <p>Current version: V1.0 Branch </p>
 
 <h2>🌟 Project Overview</h2>
-<p>This is a full-stack <strong>Fixed Asset Management System</strong> built with <strong>Spring Boot</strong> and <strong>Vue.js</strong>, designed for managing fixed assets within facilities. The system includes:</p>
+<p>This is a full-stack <strong>Fixed Asset Management System</strong> built with <strong>Spring Boot</strong> and <strong>Angular SSR</strong>, designed for managing fixed assets within facilities. The system includes:</p>
 <ul>
   <li>Purchase and maintenance record management</li>
   <li>Asset write-off tracking</li>
