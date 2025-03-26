@@ -106,4 +106,29 @@ describe('LocationController', () => {
             expect(mockLocationSerivce.findAll).toHaveBeenCalled()
         })
     })
+    describe('importData', () => {
+        it('should call service.importData for each item and return the result', async () => {
+            const dto = [
+                { placeCode: 'Office', placeName: 'Main Office', remark: 'Admin' }
+            ]
+    
+            const mockResponse = 
+                { placeCode: 'Office', placeName: 'Main Office', remark: 'Admin' }
+            
+    
+            // Mock the service method to resolve each item
+            mockLocationSerivce.create.mockImplementation((data) => Promise.resolve(data))
+    
+            // Call the controller method
+            await controller.importData(dto)
+    
+            // Assertions
+            expect(await controller.importData(dto)).toEqual(mockResponse)
+
+            for (const data of dto) {
+                expect(mockLocationSerivce.create).toHaveBeenCalledWith(data)
+            }
+            
+        })
+    })
 })
