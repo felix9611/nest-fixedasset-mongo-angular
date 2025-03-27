@@ -16,6 +16,7 @@ import { UserStoreService } from '../../../../state/user.service'
 import * as XLSX from 'xlsx'
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -25,23 +26,29 @@ import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../to
     styleUrl: './vendor.component.css',
 })
 export class VendorComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+    
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Vendor', 'vendor')
-
-            this.excelFileSetting.code = answer.excelFunctionCode                 
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete,
-                upload: answer.upload
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                // keep default value
             }
-            this.preLoadExcelSetting()
         })
+    }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {

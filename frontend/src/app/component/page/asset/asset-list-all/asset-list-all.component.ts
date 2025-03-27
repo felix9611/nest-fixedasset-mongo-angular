@@ -14,6 +14,7 @@ import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -33,10 +34,18 @@ import { findMenuItem } from '../../../tool-function'
     styleUrl: './asset-list-all.component.css',
 })
 export class AssetListAllComponent {
+    private rightSubscription: Subscription
     constructor(
         private userStoreService: UserStoreService,
         private routeTo: Router
     ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List Report', 'asset-list-all')
+            this.userRightInside = {
+                read: answer?.read ?? false
+                 // keep default value
+            }
+        })
         this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Asset List Report', 'asset-list-all')
                                                             
@@ -44,6 +53,12 @@ export class AssetListAllComponent {
                 read: answer.read
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {

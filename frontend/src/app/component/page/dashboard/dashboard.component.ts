@@ -17,6 +17,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../state/user.service'
 import { findMenuItem } from '../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     standalone: true,
@@ -37,17 +38,27 @@ import { findMenuItem } from '../../tool-function'
     styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
+    private rightSubscription: Subscription
     constructor(
-            private userStoreService: UserStoreService
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Dashboard', 'dashboard')
-                                    
-            this.userRightInside = {
-                read: answer.read
-            }
-        })
+            this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+                const answer = findMenuItem(data, 'Dashboard', 'dashboard')
+                this.userRightInside = {
+                    read: answer?.read ?? false
+                     // keep default value
+                }
+            })
+                    
     }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
 
     userRightInside = {
         read: false

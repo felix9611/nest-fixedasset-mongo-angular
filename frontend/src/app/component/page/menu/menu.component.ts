@@ -15,6 +15,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
+import { Subscription } from 'rxjs'
 
 @Component({
     standalone: true,
@@ -35,23 +36,30 @@ import { UserStoreService } from '../../../../state/user.service'
     styleUrl: './menu.component.css',
 })
 export class MenuListComponent implements OnInit {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Menu', 'menu')
-                                    
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                     // keep default value
             }
-            console.log(this.userRightInside, 'answer')
-        })
+        })             
     }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+                this.rightSubscription.unsubscribe()
+        }
+    }
+
 
     ngOnInit(): void {
         this.loadSysMenuLists()

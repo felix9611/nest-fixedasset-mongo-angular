@@ -15,6 +15,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -35,20 +36,30 @@ import { findMenuItem } from '../../../tool-function'
     styleUrl: './write-off-list.component.css',
 })
 export class WriteOffListComponent {
+    private rightSubscription: Subscription
     constructor(
-        private routeTo: Router,
-        private userStoreService: UserStoreService
-    ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        private message: NzMessageService,
+        private userStoreService: UserStoreService,
+        private routeTo: Router
+     ) {
+    
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Write Off Record', 'write-off-list')
-                                                             
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                // keep default value
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {

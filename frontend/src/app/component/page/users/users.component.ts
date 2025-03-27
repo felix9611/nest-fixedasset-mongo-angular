@@ -13,7 +13,7 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { imgToBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
-import { Observable, Observer } from 'rxjs'
+import { Observable, Observer, Subscription } from 'rxjs'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
@@ -37,22 +37,28 @@ import { UserStoreService } from '../../../../state/user.service'
     styleUrl: './users.component.css',
 })
 export class UsersComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
 
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'User', 'users')
-                    
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false
+                 // keep default value
             }
-            console.log(this.userRightInside, 'answer')
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {

@@ -49,7 +49,7 @@ export const pagesRoutes: Routes = [
     {
         path: 'asset-update',
         component: AssetFormComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'dashboard',
@@ -64,7 +64,7 @@ export const pagesRoutes: Routes = [
     {
         path: 'write-off',
         component: WriteOffFormComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'write-off-list',
@@ -124,7 +124,7 @@ export const pagesRoutes: Routes = [
     {
         path: 'stock-take-form',
         component: StockTakeFormComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'menu',
@@ -139,7 +139,7 @@ export const pagesRoutes: Routes = [
     {
         path: 'user-info',
         component: UserInfoComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'vendor',

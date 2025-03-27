@@ -16,6 +16,7 @@ import { RepairRecordCreateComponent } from '../repair-record-create/repair-reco
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -38,20 +39,28 @@ import { findMenuItem } from '../../../tool-function'
     styleUrl: './asset-list.component.css',
 })
 export class AssetListComponent {
+    private rightSubscription: Subscription
     constructor(
         private routeTo: Router,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
-                                                    
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Tax Information', 'tax-information')
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     searchForm: any = {
