@@ -23,126 +23,127 @@ import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-
 import { DashboardComponent } from './page/dashboard/dashboard.component'
 import { MenuListComponent } from './page/menu/menu.component'
 import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
+import { AccessGuard } from '../../state/AccessGuard'
 
 export const pagesRoutes: Routes = [
     {
         path: 'action-record',
         component: ActionRecordComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'asset-lists',
         component: AssetListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'asset-list-all',
         component: AssetListAllComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'asset-create',
         component: AssetFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'asset-update',
         component: AssetFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'dashboard',
         component: DashboardComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'excel-field-matchs',
         component: ExcelFieldMatchComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'write-off',
         component: WriteOffFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'write-off-list',
         component: WriteOffListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'asset-type',
         component: AssetTypeComponent, 
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'budget',
         component: BudgetComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'code-type',
         component: CodeTypeComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'departments',
         component: DepartmentComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'inventory-record',
         component: InventoryRecordListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'location',
         component: LocationComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'tax-information',
         component: TaxInformationComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'repair-records',
         component: RepairRecordListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     }, 
     {
         path: 'role',
         component: RoleComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'stock-takes',
         component: StockTakeListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'stock-take-form',
         component: StockTakeFormComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'menu',
         component: MenuListComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'users',
         component: UsersComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'user-info',
         component: UserInfoComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     },
     {
         path: 'vendor',
         component: VendorComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AccessGuard]
     }
 ]
