@@ -8,7 +8,15 @@
       <div (click)="toggleMenu(item)"
            [ngClass]="{'bg-blue-500': activeParent === item, '': activeParent !== item}"
            class="p-3 rounded-md cursor-pointer hover:bg-gray-600 transition flex justify-between">
-            <a [routerLink]="item.path" class="flex items-center px-4 cursor-pointer">
+            <a *ngIf="item.childrens && item.childrens.length === 0" [routerLink]="item.path" class="flex items-center px-4 cursor-pointer">
+              <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
+              <span class="ml-3 transition-opacity duration-300 text-white"
+                  [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
+                  {{ item.name }}
+              </span>
+              
+            </a>
+            <a *ngIf="item.childrens && item.childrens.length > 0" class="flex items-center px-4 cursor-pointer">
               <mat-icon aria-hidden="false" [fontIcon]="item.icon"></mat-icon>
               <span class="ml-3 transition-opacity duration-300 text-white"
                   [ngClass]="isMenuExpanded ? 'opacity-100' : 'opacity-0 hidden'">
