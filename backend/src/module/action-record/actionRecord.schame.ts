@@ -22,7 +22,7 @@ export class ActionRecord {
     actionSuccess: string
     
     @Prop({ type: SchemaTypes.Date, default: Date.now})
-    createdAt: Date
+    createdAt: string
 }
 
 export const ActionRecordSchema = SchemaFactory.createForClass(ActionRecord)

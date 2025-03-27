@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ActionRecordController } from './actionRecord.controller'
 import { ActionRecordService } from './actionRecord.service'
 import { AuthGuard } from '../auth/AuthGuard'
+import { ActionRecord, ActionRecordSchema } from './actionRecord.schame'
+import { Model } from 'mongoose'
+import { getModelToken } from '@nestjs/mongoose'
 
 describe('ActionRecordController', () => {
     let controller: ActionRecordController
@@ -42,6 +45,73 @@ describe('ActionRecordController', () => {
 
             expect(await controller.list(dto)).toEqual(result)
             expect(mockActionRecordService.listAndPage).toHaveBeenCalledWith(dto)
+        })
+        it('should handle errors gracefully', async () => {
+            mockActionRecordService.listAndPage.mockRejectedValue(new Error('DB Error'))
+            
+            await expect(controller.list({ page: -1, limit: 10 })).rejects.toThrow('DB Error')
+        })
+        
+    })
+})
+
+describe('ActionRecordService', () => {
+    let service: ActionRecordService
+    let model: Model<ActionRecord>
+
+    const mockActionRecordModel = {
+        countDocuments: jest.fn(),
+        find: jest.fn()
+    }
+
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                ActionRecordService,
+                {
+                    provide: getModelToken('ActionRecord'),
+                    useValue: mockActionRecordModel
+                }
+            ],
+        }).compile()
+
+        service = module.get<ActionRecordService>(ActionRecordService)
+        model = module.get<Model<ActionRecord>>(getModelToken('ActionRecord'))
+    })
+
+
+    it('should be defined', () => {
+        expect(service).toBeDefined()
+    })
+
+    describe('listAndPage', () => {
+        it('should return paginated results', async () => {
+            const mockData = [{ _id: '1', actionName: 'Test', actionMethod: 'POST', actionFrom: 'Test', actionData: {}, actionSuccess: 'Test', createdAt: '2025-03-27T00:00:00:00Z' }]
+            mockActionRecordModel.countDocuments.mockResolvedValue(10)
+            mockActionRecordModel.find.mockReturnValue({
+                skip: jest.fn().mockReturnThis(),
+                limit: jest.fn().mockReturnThis(),
+                exec: jest.fn().mockResolvedValue(mockData)
+            })
+
+            const result = await service.listAndPage({ page: 1, limit: 5 })
+            expect(result.total).toBe(10)
+            expect(result.lists).toEqual(mockData)
+            expect(result.totalPages).toBe(2)
+        })
+
+        it('should return empty list if no records', async () => {
+            mockActionRecordModel.countDocuments.mockResolvedValue(0)
+            mockActionRecordModel.find.mockReturnValue({
+                skip: jest.fn().mockReturnThis(),
+                limit: jest.fn().mockReturnThis(),
+                exec: jest.fn().mockResolvedValue([])
+            })
+
+            const result = await service.listAndPage({ page: 1, limit: 5 })
+            expect(result.total).toBe(0)
+            expect(result.lists).toEqual([])
+            expect(result.totalPages).toBe(0)
         })
     })
 })
