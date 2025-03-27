@@ -86,7 +86,7 @@ describe('DepartmentController', () => {
     describe('listAndPage', () => {
         it('should return paginated department data', async () => {
             const req: any = { page: 1, size: 10 }
-            const response = { data: [], total: 0 }
+            const response = { total: 0, totalPages: 0, list: [], ...req }
             mockDepartmentService.listPageRole.mockResolvedValue(response)
 
             const result = await controller.listAndPage(req)

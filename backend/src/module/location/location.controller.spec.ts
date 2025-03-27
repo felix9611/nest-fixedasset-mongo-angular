@@ -75,7 +75,7 @@ describe('LocationController', () => {
     describe('listAndPage', () => {
         it('should return paginated location data', async () => {
             const req: any = { page: 1, size: 10 }
-            const response: any = { data: [], total: 0 }
+            const response: any = { total: 0, totalPages: 0, list: [], ...req }
             mockLocationSerivce.listPage.mockResolvedValue(response)
 
             const result = await controller.listAndPage(req)

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface ActionRecordCreateDto {
     actionName: string

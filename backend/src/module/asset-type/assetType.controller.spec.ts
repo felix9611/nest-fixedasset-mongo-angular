@@ -85,7 +85,7 @@ describe('AssetTypeController', () => {
   describe('listAndPage', () => {
     it('should call service.listAssetTypeBySearch and return the result', async () => {
       const dto = { page: 1, limit: 10 }
-      const result = { data: [], total: 0 }
+      const result = { total: 0, totalPages: 0, list: [], ...dto }
       mockAssetTypeService.listAssetTypeBySearch.mockResolvedValue(result)
 
       expect(await controller.listAndPage(dto)).toEqual(result)

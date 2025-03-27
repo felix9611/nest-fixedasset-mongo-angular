@@ -3,7 +3,7 @@ import { BudgetController } from './budget.controller'
 import { BudgetService } from './budget.service'
 import { AuthGuard } from '../auth/AuthGuard'
 
-describe('BudgetService', () => {
+describe('BudgetController', () => {
     let controller: BudgetController
     let service: BudgetService
 
@@ -28,9 +28,9 @@ describe('BudgetService', () => {
             },
           ],
         })
-          .overrideGuard(AuthGuard)
-          .useValue({ canActivate: jest.fn(() => true) })
-          .compile();
+        .overrideGuard(AuthGuard)
+        .useValue({ canActivate: jest.fn(() => true) })
+        .compile();
     
         controller = module.get<BudgetController>(BudgetController)
         service = module.get<BudgetService>(BudgetService)
@@ -136,12 +136,12 @@ describe('BudgetService', () => {
         
                 expect(await controller.getAll()).toEqual(result)
                 expect(mockBudgetService.findAll).toHaveBeenCalled()
-            })
+        })
 
-            describe('listAndPage', () => {
+        describe('listAndPage', () => {
                 it('should call service.listPageRole and return the result', async () => {
                   const dto: any = { page: 1, limit: 10 }
-                  const result = { data: [], total: 0 }
+                  const result = { total: 0, totalPages: 0, list: [], ...dto }
                   mockBudgetService.listPage.mockResolvedValue(result)
             
                   expect(await controller.listAndPage(dto)).toEqual(result)

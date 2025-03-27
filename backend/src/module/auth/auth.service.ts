@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { SysUserService } from '../sys-user/sysUser.service'
 import { JwtService } from '@nestjs/jwt'
-import { hashPassword, salt } from 'src/tool/password-tools'
+import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
 
 @Injectable()
