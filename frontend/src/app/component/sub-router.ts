@@ -29,22 +29,22 @@ export const pagesRoutes: Routes = [
     {
         path: 'action-record',
         component: ActionRecordComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'asset-lists',
         component: AssetListComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'asset-list-all',
         component: AssetListAllComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'asset-create',
         component: AssetFormComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'asset-update',
@@ -54,12 +54,12 @@ export const pagesRoutes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'excel-field-matchs',
         component: ExcelFieldMatchComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'write-off',
@@ -69,57 +69,57 @@ export const pagesRoutes: Routes = [
     {
         path: 'write-off-list',
         component: WriteOffListComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'asset-type',
         component: AssetTypeComponent, 
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'budget',
         component: BudgetComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'code-type',
         component: CodeTypeComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'departments',
         component: DepartmentComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'inventory-record',
         component: InventoryRecordListComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'location',
         component: LocationComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'tax-information',
         component: TaxInformationComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'repair-records',
         component: RepairRecordListComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     }, 
     {
         path: 'role',
         component: RoleComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'stock-takes',
         component: StockTakeListComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'stock-take-form',
@@ -129,12 +129,12 @@ export const pagesRoutes: Routes = [
     {
         path: 'menu',
         component: MenuListComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'users',
         component: UsersComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     },
     {
         path: 'user-info',
@@ -144,6 +144,6 @@ export const pagesRoutes: Routes = [
     {
         path: 'vendor',
         component: VendorComponent,
-        canActivate: [AccessGuard]
+        canActivate: [AuthGuard]
     }
 ]
