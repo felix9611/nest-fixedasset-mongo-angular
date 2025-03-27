@@ -162,7 +162,7 @@ export class BudgetService {
         }
     }
 
-    async listPageRole(request: ListBudgetRequestDto) {
+    async listPage(request: ListBudgetRequestDto) {
             const { page, limit, name, date, deptId, placeId } = request
     
             const skip = (page - 1) * limit

@@ -3,7 +3,7 @@ import { BudgetBody, CreateBudgetBody, CreateBudgetDto, ImportBudgetBody, ListBu
 import { AuthGuard } from '../auth/AuthGuard'
 import { BudgetService } from './budget.service'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @Controller('base/budget')
 export class BudgetController {
@@ -59,7 +59,7 @@ export class BudgetController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListBudgetRequestDto) {
-        return this.budgetService.listPageRole(req)
+        return this.budgetService.listPage(req)
     }
 
     @ApiOperation({ summary: 'Create Budgete' })
