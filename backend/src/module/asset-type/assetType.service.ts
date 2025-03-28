@@ -218,7 +218,7 @@ export class AssetTypeService {
                     depreciationRate = Number(depreciationRate) / 100
                 }
             } else {
-                depreciationRate = Number(depreciationRate) / 100
+                depreciationRate = Number(depreciationRate)
             }
 
             await this.create({

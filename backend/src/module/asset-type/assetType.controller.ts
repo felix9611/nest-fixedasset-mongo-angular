@@ -65,7 +65,7 @@ export class AssetTypeController {
   @ApiBody({ description: 'Create Asset Type', type: [ImportAssetTypeBody] })
   @ApiResponse({ description: 'If save successful', status: 201, type: AssetTypeBody  })
   @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
-  @Post('batch-import')
+  @Post('batch-create')
   @UseGuards(AuthGuard)
   async importData(@Body() createDatas: AssetTypeUploadDto[]) {
      return this.assetTypeService.importData(createDatas)

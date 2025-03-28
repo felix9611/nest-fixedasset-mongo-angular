@@ -15,6 +15,8 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
+import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../../tool/excel-helper'
+import { NzUploadModule } from 'ng-zorro-antd/upload'
 
 @Component({
     // selector: 'app-footer',
@@ -28,7 +30,8 @@ import { Subscription } from 'rxjs'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        NzUploadModule
     ],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
@@ -49,6 +52,8 @@ export class AssetTypeComponent {
                 upload: answer.upload ?? false
                  // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
 
     }
@@ -166,6 +171,48 @@ export class AssetTypeComponent {
         }
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
+
+    downloadTemplateExcel() {
+        downloadTempExcelFile(this.excelFieldList, 'asset_type_template.xlsx')
+    }
+
+    upLoadDialog: boolean = false
+    openUploadDialog() {
+        this.upLoadDialog = true
+    }
+    
+    closeUploadDialog() {
+        this.upLoadDialog = false
+    }
+    
+    async uploadAction(file: any) {
+        const data = await readExcelFile(file.file)
+        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
+            
+        if (reData.length > 0 ) {
+            const res = await postApiWithAuth('/asset/type/batch-create', reData)
+            if (res) {
+                this.message.success('In Uploading')
+                this.closeUploadDialog()
+            } else {
+                this.message.info('Oooops, may something is wrong, please try again!')
+            }
+                
+        } else {
+            this.message.error('Ooooops, may data is wrong, please check again.')
+        }
     }
 
 }
