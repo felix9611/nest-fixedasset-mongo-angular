@@ -4,7 +4,7 @@ import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-ap
 export interface CreateLocationDto {
     placeCode: string
     placeName: string,
-    remark?: string
+    remark: string
 }
 
 export interface UpdateLocationDto extends CreateLocationDto {

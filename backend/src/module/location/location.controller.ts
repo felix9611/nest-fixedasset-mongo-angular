@@ -62,16 +62,14 @@ export class LocationController {
         return await this.locationService.listPage(req)
     }
 
-    @ApiOperation({ summary: 'batch-import' })
+    @ApiOperation({ summary: 'Batch Create' })
     @ApiBody({ type: [CreateLocationBody] })
     @ApiResponse({ description: 'If save successful', status: 201, type: LocationBody })
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
-    @Post('batch-import')
+    @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: CreateLocationBody[]) {
-        for (const createData of createDatas) {
-            return await this.locationService.create(createData)
-        }
+        return await this.locationService.importData(createDatas)
     }
     
 }

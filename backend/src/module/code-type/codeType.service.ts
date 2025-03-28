@@ -207,7 +207,7 @@ export class CodeTypeService {
 
     async importData(data: CreateCodeTypeDto[]) {
         for (const item of data) {
-            await this.create(item)
+            return await this.create(item)
         }
     }
 }

@@ -187,4 +187,10 @@ export class LocationService {
                 lists
             }
     }
+
+    async importData(data: CreateLocationDto[]) {
+        for (const item of data) {
+            return await this.create(item)
+        }
+    }
 }

@@ -71,6 +71,9 @@ export class CodeTypeController {
         return await this.codeTypeService.getByType(type)
     }
 
+    @ApiOperation({ summary: 'Create Code Type' })
+    @ApiBody({ description: 'Create Code Type', type: [CreateCodeTypeBody] })
+    @ApiResponse({ description: 'return meessage', status: 200, type: ReturnMsg })
     @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() importData: CreateCodeTypeBody[]) {
