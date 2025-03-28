@@ -262,6 +262,6 @@ export class TaxInformationComponent {
         }
 
     downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'vendors_template.xlsx')
+        downloadTempExcelFile(this.excelFieldList, 'tax_info_template.xlsx')
     }
 }

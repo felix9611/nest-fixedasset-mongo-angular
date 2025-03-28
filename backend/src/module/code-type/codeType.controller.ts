@@ -70,5 +70,11 @@ export class CodeTypeController {
     async getByType(@Param('type') type: string) {
         return await this.codeTypeService.getByType(type)
     }
+
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() importData: CreateCodeTypeBody[]) {
+        return await this.codeTypeService.importData(importData)
+    }
     
 }

@@ -10,6 +10,12 @@
             <div *ngIf="userRightInside.write" (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
                 Create
             </div>
+            <div *ngIf="userRightInside.upload" (click)="downloadTemplateExcel()" class="w-[200px] border-1 border-[#D17600] text-center px-1 py-2 rounded-lg">
+                Download Excel Template
+            </div>
+            <div *ngIf="userRightInside.upload" (click)="openUploadDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+                Upload
+            </div>
         </div>
         <nz-table
                 [nzData]="dataLists"
@@ -103,6 +109,34 @@
             <ng-container *nzModalContent>
                 Are you sure to confirm delete this asset type?
             </ng-container>
+        </nz-modal>
+
+        <nz-modal
+            [(nzVisible)]="upLoadDialog" 
+            nzTitle="Excel Import"
+            (nzOnCancel)="closeUploadDialog()"
+            (nzOnOk)="closeUploadDialog()"
+            [nzOkLoading]="false"
+            [nzFooter]="modalFooter"
+        >
+            <ng-container *nzModalContent>
+                <nz-upload
+                    nzType="drag"
+                    (nzChange)="uploadAction($event)"
+                    [nzShowUploadList]="false"
+                        >
+                            <p class="ant-upload-drag-icon">
+                                <nz-icon nzType="inbox" />
+                            </p>
+                            <p class="ant-upload-text">Click or drag file to this area to upload</p>
+                            <p class="ant-upload-hint">
+                                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+                            </p>
+                </nz-upload>
+            </ng-container>
+            <ng-template #modalFooter>
+                <button nz-button nzType="primary" (click)="closeUploadDialog()">Close</button>
+            </ng-template>
         </nz-modal>
     </div>
 </div>
