@@ -253,6 +253,7 @@ export class TaxInformationService {
     }
 
     async importData(importData: TaxInformationImportDto[]) {
+        let arrayTest: any = []
         for (const data of importData) {
             let { taxType, taxCode, taxName, nationCode, nationName, countryCode, countryName, remark, taxRate, importRate } = data
 
@@ -263,7 +264,7 @@ export class TaxInformationService {
                     taxRate = Number(taxRate) / 100
                 }
             } else {
-                taxRate = Number(taxRate) / 100
+                taxRate = Number(taxRate)
             }
 
             if (typeof importRate === 'string') {
@@ -273,13 +274,26 @@ export class TaxInformationService {
                     importRate = Number(taxRate) / 100
                 }
             } else {
-                importRate = Number(taxRate) / 100
+                importRate = Number(taxRate)
             }
 
             const checkData = await this.findCheckData(taxCode, taxName, nationCode, nationName, countryCode, countryName)
 
 
             if (checkData) {
+                arrayTest.push({
+                    _id: checkData._id.toString(),
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
                 await this.update({
                     _id: checkData._id.toString(),
                     taxType,
@@ -294,6 +308,18 @@ export class TaxInformationService {
                     remark
                 })
             } else {
+                arrayTest.push({
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
                 await this.create({
                     taxType,
                     taxCode, 
@@ -308,5 +334,7 @@ export class TaxInformationService {
                 })
             }
         }
+
+        return arrayTest
     }
 }

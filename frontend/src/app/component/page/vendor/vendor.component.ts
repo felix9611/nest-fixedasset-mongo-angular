@@ -42,7 +42,10 @@ export class VendorComponent {
                 upload: answer.upload ?? false
                 // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
+        
     }
     
     ngOnDestroy() {
@@ -95,7 +98,7 @@ export class VendorComponent {
 
     ngOnInit() {
         this.loadVendorLists()
-        
+        this.preLoadExcelSetting()
     }
 
     dbFieldList: string[] = []

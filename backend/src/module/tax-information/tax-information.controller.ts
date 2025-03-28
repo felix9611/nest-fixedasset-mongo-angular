@@ -43,7 +43,7 @@ export class TaxInformationController {
     return this.taxInformationService.voidOne(id)
   }
 
-  @Get('batch-import')
+  @Post('batch-create')
   @UseGuards(AuthGuard)
   async importData(@Body() importData: TaxInformationImportDto[]) {
     return await this.taxInformationService.importData(importData)

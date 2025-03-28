@@ -17,6 +17,8 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
 import { Subscription } from 'rxjs'
+import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
+import { NzUploadModule } from 'ng-zorro-antd/upload'
 
 @Component({
     // selector: 'app-footer',
@@ -32,7 +34,8 @@ import { Subscription } from 'rxjs'
         NzPaginationModule,
         NzSelectModule,
         NzDatePickerModule,
-        NzInputNumberModule
+        NzInputNumberModule, 
+        NzUploadModule
     ],
     templateUrl: './tax-information.component.html',
     styleUrl: './tax-information.component.css',
@@ -54,7 +57,10 @@ export class TaxInformationComponent {
                 upload: answer.upload ?? false
                  // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
+        
     }
 
     ngOnDestroy() {
@@ -109,6 +115,18 @@ export class TaxInformationComponent {
         this.loadTaxInfoLists()
         this.loadDeptLists()
         this.loadPlaceLists()
+        
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 
     async loadPlaceLists() {
@@ -214,5 +232,36 @@ export class TaxInformationComponent {
         this.department = res.department
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    upLoadDialog: boolean = false
+    openUploadDialog() {
+        this.upLoadDialog = true
+    }
+
+    closeUploadDialog() {
+        this.upLoadDialog = false
+    }
+
+    async uploadAction(file: any) {
+            const data = await readExcelFile(file.file)
+            const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
+            
+            if (reData.length > 0 ) {
+                const res = await postApiWithAuth('/base/tax-information/batch-create', reData)
+                if (res) {
+                    this.message.success('In Uploading')
+                    this.closeUploadDialog()
+                } else {
+                    this.message.info('Oooops, may something is wrong, please try again!')
+                }
+                
+            } else {
+                this.message.error('Ooooops, may data is wrong, please check again.')
+            }
+        }
+
+    downloadTemplateExcel() {
+        downloadTempExcelFile(this.excelFieldList, 'vendors_template.xlsx')
     }
 }
