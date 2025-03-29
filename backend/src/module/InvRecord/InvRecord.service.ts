@@ -29,7 +29,7 @@ export class InvRecordService {
         return await this.invRecordModel.create({
             ...createData,
             createdAt: new Date()
-        }).exec()
+        })
     }
 
     async listRecord(query: ListRecordReqDto) {
