@@ -204,4 +204,23 @@ export class VendorService {
                 lists,
             }
     }
+
+    async importData(data: CreateVendorDto[]) {
+        for (const item of data) {
+            const { vendorCode, vendorName, ..._dto } = item
+
+            const checkData = await this.vendorModel.findOne({ vendorCode, vendorName, status: 1}).exec()
+
+            if (checkData) {
+                await this.update({
+                    vendorCode,
+                    vendorName,
+                    ..._dto,
+                    _id: checkData._id.toString()
+                })
+            } else {
+                await this.create(item)
+            }
+        }
+    }
 }

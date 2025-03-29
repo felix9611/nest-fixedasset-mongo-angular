@@ -45,10 +45,8 @@ export class VendorController {
 
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async batchCreate(@Body() createDatas: UpdateVendorDto[]) {
-        for (const data of createDatas) {
-            return await this.vendorService.create(data)
-        }
+    async batchCreate(@Body() createDatas: CreateVendorDto[]) {
+        return await this.vendorService.importData(createDatas)
     }
     
 }

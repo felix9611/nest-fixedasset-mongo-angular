@@ -12,7 +12,7 @@ export interface CreateVendorDto {
 }
 
 export interface UpdateVendorDto extends CreateVendorDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListVendorRequestDto {

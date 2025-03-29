@@ -25,7 +25,7 @@ export class BudgetService {
     async create(createData: UpdateBudgetDto) {
         const { _id, budgetName, year, month, ..._data } = createData
 
-        const checkData = await this.budgetModel.findOne({ budgetName, year, month, status: 1})
+        const checkData = await this.budgetModel.findOne({ budgetName, year, month, status: 1}).exec()
 
         if (checkData) {
             await this.actionRecordService.saveRecord({
@@ -69,7 +69,7 @@ export class BudgetService {
     async update(updateData: UpdateBudgetDto) {
         const { _id, ...data } = updateData
 
-        const checkData: any = await this.budgetModel.findOne({ _id })
+        const checkData: any = await this.budgetModel.findOne({ _id }).exec()
 
         if (checkData.status === 1) {
 
@@ -87,7 +87,7 @@ export class BudgetService {
                 createdAt: new Date()
             })
 
-            return await this.budgetModel.updateOne({ _id}, finalData)
+            return await this.budgetModel.updateOne({ _id}, finalData).exec()
 
         } else {
 
@@ -140,7 +140,7 @@ export class BudgetService {
                 await this.budgetModel.updateOne({ _id}, {
                     status: 0,
                     updateAt: new Date()
-                })
+                }).exec()
         
                 await this.actionRecordService.saveRecord({
                     actionName: 'Void Budget',
@@ -202,8 +202,8 @@ export class BudgetService {
                 { $unwind: { path: '$place', preserveNullAndEmptyArrays: false } },
                 { $unwind: { path: '$department', preserveNullAndEmptyArrays: false } } // Avoids errors if no match
               ]).skip(skip)
-              .limit(limit).exec();
-            const total = await this.budgetModel.find(filters).countDocuments()
+              .limit(limit).exec()
+            const total = await this.budgetModel.find(filters).countDocuments().exec()
     
             return {
                 total,
@@ -252,7 +252,7 @@ export class BudgetService {
               }
             },
             { $sort: { year: 1, month: 1 } }
-        ])
+        ]).exec()
           
     }
 
@@ -317,7 +317,16 @@ export class BudgetService {
                 remark
             }
 
-            await this.create(finalData)
+            const checkData = await this.budgetModel.findOne({ budgetNo, budgetName, year, month, status: 1 }).exec()
+
+            if (checkData?._id) {
+                await this.update({
+                    ...finalData,
+                    _id: checkData._id.toString()
+                })
+            } else {
+                await this.create(finalData)
+            }
         }
     }
 }

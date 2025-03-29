@@ -77,7 +77,7 @@ export class AssetTypeService {
             return await this.assetTypeModel.updateOne(
                 { _id }, 
                 finalData
-            )
+            ).exec()
         } else {
 
             await this.actionRecordService.saveRecord({
@@ -98,7 +98,7 @@ export class AssetTypeService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.assetTypeModel.findOne({ _id, status: 1})
+        const data = await this.assetTypeModel.findOne({ _id, status: 1}).exec()
 
         if (data) {
             return data
@@ -132,7 +132,7 @@ export class AssetTypeService {
             const res = await this.assetTypeModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
 
             await this.actionRecordService.saveRecord({
                 actionName: 'Void Asset Type',
@@ -170,7 +170,7 @@ export class AssetTypeService {
     async findAll(): Promise<AssetType[]> {
         return this.assetTypeModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async listAssetTypeBySearch(req: AssetTypeListSearchDto) {
@@ -196,7 +196,7 @@ export class AssetTypeService {
             .skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.assetTypeModel.find(filters).countDocuments()
+        const total = await this.assetTypeModel.find(filters).countDocuments().exec()
 
         return {
             total,
@@ -221,12 +221,24 @@ export class AssetTypeService {
                 depreciationRate = Number(depreciationRate)
             }
 
-            await this.create({
-                typeCode,
-                typeName,
-                remark,
-                depreciationRate
-            })
+            const checkData = await this.findCheckData(typeCode, typeName)
+
+            if (checkData) {
+                await this.update({
+                    typeCode,
+                    typeName,
+                    remark,
+                    depreciationRate,
+                    _id: checkData._id.toString()
+                })
+            } else {
+                await this.create({
+                    typeCode,
+                    typeName,
+                    remark,
+                    depreciationRate
+                })
+            }
             
         }
     }

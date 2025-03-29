@@ -207,7 +207,24 @@ export class CodeTypeService {
 
     async importData(data: CreateCodeTypeDto[]) {
         for (const item of data) {
-            return await this.create(item)
+            const { valueCode, valueName, type } = item
+
+            const checkData = await this.codeTypeModel.findOne({ valueCode, valueName, type, status: 1 })
+
+            if (checkData?._id) {
+                return await this.update({
+                    valueCode,
+                    valueName,
+                    type,
+                    _id: checkData._id.toString()
+                })
+            } else {
+                return await this.create({
+                    valueCode,
+                    valueName,
+                    type
+                })
+            }         
         }
     }
 }
