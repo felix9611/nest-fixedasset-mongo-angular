@@ -18,7 +18,7 @@ export class AssetListService {
     ) {}
 
     async getById(_id: string) {
-        const res: any = await this.assetListModel.findOne({ _id })
+        const res: any = await this.assetListModel.findOne({ _id }).exec()
         if (res?.status === 0) {
             return {
                 msg: 'This asset maybe voided! Please contact admin!'
@@ -31,7 +31,7 @@ export class AssetListService {
     }
 
     async getByAssetCode(assetCode: string) {
-        const res = await this.assetListModel.findOne({ assetCode })
+        const res = await this.assetListModel.findOne({ assetCode }).exec()
         if (res?.status === 0) {
             return {
                 msg: 'This asset maybe voided! Please contact admin!'
@@ -134,7 +134,7 @@ export class AssetListService {
                 })
             }
 
-            const res = await this.assetListModel.updateOne({ _id}, finalData)
+            const res = await this.assetListModel.updateOne({ _id}, finalData).exec()
             if (res) {
 
                 if (_data.uploadAssetListFiles && _data.uploadAssetListFiles.length > 0) {
@@ -187,7 +187,7 @@ export class AssetListService {
             await this.assetListModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
     
             await this.actionRecordService.saveRecord({
                 actionName: 'Void Asset',
@@ -260,7 +260,7 @@ export class AssetListService {
             { $sort: { assetCode: 1 } } 
         ]).exec()
 
-        const total = await this.assetListModel.find(filters).countDocuments()
+        const total = await this.assetListModel.find(filters).countDocuments().exec()
 
         return {
             total,
@@ -321,7 +321,7 @@ export class AssetListService {
                 maxNumber: { $max: "$assetCodeInt" } // Find max
               }
             }
-        ])
+        ]).exec()
 
         const maxNumber = result.length > 0 ? result[0].maxNumber : 0
         if (maxNumber == null) {
@@ -358,7 +358,7 @@ export class AssetListService {
     }
 
     async getListFiles(assetId: string) {
-        const files = await this.assetListFileModel.find({ assetId, status: 1 })
+        const files = await this.assetListFileModel.find({ assetId, status: 1 }).exec()
         
         if (files.length > 0) {
             return files
@@ -374,7 +374,7 @@ export class AssetListService {
             const res = await this.assetListFileModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
     
             if (res) {
                 await this.actionRecordService.saveRecord({

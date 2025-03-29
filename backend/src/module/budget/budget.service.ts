@@ -119,7 +119,7 @@ export class BudgetService {
     }
 
     async invalidate(_id: string) {
-        const checkData = await this.budgetModel.findOne({ _id })
+        const checkData = await this.budgetModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({

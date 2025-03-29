@@ -57,7 +57,7 @@ export class AssetTypeService {
     async update(updateDto: AssetTypeUpdateDto) {
         const { _id, ..._updateDto } = updateDto
 
-        const checkData = await this.assetTypeModel.findOne({ _id, status: 1 })
+        const checkData = await this.assetTypeModel.findOne({ _id, status: 1 }).exec()
 
         if (checkData) {
             const finalData = {
@@ -164,7 +164,7 @@ export class AssetTypeService {
         return await this.assetTypeModel.findOne({
             typeCode: typeCode,
             typeName: typeName
-        })
+        }).exec()
     }
 
     async findAll(): Promise<AssetType[]> {

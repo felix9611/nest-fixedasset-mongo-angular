@@ -30,7 +30,7 @@ export class SysMenuService {
   async create(createData: UpdateSysMenuDto) {
     let { mainId, name, _id, ..._data } = createData
 
-    const checkData = await this.sysMenuModel.findOne({ name,  })
+    const checkData = await this.sysMenuModel.findOne({ name }).exec()
 
     if (checkData) {
       await this.actionRecordService.saveRecord({
@@ -73,7 +73,7 @@ export class SysMenuService {
   async update(updateData: UpdateSysMenuDto) {
     const { _id, ...data } = updateData
 
-    const checkData = await this.sysMenuModel.findOne({ _id })
+    const checkData = await this.sysMenuModel.findOne({ _id }).exec()
 
     if (checkData?.status === 0) {
       await this.actionRecordService.saveRecord({
@@ -103,12 +103,12 @@ export class SysMenuService {
           createdAt: new Date()
       })
 
-      return await this.sysMenuModel.updateOne({ _id}, finalData)
+      return await this.sysMenuModel.updateOne({ _id}, finalData).exec()
     }
   }
 
   async getOneById(_id: string) {
-    const data = await this.sysMenuModel.findOne({ _id, status: 1})
+    const data = await this.sysMenuModel.findOne({ _id, status: 1 }).exec()
 
     if (data) {
       return data
@@ -120,7 +120,7 @@ export class SysMenuService {
   }
 
   async invalidate(_id: string) {
-    const checkData = await this.sysMenuModel.findOne({ _id })
+    const checkData = await this.sysMenuModel.findOne({ _id }).exec()
 
     if (checkData?.status === 0) {
 
@@ -142,7 +142,7 @@ export class SysMenuService {
         const res = await this.sysMenuModel.updateOne({ _id}, {
             status: 0,
             updateAt: new Date()
-        })
+        }).exec()
     
         if (res.modifiedCount === 1) {
             await this.actionRecordService.saveRecord({
@@ -188,9 +188,7 @@ export class SysMenuService {
           name: '$_id.name'
         }
       }
-    ])
-
-
+    ]).exec()
   }
 
   async listAllMenu(query: SysMenuList) {

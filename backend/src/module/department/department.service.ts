@@ -15,7 +15,7 @@ export class DepartmentService {
     async findAll(): Promise<Department[]> {
         return this.departmentModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async create(createData: UpdateDeptDto) {
@@ -62,7 +62,7 @@ export class DepartmentService {
     async update(updateData: UpdateDeptDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.departmentModel.findOne({ _id })
+        const checkData = await this.departmentModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
@@ -93,12 +93,12 @@ export class DepartmentService {
                 createdAt: new Date()
             })
 
-            return await this.departmentModel.updateOne({ _id}, finalData)
+            return await this.departmentModel.updateOne({ _id}, finalData).exec()
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.departmentModel.findOne({ _id, status: 1})
+        const data = await this.departmentModel.findOne({ _id, status: 1}).exec()
 
         if (data) {
             return data
@@ -110,7 +110,7 @@ export class DepartmentService {
     }
 
     async invalidateDepartment(_id: string) {
-        const checkData = await this.departmentModel.findOne({ _id })
+        const checkData = await this.departmentModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
@@ -132,7 +132,7 @@ export class DepartmentService {
             const res = await this.departmentModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
@@ -182,7 +182,7 @@ export class DepartmentService {
             const lists = await this.departmentModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.departmentModel.countDocuments()
+            const total = await this.departmentModel.countDocuments().exec()
     
             return {
                 total,

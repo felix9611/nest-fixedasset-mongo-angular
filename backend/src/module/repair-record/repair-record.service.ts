@@ -16,7 +16,7 @@ export class RepairRecordService {
     ) {}
 
     async getOneById(_id: string) {
-        const data = await this.repairRecordModel.findOne({ _id})
+        const data = await this.repairRecordModel.findOne({ _id}).exec()
         if (data?.status === 0) {
             return {
                 msg: 'Oooops! This record has been removed!'
@@ -80,7 +80,7 @@ export class RepairRecordService {
     async update(updateData: UpdateRepairRecordDto) {
         const { _id, ..._data } = updateData
 
-        const checkData = await this.repairRecordModel.findOne({ _id })
+        const checkData = await this.repairRecordModel.findOne({ _id }).exec()
 
         if (checkData?.status === 1) {
 
@@ -99,7 +99,7 @@ export class RepairRecordService {
             })
 
 
-            return await this.repairRecordModel.updateOne({ _id}, finalData)
+            return await this.repairRecordModel.updateOne({ _id}, finalData).exec()
         } else {
 
             await this.actionRecordService.saveRecord({
@@ -120,7 +120,7 @@ export class RepairRecordService {
     }
 
     async invalidate(_id: string) {
-        const checkData = await this.repairRecordModel.findOne({ _id })
+        const checkData = await this.repairRecordModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -141,7 +141,7 @@ export class RepairRecordService {
             const res = await this.repairRecordModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({

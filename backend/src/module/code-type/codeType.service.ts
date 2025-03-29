@@ -15,7 +15,7 @@ export class CodeTypeService {
     async findAll(): Promise<CodeType[]> {
         return this.codeTypeModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async create(createData: UpdateCodeTypeDto) {
@@ -63,7 +63,7 @@ export class CodeTypeService {
     async update(updateData: UpdateCodeTypeDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.codeTypeModel.findOne({ _id })
+        const checkData = await this.codeTypeModel.findOne({ _id }).exec()
 
         if (checkData?.status === 1) {
 
@@ -101,7 +101,7 @@ export class CodeTypeService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.codeTypeModel.findOne({ _id, status: 1})
+        const data = await this.codeTypeModel.findOne({ _id, status: 1}).exec()
 
         if (data) {
             return data
@@ -113,7 +113,7 @@ export class CodeTypeService {
     }
 
     async invalidateDepartment(_id: string) {
-        const checkData = await this.codeTypeModel.findOne({ _id })
+        const checkData = await this.codeTypeModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
@@ -135,7 +135,7 @@ export class CodeTypeService {
             const res = await this.codeTypeModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
@@ -194,7 +194,7 @@ export class CodeTypeService {
             const lists = await this.codeTypeModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.codeTypeModel.countDocuments()
+            const total = await this.codeTypeModel.countDocuments().exec()
     
             return {
                 total,
@@ -209,7 +209,7 @@ export class CodeTypeService {
         for (const item of data) {
             const { valueCode, valueName, type } = item
 
-            const checkData = await this.codeTypeModel.findOne({ valueCode, valueName, type, status: 1 })
+            const checkData = await this.codeTypeModel.findOne({ valueCode, valueName, type, status: 1 }).exec()
 
             if (checkData?._id) {
                 return await this.update({

@@ -29,7 +29,7 @@ export class TaxInformationService {
             await this.taxInformationModel.updateOne({ _id: checkData._id}, {
                 ..._createData,
                 updatedAt: new Date()
-            })
+            }).exec()
 
             await this.actionRecordService.saveRecord({
                 actionName: 'Create Tax information for update',
@@ -92,7 +92,7 @@ export class TaxInformationService {
             return await this.taxInformationModel.updateOne(
                 { _id }, 
                 finalData
-            )
+            ).exec()
         } else {
 
 
@@ -113,7 +113,7 @@ export class TaxInformationService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.taxInformationModel.findOne({ _id, status: 1})
+        const data = await this.taxInformationModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
@@ -125,7 +125,7 @@ export class TaxInformationService {
     }
 
     async voidOne(_id: string) {
-        const checkData = await this.taxInformationModel.findOne({ _id })
+        const checkData = await this.taxInformationModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -147,7 +147,7 @@ export class TaxInformationService {
             const res = await this.taxInformationModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.acknowledged === true) {
                 await this.actionRecordService.saveRecord({
@@ -192,13 +192,13 @@ export class TaxInformationService {
             countryCode,
             countryName,
             status: 1
-        })
+        }).exec()
     }
 
     async findAll(): Promise<TaxInformation[]> {
         return this.taxInformationModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async listAssetTypeBySearch(req: TaxInformationListSearchDto) {
@@ -240,7 +240,7 @@ export class TaxInformationService {
             .skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.taxInformationModel.find(filters).countDocuments()
+        const total = await this.taxInformationModel.find(filters).countDocuments().exec()
 
         return {
             total,

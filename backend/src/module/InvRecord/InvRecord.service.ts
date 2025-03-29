@@ -29,7 +29,7 @@ export class InvRecordService {
         return await this.invRecordModel.create({
             ...createData,
             createdAt: new Date()
-        })
+        }).exec()
     }
 
     async listRecord(query: ListRecordReqDto) {
@@ -79,7 +79,7 @@ export class InvRecordService {
             { $limit: limit },
         ]).exec()
 
-        const total = await this.invRecordModel.find(finalFilter).countDocuments()
+        const total = await this.invRecordModel.find(finalFilter).countDocuments().exec()
 
         return {
             total,
