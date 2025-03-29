@@ -209,26 +209,26 @@ export class SysMenuService {
       const result: any = await this.sysMenuModel.find({ status: 1, $or: [
         { _id: { $in: ids} },
         { mainId:{ $in: ids}  }
-      ]}).exec()
+      ]}).exec()  // GET first round datas
 
       const initialIds = [...new Set(
         result
           .map((record: any) => record.mainId)
           .filter((mainId: any) => mainId !== '')
-      )]
+      )] // GET first round ids
       const additionalRecords = await this.sysMenuModel.find({
         status: 1,
       _id: { $in: initialIds }
-      }).exec()
+      }).exec() // GET second round data
 
       const finalResult = Array.from(
         new Map(
           [...result, ...additionalRecords].map(doc => [doc._id.toString(), doc])
         ).values()
-      )
+      ) // first round datas + second round data
 
     const plainResult = finalResult.map(doc => doc.toObject())
-    const final = this.buildSortedTree(plainResult)
+    const final = this.buildSortedTree(plainResult) // tree finalResult
 
     return final
   }
