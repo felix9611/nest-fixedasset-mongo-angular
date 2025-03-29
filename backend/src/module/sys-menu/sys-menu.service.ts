@@ -4,6 +4,7 @@ import { SysMenu } from './sys-menu.schame'
 import { InjectModel } from '@nestjs/mongoose'
 import { SysMenuDto, SysMenuList, UpdateSysMenuDto } from './sys-menu.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
+import { SysRole } from '../sys-role/role.schame'
 
 interface MenuItem {
   _id: string;
@@ -24,6 +25,7 @@ interface MenuItem {
 export class SysMenuService {
   constructor(
       @InjectModel(SysMenu.name) private sysMenuModel: Model<SysMenu>,
+      @InjectModel(SysRole.name) private sysRoleModel: Model<SysRole>,
       private actionRecordService: ActionRecordService
   ) {}
 
@@ -204,11 +206,28 @@ export class SysMenuService {
 
 
   async getTreeAllMenuById(ids: string[]) {
-    const result: any = await this.sysMenuModel.find({ status: 1, $or: [
-      { _id: { $in: ids} },
-      { mainId:{ $in: ids}  }
-    ]}).exec()
-    const plainResult = result.map(doc => doc.toObject())
+      const result: any = await this.sysMenuModel.find({ status: 1, $or: [
+        { _id: { $in: ids} },
+        { mainId:{ $in: ids}  }
+      ]}).exec()
+
+      const initialIds = [...new Set(
+        result
+          .map((record: any) => record.mainId)
+          .filter((mainId: any) => mainId !== '')
+      )]
+      const additionalRecords = await this.sysMenuModel.find({
+        status: 1,
+      _id: { $in: initialIds }
+      }).exec()
+
+      const finalResult = Array.from(
+        new Map(
+          [...result, ...additionalRecords].map(doc => [doc._id.toString(), doc])
+        ).values()
+      )
+
+    const plainResult = finalResult.map(doc => doc.toObject())
     const final = this.buildSortedTree(plainResult)
 
     return final
@@ -216,40 +235,49 @@ export class SysMenuService {
 
 
   async getTreeAllMenuRoleById(ids: string[], roleIds: string[]) {
-    const result: any = await this.sysMenuModel.aggregate([
-      {
-        $match: { 
-          status: 1, 
-            $or: [
-            { _id: { $in: ids} },
-            { mainId:{ $in: ids}  }
-          ]
-        }
-      },
-      {
-        $lookup: {
-          from: 'sysroles',
-          let: { idStr: { $toObjectId: '$_id' }, mainId: "$mainId" },
-          pipeline: [
-            {
-              $match: {
-                _id: { $in: roleIds },
-                $expr: {
-                  $or: [
-                    { $in: ['$$idStr', '$menuIds'] },
-                    { $in: ['$$mainId', '$menuIds'] },
-                  ]
+
+    const vaildRole = await this.sysRoleModel.find({ _id: { $in: roleIds }}).exec()
+
+    if (vaildRole.length === 0) {
+      throw new Error('No valid role found!')
+    } else {
+      const vaildRoleIds = vaildRole.map((item: any) => item._id.$toString())
+
+      const result: any = await this.sysMenuModel.aggregate([
+        {
+          $match: { 
+            status: 1, 
+              $or: [
+              { _id: { $in: ids} },
+              { mainId:{ $in: ids}  }
+            ]
+          }
+        },
+        {
+          $lookup: {
+            from: 'sysroles',
+            let: { idStr: { $toObjectId: '$_id' }, mainId: "$mainId" },
+            pipeline: [
+              {
+                $match: {
+                  _id: { $in: vaildRoleIds },
+                  $expr: {
+                    $or: [
+                      { $in: ['$$idStr', '$menuIds'] },
+                      { $in: ['$$mainId', '$menuIds'] },
+                    ]
+                  }
                 }
               }
-            }
-          ],
-          as: 'role'
-        }
-      },
-      { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } }
-    ]).exec()
-
-    return result
+            ],
+            as: 'role'
+          }
+        },
+        { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } }
+      ]).exec()
+  
+      return result
+    }
   }
 
   async getAllMenu() {
