@@ -17,6 +17,9 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
 import { Subscription } from 'rxjs'
+import { downloadTempExcelFile } from '../../../../tool/excel-helper'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -32,7 +35,9 @@ import { Subscription } from 'rxjs'
         NzPaginationModule,
         NzSelectModule,
         NzDatePickerModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './budget.component.html',
     styleUrl: './budget.component.css',
@@ -53,6 +58,8 @@ export class BudgetComponent {
                 upload: answer.upload ?? false
                  // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
                 
     }
@@ -191,7 +198,6 @@ export class BudgetComponent {
         
     }
 
-
     dateFormat(data: string) {
         return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
     }
@@ -203,4 +209,17 @@ export class BudgetComponent {
         this.okText = 'Update'
         this.showDialog()
     }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
+    
 }

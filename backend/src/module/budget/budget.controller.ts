@@ -66,7 +66,7 @@ export class BudgetController {
     @ApiBody({ description: 'Create Budgete', type: [ImportBudgetBody] })
     @ApiResponse({ description: 'If save successful', status: 201, type: BudgetBody  })
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
-    @Post('batch-import')
+    @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: UploadBudgetDto[]) {
         return await this.budgetService.importData(createDatas)
