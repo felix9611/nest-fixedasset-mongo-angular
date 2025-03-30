@@ -13,15 +13,28 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
-import * as XLSX from 'xlsx'
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
+import { NzUploadModule } from 'ng-zorro-antd/upload'
 import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
 import { Subscription } from 'rxjs'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, NzUploadModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        NzUploadModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
+    ],
     templateUrl: './vendor.component.html',
     styleUrl: './vendor.component.css',
 })
@@ -187,36 +200,4 @@ export class VendorComponent {
         this.searchForm = {}
         this.loadVendorLists()
     }
-
-    upLoadDialog: boolean = false
-    openUploadDialog() {
-        this.upLoadDialog = true
-    }
-
-    closeUploadDialog() {
-        this.upLoadDialog = false
-    }
-
-    async uploadAction(file: any) {
-        const data = await readExcelFile(file.file)
-        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
-        
-        if (reData.length > 0 ) {
-            const res = await postApiWithAuth('/base/vendor/batch-create', reData)
-            if (res) {
-                this.message.success('In Uploading')
-                this.closeUploadDialog()
-            } else {
-                this.message.info('Oooops, may something is wrong, please try again!')
-            }
-            
-        } else {
-            this.message.error('Ooooops, may data is wrong, please check again.')
-        }
-    }
-
-    downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'vendors_template.xlsx')
-    }
-
 }
