@@ -3,9 +3,17 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { AssetList } from './asset-list.schame'
-import { AssetListFileDto, CreateAssetDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { AssetListFileDto, CreateAssetDto, ListAssetReqDto, UpdateAssetDto, UploadAssetListDto } from './asset-list.dto'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { AssetListFile } from './asset-list-file.schame'
+import { TaxInformation } from '../tax-information/tax-information.schame'
+import { Department } from '../department/department.schame'
+import { AssetType } from '../asset-type/assetType.schame'
+import { Location } from '../location/location.schame'
+import { AssetTypeService } from '../asset-type/assetType.service'
+import { TaxInformationService } from '../tax-information/tax-information.service'
+import { DepartmentService } from '../department/department.service'
+import { LocationService } from '../location/location.service'
 
 
 @Injectable()
@@ -13,6 +21,14 @@ export class AssetListService {
     constructor(
         @InjectModel(AssetList.name) private assetListModel: Model<AssetList>,
         @InjectModel(AssetListFile.name) private assetListFileModel: Model<AssetListFile>,
+        @InjectModel(TaxInformation.name) private taxInfoModel: Model<TaxInformation>,
+        @InjectModel(Department.name) private departmentModel: Model<Department>,
+        @InjectModel(Location.name) private locationModel: Model<Location>,
+        @InjectModel(AssetType.name) private assetTypeModel: Model<AssetType>,
+        private taxInfoSerivce: TaxInformationService,
+        private assetTypeService: AssetTypeService,
+        private departmentService: DepartmentService,
+        private locationService: LocationService,
         private actionRecordService: ActionRecordService,
         private invRecordService: InvRecordService
     ) {}
@@ -415,5 +431,185 @@ export class AssetListService {
 
     async loadFileByAssetId(assetId: string) {
         return this.assetListFileModel.find({ assetId, status: 1}).exec()
+    }
+
+    async importData(uploadDatas: UploadAssetListDto[]) {
+        for (const data of uploadDatas) {
+            let { 
+                assetCode, 
+                assetName, 
+                taxCountryCode, 
+                taxCode, 
+                taxRate, 
+                typeCode,
+                typeName,
+                deptCode,
+                deptName,
+                placeCode,
+                placeName,
+                purchaseDate,
+                sponsor,
+                includeTax,
+                afterBeforeTax,
+                cost,
+                maintenancePeriodStart,
+                maintenancePeriodEnd,
+                voucherUsedDate,
+                invoiceDate,
+                ..._data 
+            } = data
+
+            let typeId = '', deptId = '', placeId = '', taxInfofId = ''
+            
+            const checkAssetName = await this.assetListModel.findOne({ assetName }).exec()
+
+            if (typeof taxRate === 'string') {
+                if (taxRate.includes('%')) {
+                    taxRate = Number(taxRate.replace('%', '')) / 100
+                } else {
+                    taxRate = Number(taxRate) / 100
+                }
+            }
+
+            if (taxCode && taxCountryCode && taxRate) {
+                const taxInfo = await this.taxInfoModel.findOne({ taxCode, countryCode: taxCountryCode }).exec()
+
+                if (taxInfo) {
+                    typeId = taxInfo._id.toString()
+                } else {
+                    const createType: any = await this.taxInfoSerivce.create({ 
+                        taxCode, 
+                        countryCode: taxCountryCode,
+                        taxRate, 
+                        taxName: '', 
+                        taxType: '',  
+                        nationCode: '',
+                        nationName: '',
+                        countryName: '',
+                        importRate: 0,
+                        remark: ''
+                    })
+                    typeId = createType._id.toString()
+                }
+            }
+
+            if (typeCode || typeName) {
+                const checkAssetType = await this.assetTypeModel.findOne({ 
+                    ...typeCode? { typeCode } : {},
+                    ...typeName? { typeName } : {}
+                })
+                
+                if (checkAssetType) {
+                    typeId = checkAssetType._id.toString()
+                } else {
+                    const createType: any = await this.assetTypeService.create({ typeCode, typeName})
+                    typeId = createType._id.toString()
+                }
+            }
+
+            if (deptCode || deptCode) {
+                const checkDepartment = await this.departmentModel.findOne({ 
+                    ...deptCode? { deptCode } : {},
+                    ...deptName? { deptName } : {}
+                })
+                
+                if (checkDepartment) {
+                    deptId = checkDepartment._id.toString()
+                } else {
+                    const createType: any = await this.departmentService.create({ deptCode, deptName })
+                    deptId = createType._id.toString()
+                }
+            }
+
+            if (placeCode || placeCode) {
+                const checkLocation = await this.locationModel.findOne({ 
+                    ...placeCode? { placeCode } : {},
+                    ...placeName? { placeName } : {}
+                })
+                
+                if (checkLocation) {
+                    placeId = checkLocation._id.toString()
+                } else {
+                    const createPlace: any = await this.locationService.create({ placeCode, placeName, remark: '' })
+                    placeId = createPlace._id.toString()
+                }
+            }
+
+                // Date Formatter
+            if (purchaseDate) {
+                purchaseDate = new Date(purchaseDate).toISOString()
+            }
+            if (maintenancePeriodStart) {
+                maintenancePeriodStart = new Date(maintenancePeriodStart).toISOString()
+            }
+            if (maintenancePeriodEnd) {
+                maintenancePeriodEnd = new Date(maintenancePeriodEnd).toISOString()
+            }
+            if (voucherUsedDate) {
+                voucherUsedDate = new Date(voucherUsedDate).toISOString()
+            }
+            if (invoiceDate) {
+                invoiceDate = new Date(invoiceDate).toISOString()
+            }
+
+            // Boolean Transformer
+            if (sponsor === 'Yes') {
+                sponsor = true
+            } else {
+                sponsor = false
+            }
+
+            if (includeTax === 'Yes') {
+                includeTax = true
+            } else {
+                includeTax = false
+            }
+
+            // Number Transformer
+            if (typeof cost === 'string') {
+                cost = Number(cost)
+            }
+
+            if (typeof cost === 'string') {
+                cost = Number(cost)
+            }
+            
+            if (typeof afterBeforeTax === 'string') {
+                afterBeforeTax = Number()
+            }
+
+            const finalData = {
+                assetName,
+                taxInfofId,
+                typeId,
+                deptId,
+                placeId,
+                taxCountryCode, 
+                taxCode, 
+                taxRate, 
+                typeCode,
+                typeName,
+                deptCode,
+                deptName,
+                placeCode,
+                placeName,
+                purchaseDate,
+                sponsor,
+                includeTax,
+                afterBeforeTax,
+                cost,
+                maintenancePeriodStart,
+                maintenancePeriodEnd,
+                voucherUsedDate,
+                invoiceDate,
+                ..._data
+            }
+
+            if (checkAssetName) {
+                return await this.update({ ...finalData, assetCode, _id: checkAssetName._id.toString() })
+            } else {
+                return await this.create({ ...finalData, assetCode, _id: '' })
+            }
+        }
     }
 }

@@ -1,3 +1,5 @@
+import { StringExpression } from "mongoose"
+
 export interface AssetListFileDto {
     _id?: string
     assetId?: string
@@ -73,4 +75,41 @@ export interface DashboardReqFilterDto {
     placeIds?: string[]
     deptIds?: string[]
     purchaseDates?: string[]
+}
+
+export interface UploadAssetListDto {
+    assetCode: string
+    assetName: string
+    unit: string
+    typeCode: string
+    typeName: string
+    deptCode: string
+    deptName: string
+    placeCode: string
+    placeName: string
+    purchaseDate: string
+    description: string
+    sponsor: string | boolean
+    sponsorName: string
+    cost: string | number
+    serialNo: string
+    invoiceNo: string
+    invoiceDate: string
+    invoiceRemark: string
+    vendorId: string
+    remark: string
+    taxCountryCode: string
+    taxCode: string
+    taxRate: string | number
+    includeTax: string | boolean
+    afterBeforeTax: string | number
+    accountCode: string
+    accountName: string
+    brandCode: string
+    brandName: string
+    chequeNo: string
+    maintenancePeriodStart: string
+    maintenancePeriodEnd: string
+    voucherNo: string
+    voucherUsedDate: string
 }
