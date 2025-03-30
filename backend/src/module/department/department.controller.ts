@@ -69,9 +69,7 @@ export class DepartmentController {
     @Post('batch-import')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: UpdateDeptBody[]) {
-        for (const createData of createDatas) {
-            return await this.deptService.create(createData)
-        }
+        return await this.deptService.importData(createDatas)
     }
     
 }
