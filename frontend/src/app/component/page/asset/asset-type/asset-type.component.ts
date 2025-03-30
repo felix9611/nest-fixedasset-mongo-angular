@@ -15,8 +15,9 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
-import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../../tool/excel-helper'
+import { formatJson, readExcelFile } from '../../../../../tool/excel-helper'
 import { NzUploadModule } from 'ng-zorro-antd/upload'
+import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -31,7 +32,8 @@ import { NzUploadModule } from 'ng-zorro-antd/upload'
         NzInputModule, 
         NzPaginationModule,
         NzInputNumberModule,
-        NzUploadModule
+        NzUploadModule,
+        DownloadExcelTemplateComponent
     ],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
@@ -182,10 +184,6 @@ export class AssetTypeComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
-    }
-
-    downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'asset_type_template.xlsx')
     }
 
     upLoadDialog: boolean = false
