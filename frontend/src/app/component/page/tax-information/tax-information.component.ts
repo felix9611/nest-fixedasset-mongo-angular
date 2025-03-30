@@ -19,6 +19,8 @@ import { UserStoreService } from '../../../../state/user.service'
 import { Subscription } from 'rxjs'
 import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
 import { NzUploadModule } from 'ng-zorro-antd/upload'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -35,7 +37,9 @@ import { NzUploadModule } from 'ng-zorro-antd/upload'
         NzSelectModule,
         NzDatePickerModule,
         NzInputNumberModule, 
-        NzUploadModule
+        NzUploadModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './tax-information.component.html',
     styleUrl: './tax-information.component.css',
@@ -232,36 +236,5 @@ export class TaxInformationComponent {
         this.department = res.department
         this.okText = 'Update'
         this.showDialog()
-    }
-
-    upLoadDialog: boolean = false
-    openUploadDialog() {
-        this.upLoadDialog = true
-    }
-
-    closeUploadDialog() {
-        this.upLoadDialog = false
-    }
-
-    async uploadAction(file: any) {
-            const data = await readExcelFile(file.file)
-            const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
-            
-            if (reData.length > 0 ) {
-                const res = await postApiWithAuth('/base/tax-information/batch-create', reData)
-                if (res) {
-                    this.message.success('In Uploading')
-                    this.closeUploadDialog()
-                } else {
-                    this.message.info('Oooops, may something is wrong, please try again!')
-                }
-                
-            } else {
-                this.message.error('Ooooops, may data is wrong, please check again.')
-            }
-        }
-
-    downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'tax_info_template.xlsx')
     }
 }
