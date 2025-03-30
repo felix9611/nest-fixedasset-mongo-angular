@@ -17,11 +17,23 @@ import { findMenuItem } from '../../tool-function'
 import { Subscription } from 'rxjs'
 import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
 import { NzUploadModule } from 'ng-zorro-antd/upload'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, NzUploadModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        NzUploadModule,
+        DownloadExcelTemplateComponent
+    ],
     templateUrl: './location.component.html',
     styleUrl: './location.component.css',
 })
@@ -168,10 +180,6 @@ export class LocationComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
-    }
-
-    downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'locations_template.xlsx')
     }
 
     upLoadDialog: boolean = false
