@@ -14,13 +14,27 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
 import { Subscription } from 'rxjs'
-import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
+import { formatJson, readExcelFile } from '../../../../tool/excel-helper'
 import { NzUploadModule } from 'ng-zorro-antd/upload'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, NzUploadModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        NzUploadModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
+    ],
     templateUrl: './code-type.component.html',
     styleUrl: './code-type.component.css',
 })
@@ -160,10 +174,6 @@ export class CodeTypeComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
-    }
-
-    downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'CODE_TYPE_template.xlsx')
     }
 
     upLoadDialog: boolean = false

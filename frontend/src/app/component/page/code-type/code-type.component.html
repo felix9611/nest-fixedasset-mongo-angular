@@ -18,8 +18,13 @@
                     [excelFieldList]="excelFieldList" 
                 />
             </div>
-            <div *ngIf="userRightInside.upload" (click)="openUploadDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
-                Upload
+            <div *ngIf="userRightInside.upload" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+                <app-upload-dialog
+                    uploadButtonLabel="Upload"
+                    uploadApiUrl="/base/code-type/batch-create"
+                    [excelFieldList]="excelFieldList"
+                    [dbFieldList]="dbFieldList"
+                />
             </div>
         </div>
         <nz-table
