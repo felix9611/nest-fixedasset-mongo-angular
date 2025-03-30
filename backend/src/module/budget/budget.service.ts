@@ -261,6 +261,7 @@ export class BudgetService {
     }
 
     async importData(createDatas: UploadBudgetDto[]) {
+        let finalData: any[] = []
         for (const data of createDatas) {
             let { 
                 deptCode, 

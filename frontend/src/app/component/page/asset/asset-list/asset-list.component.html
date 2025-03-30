@@ -1,7 +1,7 @@
 <div class="bg-white px-[2rem]">
     <div class="p-1  lg:p-6"  *ngIf="userRightInside.read">
         <div class="flex gap-2 py-5">
-            <div>
+           <!-- <div class="w-[240px]">
                 <nz-range-picker
                     nzSize="large"
                     class="h-full"
@@ -10,12 +10,12 @@
                     nzFormat="yyyy-MM-dd HH:mm:ss"
                     [(ngModel)]="searchForm.purchaseDates"
                 ></nz-range-picker>
+            </div>-->
+            <div class="w-[150px]">
+                <input class="h-full" nz-input type="text" name="assetCode" placeholder="Asset Code" [(ngModel)]="searchForm.assetCode" />
             </div>
             <div class="w-[150px]">
-                <input class="h-full" nz-input type="text" name="assetCode" placeholder="Input Asset Code" [(ngModel)]="searchForm.assetCode" />
-            </div>
-            <div class="w-[150px]">
-                <input class="h-full" nz-input type="text" name="assetName" placeholder="Input Asset Name" [(ngModel)]="searchForm.assetName" />
+                <input class="h-full" nz-input type="text" name="assetName" placeholder="Asset Name" [(ngModel)]="searchForm.assetName" />
             </div>
             
             <div class="w-[150px] h-full">
