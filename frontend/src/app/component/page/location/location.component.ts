@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs'
 import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
 import { NzUploadModule } from 'ng-zorro-antd/upload'
 import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -32,7 +33,8 @@ import { DownloadExcelTemplateComponent } from '../../components/download-templa
         NzInputModule, 
         NzPaginationModule, 
         NzUploadModule,
-        DownloadExcelTemplateComponent
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './location.component.html',
     styleUrl: './location.component.css',
@@ -180,33 +182,6 @@ export class LocationComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
-    }
-
-    upLoadDialog: boolean = false
-        openUploadDialog() {
-            this.upLoadDialog = true
-        }
-    
-        closeUploadDialog() {
-            this.upLoadDialog = false
-        }
-    
-    async uploadAction(file: any) {
-        const data = await readExcelFile(file.file)
-        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
-            
-        if (reData.length > 0 ) {
-            const res = await postApiWithAuth('/base/location/batch-create', reData)
-            if (res) {
-                this.message.success('In Uploading')
-                this.closeUploadDialog()
-            } else {
-                this.message.info('Oooops, may something is wrong, please try again!')
-            }
-                
-        } else {
-            this.message.error('Ooooops, may data is wrong, please check again.')
-        }
     }
 
 }
