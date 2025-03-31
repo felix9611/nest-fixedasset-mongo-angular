@@ -183,7 +183,7 @@ export class ExcelFieldMatchService {
         const lists = await this.excelFieldMatchModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-        const total = await this.excelFieldMatchModel.countDocuments().exec()
+        const total = await this.excelFieldMatchModel.find(filters).countDocuments().exec()
     
         return {
             total,

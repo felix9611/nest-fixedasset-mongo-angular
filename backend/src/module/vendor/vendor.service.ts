@@ -194,7 +194,7 @@ export class VendorService {
             const lists = await this.vendorModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.vendorModel.countDocuments().exec()
+            const total = await this.vendorModel.find(filters).countDocuments().exec()
     
             return {
                 total,

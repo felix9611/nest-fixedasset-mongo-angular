@@ -194,7 +194,7 @@ export class CodeTypeService {
             const lists = await this.codeTypeModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.codeTypeModel.countDocuments().exec()
+            const total = await this.codeTypeModel.find(filters).countDocuments().exec()
     
             return {
                 total,
