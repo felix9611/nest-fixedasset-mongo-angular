@@ -3,6 +3,8 @@
 <h1>Fixed Asset Management System</h1>
 <p><strong>Nest.js & Angular SSR | Cloud-based Web Application for Asset Management</strong></p>
 <p>Current version: V1.5 Branch </p>
+<p>Next version function: Unit test and Excel Data Export </p>
+<p>If you find this project helpful, please click ⭐ Star! This helps more people discover it.</p>
 
 <h2>🌟 Project Overview</h2>
 <p>This is a full-stack <strong>Fixed Asset Management System</strong> built with <strong>Spring Boot</strong> and <strong>Angular SSR</strong>, designed for managing fixed assets within facilities. The system includes:</p>
@@ -64,6 +66,7 @@
   <li><strong>Expenditure & Maintenance Management:</strong> Log asset purchase, maintenance, and write-off records for better financial control.</li>
   <li><strong>Dynamic Reporting:</strong> Showing chart graphs for easy analysis and sharing.</li>
   <li><strong>Role Permission:</strong> Unit by per role with menu page permission, customization user group(s) to actionable functions</li>
+  <li><strong>Excel Data Import:</strong> Batch upload data increases efficiency</li>
 </ul>
 
 <h2>📋 How to Run the Project</h2>
