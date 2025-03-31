@@ -177,7 +177,7 @@ export class LocationService {
             const lists = await this.locationModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.locationModel.countDocuments().exec()
+            const total = await this.locationModel.find(filters).countDocuments().exec()
     
             return {
                 total,

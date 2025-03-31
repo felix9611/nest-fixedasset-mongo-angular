@@ -220,7 +220,7 @@ export class SysRoleService {
         const lists = await this.sysRoleModel.find(filters).skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.sysRoleModel.countDocuments().exec()
+        const total = await this.sysRoleModel.find(filters).countDocuments().exec()
 
         return {
             total,

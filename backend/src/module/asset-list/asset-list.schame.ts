@@ -37,7 +37,7 @@ export class AssetList extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
     sponsorName: string
     
-    @Prop({ type: Types.Double, required: true})
+    @Prop({ type: Types.Double, required: true })
     cost: number
 
     @Prop({ type: SchemaTypes.String })

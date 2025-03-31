@@ -213,7 +213,7 @@ export class SysUserService {
     .limit(limit)
     .exec()
 
-    const total = await this.sysUserModel.countDocuments().exec()
+    const total = await this.sysUserModel.find(filters).countDocuments().exec()
 
     return {
       total,
