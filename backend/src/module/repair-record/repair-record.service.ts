@@ -281,7 +281,16 @@ export class RepairRecordService {
 
     async importData(createDatas: UploadRepairRecordDto[]) {
         for (const data of createDatas) {
-            const { assetCode, assetName, ..._rrData } = data
+            let { 
+                assetCode, 
+                assetName, 
+                maintenanceReriod, 
+                repairAmount, 
+                maintenanceDate,
+                maintenanceFinishDate,
+                repairInvoiceDate,
+                ..._rrData 
+            } = data
 
             const assetData = await this.assetListModel.findOne({
                 ...assetCode ? { assetCode } : {},
@@ -289,9 +298,26 @@ export class RepairRecordService {
                 status: 1
             }).exec()
 
-            if (assetData) {
+            if (assetData?._id) {
+                if (typeof maintenanceReriod === 'string') {
+                    if (maintenanceReriod === 'Yes') {
+                        maintenanceReriod = true
+                    } else {
+                        maintenanceReriod = false
+                    }
+                }
+
+                if (typeof repairAmount === 'string') {
+                    repairAmount = Number(repairAmount)
+                }
+
                 const finalData = {
                     assetId: assetData._id.toString(),
+                    maintenanceReriod,
+                    repairAmount,
+                    repairInvoiceDate,
+                    maintenanceFinishDate,
+                    maintenanceDate,
                     ..._rrData,
                     createdAt: new Date(),
                     status: 1

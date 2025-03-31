@@ -32,13 +32,13 @@ export interface UploadRepairRecordDto {
     assetCode: string
     assetName: string
     repairReason: string
-    maintenanceReriod: boolean
+    maintenanceReriod: string | boolean
     maintenanceName: string
     maintenanceDate: string
     maintenanceFinishDate: string
     repairInvoiceDate: string
     repairInvoiceNo: string
-    repairAmount: number
+    repairAmount: string | number
     remark: string
 }
 
@@ -53,7 +53,7 @@ export class UploadRepairRecordBody {
     repairReason: string
 
     @ApiProperty({ description: 'True = Yes, False = No' })
-    maintenanceReriod: boolean
+    maintenanceReriod: string
 
     @ApiProperty({ description: 'Maintenance Name' })
     maintenanceName: string

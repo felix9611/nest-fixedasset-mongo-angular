@@ -34,16 +34,18 @@ export class UploadDialogComponent implements OnInit {
     }
 
     async uploadAction(file: any) {
-        const data = await readExcelFile(file.file)
-        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
-                
-        if (reData.length > 0 ) {
-            await postApiWithAuth(this.uploadApiUrl, reData)
-            this.message.success('In Uploading')
-            this.closeUploadDialog()
+        if (file.type === 'start') {
+            const data = await readExcelFile(file.file)
+            const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
                     
-        } else {
-                this.message.error('Ooooops, may data is wrong, please check again.')
+            if (reData.length > 0 ) {
+                await postApiWithAuth(this.uploadApiUrl, reData)
+                this.message.success('In Uploading')
+                this.closeUploadDialog()
+                        
+            } else {
+                    this.message.error('Ooooops, may data is wrong, please check again.')
+            }
         }
     }
 }

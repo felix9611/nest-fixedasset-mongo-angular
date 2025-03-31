@@ -5,7 +5,7 @@ import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
 
-@Controller('aaset/repair-record')
+@Controller('asset/repair-record')
 export class RepairRecordController {
     constructor(private repairRecordService: RepairRecordService) {}
 

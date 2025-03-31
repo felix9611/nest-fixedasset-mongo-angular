@@ -19,6 +19,8 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { Subscription, timer } from 'rxjs'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -35,7 +37,9 @@ import { findMenuItem } from '../../../tool-function'
         NzPaginationModule,
         NzDatePickerModule,
         NzCheckboxModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './repair-record-list.component.html',
     styleUrl: './repair-record-list.component.css',
@@ -56,6 +60,8 @@ export class RepairRecordListComponent {
                 upload: answer.upload ?? false
                  // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
     }
 
@@ -69,7 +75,8 @@ export class RepairRecordListComponent {
         read: false,
         write: false,
         update: false,
-        delete: false
+        delete: false,
+        upload: false
     }
 
     searchForm: any = {
@@ -117,7 +124,7 @@ export class RepairRecordListComponent {
 
 
     async loadRepairRecordLists() {
-        const res = await postApiWithAuth('/aaset/repair-record/list', this.searchForm)
+        const res = await postApiWithAuth('/asset/repair-record/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -141,13 +148,13 @@ export class RepairRecordListComponent {
         this.editFormDialog = true
         this.editTitle = `Edit Repair Record (Code: ${data.assetlist.assetCode})`
         const id = data._id
-        const getUrl = `/aaset/repair-record/one/${id}`
+        const getUrl = `/asset/repair-record/one/${id}`
         this.editForm = await getApiWithAuth(getUrl)
     }
 
     async goToSave() {
             
-        const res = await postApiWithAuth('/aaset/repair-record/update', this.editForm)
+        const res = await postApiWithAuth('/asset/repair-record/update', this.editForm)
             
         if (res.acknowledged === true) {
             this.message.info('Update successfully!')
@@ -163,9 +170,7 @@ export class RepairRecordListComponent {
     }
 
     async goToWriteOff() {
-        
-
-        const res = await getApiWithAuth(`/aaset/repair-record/void/${this.handleId}`)
+        const res = await getApiWithAuth(`/asset/repair-record/void/${this.handleId}`)
 
         this.message.info(res.msg)
 
@@ -173,4 +178,15 @@ export class RepairRecordListComponent {
         this.loadRepairRecordLists()
     }
 
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
 }
