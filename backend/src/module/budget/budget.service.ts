@@ -291,14 +291,22 @@ export class BudgetService {
 
             let deptId, placeId
             if (deptCode || deptName) {
-                const departmentData = await this.departmentModel.findOne({ $or: [{ deptCode }, { deptName }], status: 1 }).exec()
+                const departmentData = await this.departmentModel.findOne({ 
+                    ...deptCode ? { deptCode } : {},
+                    ...deptName ? { deptName } : {},
+                    status: 1 
+                }).exec()
                 if (departmentData?._id) {
                     deptId = departmentData._id.toString()
                 }
             }
 
             if (placeCode || placeName) {
-                const locationData = await this.locationModel.findOne({ $or: [{ placeCode }, { deptName }], status: 1 }).exec()
+                const locationData = await this.locationModel.findOne({ 
+                    ...placeCode ? { placeCode } : {},
+                    ...placeName ? { placeName } : {}, 
+                    status: 1 
+                }).exec()
                 if (locationData?._id) {
                     placeId = locationData._id.toString()
                 }
