@@ -17,6 +17,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
+import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -34,6 +36,8 @@ import { Subscription } from 'rxjs'
         QRcodeComponent,
         RepairRecordCreateComponent,
         NzDatePickerModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
@@ -54,6 +58,8 @@ export class AssetListComponent {
                 upload: answer.upload ?? false
                  // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
     }
 
@@ -171,5 +177,17 @@ export class AssetListComponent {
     openRepairRecordDialog(data: any) {
         this.repairRecordDialog = true
         this.handleId = data._id
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 }

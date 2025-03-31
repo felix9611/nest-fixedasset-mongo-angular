@@ -175,31 +175,4 @@ export class CodeTypeComponent {
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
-
-    upLoadDialog: boolean = false
-    openUploadDialog() {
-        this.upLoadDialog = true
-    }
-    
-    closeUploadDialog() {
-        this.upLoadDialog = false
-    }
-    
-    async uploadAction(file: any) {
-        const data = await readExcelFile(file.file)
-        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
-            
-        if (reData.length > 0 ) {
-            const res = await postApiWithAuth('/base/code-type/batch-create', reData)
-            if (res) {
-                this.message.success('In Uploading')
-                this.closeUploadDialog()
-            } else {
-                this.message.info('Oooops, may something is wrong, please try again!')
-            }
-                
-        } else {
-            this.message.error('Ooooops, may data is wrong, please check again.')
-        }
-    }
 }
