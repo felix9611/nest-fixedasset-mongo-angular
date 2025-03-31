@@ -66,7 +66,7 @@ export class DepartmentController {
     @ApiBody({ type: [CreateDeptBody] })
     @ApiResponse({ description: 'If save successful', status: 201, type: DepartmentBody })
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
-    @Post('batch-import')
+    @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: UpdateDeptBody[]) {
         return await this.deptService.importData(createDatas)

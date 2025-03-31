@@ -606,9 +606,9 @@ export class AssetListService {
             }
 
             if (checkAssetName) {
-                return await this.update({ ...finalData, assetCode, _id: checkAssetName._id.toString() })
+                await this.update({ ...finalData, assetCode, _id: checkAssetName._id.toString() })
             } else {
-                return await this.create({ ...finalData, assetCode, _id: '' })
+                await this.create({ ...finalData, assetCode, _id: '' })
             }
         }
     }

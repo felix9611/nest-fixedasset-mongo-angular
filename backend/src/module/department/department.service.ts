@@ -195,13 +195,13 @@ export class DepartmentService {
 
     async importData(data: CreateDeptDto[]) {
         for (const item of data) {
-            const { deptCode, deptName } = item
+            const { deptCode, deptName, remark } = item
             const checkData = await this.departmentModel.findOne({ deptCode, deptName, status: 1 }).exec()
 
             if (checkData) {
-                return await this.update({ ...item, _id: checkData._id.toString() })
+                await this.update({ deptCode, deptName, remark, _id: checkData._id.toString() })
             } else {
-                return await this.create(item)
+                await this.create({ deptCode, deptName, remark })
             } 
         } 
     }

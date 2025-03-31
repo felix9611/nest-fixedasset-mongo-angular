@@ -194,9 +194,9 @@ export class LocationService {
             const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1 }).exec()
 
             if (checkData) {
-                return await this.update({ ...item, _id: checkData._id.toString() })
+                await this.update({ ...item, _id: checkData._id.toString() })
             } else {
-                return await this.create(item)
+                await this.create(item)
             } 
         }
     }

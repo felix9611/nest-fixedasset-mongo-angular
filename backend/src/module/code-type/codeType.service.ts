@@ -212,14 +212,14 @@ export class CodeTypeService {
             const checkData = await this.codeTypeModel.findOne({ valueCode, valueName, type, status: 1 }).exec()
 
             if (checkData?._id) {
-                return await this.update({
+                await this.update({
                     valueCode,
                     valueName,
                     type,
                     _id: checkData._id.toString()
                 })
             } else {
-                return await this.create({
+                await this.create({
                     valueCode,
                     valueName,
                     type
