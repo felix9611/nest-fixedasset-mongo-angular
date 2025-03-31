@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
-import { BudgetBody, CreateBudgetBody, CreateBudgetDto, ListBudgetQuery, ListBudgetRequestDto, ListBudgetueryRes, UpdateBudgetBody, UpdateBudgetDto } from './budget.dto'
+import { BudgetBody, CreateBudgetBody, CreateBudgetDto, ImportBudgetBody, ListBudgetQuery, ListBudgetRequestDto, ListBudgetueryRes, UpdateBudgetBody, UpdateBudgetDto, UploadBudgetDto } from './budget.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { BudgetService } from './budget.service'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @Controller('base/budget')
 export class BudgetController {
@@ -59,7 +59,17 @@ export class BudgetController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListBudgetRequestDto) {
-        return this.budgetService.listPageRole(req)
+        return this.budgetService.listPage(req)
+    }
+
+    @ApiOperation({ summary: 'Create Budgete' })
+    @ApiBody({ description: 'Create Budgete', type: [ImportBudgetBody] })
+    @ApiResponse({ description: 'If save successful', status: 201, type: BudgetBody  })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: UploadBudgetDto[]) {
+        return await this.budgetService.importData(createDatas)
     }
     
     // testing mongo db query

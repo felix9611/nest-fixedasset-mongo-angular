@@ -1,11 +1,11 @@
 import { Body, Controller, Param, Post, UseGuards, Get } from '@nestjs/common'
 import { RepairRecordService } from './repair-record.service'
-import { CreateRepairRecordDto, UpdateRepairRecordDto, ListRepairRecordDto, CreateRepairRecordBody, RepairRecordBody, ListRepairRecordQuery, ListRepairRecordQueryRes, UpdateRepairRecordBody } from './repair-record.dto'
+import { CreateRepairRecordDto, UpdateRepairRecordDto, ListRepairRecordDto, CreateRepairRecordBody, RepairRecordBody, ListRepairRecordQuery, ListRepairRecordQueryRes, UpdateRepairRecordBody, UploadRepairRecordBody } from './repair-record.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
 
-@Controller('aaset/repair-record')
+@Controller('asset/repair-record')
 export class RepairRecordController {
     constructor(private repairRecordService: RepairRecordService) {}
 
@@ -55,5 +55,11 @@ export class RepairRecordController {
         return await this.repairRecordService.listAndPage(query)
     }
 
-
+    @ApiOperation({ summary: 'Batch Create' })
+    @ApiBody({ type: [UploadRepairRecordBody] })
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: UploadRepairRecordBody[]) {
+        return await this.repairRecordService.importData(createDatas)
+    }
 }

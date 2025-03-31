@@ -19,6 +19,7 @@ import { UserStoreService } from '../../../../state/user.service'
 import { read, write } from 'fs'
 import { update } from 'plotly.js-dist-min'
 import { findMenuItem } from '../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -40,23 +41,29 @@ import { findMenuItem } from '../../tool-function'
 })
 export class RoleComponent implements OnInit{
     @ViewChild('nzTreeComponent', { static: false }) nzTreeComponent!: NzTreeComponent
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Role', 'role')
-            
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false
+                 // keep default value
             }
-            console.log(this.userRightInside, 'answer')
-        })
-        
+        })         
     }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+                this.rightSubscription.unsubscribe()
+        }
+    }
+    
 
     userRightInside: any = {
         read: false,

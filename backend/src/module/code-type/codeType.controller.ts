@@ -3,7 +3,7 @@ import { CreateCodeTypeBody, ListCodeTypeRequestDto, UpdateCodeTypeDto, CodeType
 import { AuthGuard } from '../auth/AuthGuard'
 import { CodeTypeService } from './codeType.service'
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @ApiTags('Code Type')
 @Controller('base/code-type')
@@ -69,6 +69,15 @@ export class CodeTypeController {
     @UseGuards(AuthGuard)
     async getByType(@Param('type') type: string) {
         return await this.codeTypeService.getByType(type)
+    }
+
+    @ApiOperation({ summary: 'Create Code Type' })
+    @ApiBody({ description: 'Create Code Type', type: [CreateCodeTypeBody] })
+    @ApiResponse({ description: 'return meessage', status: 200, type: ReturnMsg })
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() importData: CreateCodeTypeBody[]) {
+        return await this.codeTypeService.importData(importData)
     }
     
 }

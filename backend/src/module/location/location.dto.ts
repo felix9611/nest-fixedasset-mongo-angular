@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface CreateLocationDto {
     placeCode: string
     placeName: string,
-    remark?: string
+    remark: string
 }
 
 export interface UpdateLocationDto extends CreateLocationDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListLocationRequestDto {

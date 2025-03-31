@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface CreateDeptDto {
     deptCode: string
@@ -8,7 +8,7 @@ export interface CreateDeptDto {
 }
 
 export interface UpdateDeptDto extends CreateDeptDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListDeptRequestDto {

@@ -21,7 +21,7 @@ export class LocationService {
     async create(createData: UpdateLocationDto) {
         const { _id, placeCode, placeName, ..._data } = createData
 
-        const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1})
+        const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1}).exec()
 
         if (checkData) {
             await this.actionRecordService.saveRecord({
@@ -62,7 +62,7 @@ export class LocationService {
     async update(updateData: UpdateLocationDto) {
         const { _id, ...data } = updateData
 
-        const checkData: any = await this.locationModel.findOne({ _id })
+        const checkData: any = await this.locationModel.findOne({ _id }).exec()
 
         if (checkData.status === 1) {
 
@@ -80,7 +80,7 @@ export class LocationService {
                 createdAt: new Date()
             })
 
-            return await this.locationModel.updateOne({ _id}, finalData)
+            return await this.locationModel.updateOne({ _id}, finalData).exec()
 
         } else {
 
@@ -100,7 +100,7 @@ export class LocationService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.locationModel.findOne({ _id, status: 1})
+        const data = await this.locationModel.findOne({ _id, status: 1}).exec()
 
         if (data) {
             return data
@@ -133,7 +133,7 @@ export class LocationService {
                 await this.locationModel.updateOne({ _id}, {
                     status: 0,
                     updateAt: new Date()
-                })
+                }).exec()
         
                 await this.actionRecordService.saveRecord({
                     actionName: 'Void Location',
@@ -155,7 +155,7 @@ export class LocationService {
         }
     }
 
-    async listPageRole(request: ListLocationRequestDto) {
+    async listPage(request: ListLocationRequestDto) {
             const { page, limit, name } = request
     
             const skip = (page - 1) * limit
@@ -177,7 +177,7 @@ export class LocationService {
             const lists = await this.locationModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.locationModel.countDocuments()
+            const total = await this.locationModel.countDocuments().exec()
     
             return {
                 total,
@@ -186,5 +186,18 @@ export class LocationService {
                 totalPages: Math.ceil(total / limit),
                 lists
             }
+    }
+
+    async importData(data: CreateLocationDto[]) {
+        for (const item of data) {
+            const { placeCode, placeName, ...dto } = item
+            const checkData = await this.locationModel.findOne({ placeCode, placeName, status: 1 }).exec()
+
+            if (checkData) {
+                await this.update({ ...item, _id: checkData._id.toString() })
+            } else {
+                await this.create(item)
+            } 
+        }
     }
 }

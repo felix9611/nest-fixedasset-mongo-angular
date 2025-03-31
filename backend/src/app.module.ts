@@ -25,6 +25,7 @@ import { SysMenuMoudule } from './module/sys-menu/sys-menu.module'
 import { RepairRecordMoudule } from './module/repair-record/repair-record.module'
 import { StockTakeMoudule } from './module/stock-take/stcok-take.module'
 import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.module'
+import { SysUserSchema } from './module/sys-user/sysUser.schame'
 
 @Module({
   imports: [
@@ -49,7 +50,8 @@ import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.
     MongooseModule.forRoot('mongodb://localhost/fixedasset'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
-      { name: 'Department', schema: DepartmentSchema }
+      { name: 'Department', schema: DepartmentSchema },
+      { name: 'SysUser', schema: SysUserSchema }
     ])
   ],
   controllers: [AppController],

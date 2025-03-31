@@ -14,7 +14,7 @@ export class ExcelFieldMatchService {
     ) {}
 
     async getOneById(_id: string) {
-        const data = await this.excelFieldMatchModel.findOne({ _id, status: 1 })
+        const data = await this.excelFieldMatchModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
@@ -26,7 +26,7 @@ export class ExcelFieldMatchService {
     }
 
     async getOneByCode(functionCode: string) {
-        const data = await this.excelFieldMatchModel.findOne({ functionCode })
+        const data = await this.excelFieldMatchModel.findOne({ functionCode }).exec()
 
         if (data?.status === 1) {
             return data
@@ -38,7 +38,7 @@ export class ExcelFieldMatchService {
     }
 
     async invalidate(_id: string) {
-        const checkData = await this.excelFieldMatchModel.findOne({ _id })
+        const checkData = await this.excelFieldMatchModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -59,7 +59,7 @@ export class ExcelFieldMatchService {
                 await this.excelFieldMatchModel.updateOne({ _id}, {
                     status: 0,
                     updateAt: new Date()
-                })
+                }).exec()
         
                 await this.actionRecordService.saveRecord({
                     actionName: 'Void Excel Field Match',
@@ -84,7 +84,7 @@ export class ExcelFieldMatchService {
     async create(createData: ExcelFieldMatchUpdate) {
         const { _id, functionCode, functionName, ..._data } = createData
 
-        const checkData = await this.excelFieldMatchModel.findOne({ functionCode, functionName })
+        const checkData = await this.excelFieldMatchModel.findOne({ functionCode, functionName }).exec()
 
         if (checkData?.status === 1) {
             await this.actionRecordService.saveRecord({
@@ -128,7 +128,7 @@ export class ExcelFieldMatchService {
 
         const { _id,  ..._data } = updateData
 
-        const checkData = await this.excelFieldMatchModel.findOne({ _id })
+        const checkData = await this.excelFieldMatchModel.findOne({ _id }).exec()
 
         if (checkData?.status === 1) {
 
@@ -146,7 +146,7 @@ export class ExcelFieldMatchService {
                 createdAt: new Date()
             })
 
-            return await this.excelFieldMatchModel.updateOne({ _id}, finalData)
+            return await this.excelFieldMatchModel.updateOne({ _id}, finalData).exec()
 
         } else {
 
@@ -183,7 +183,7 @@ export class ExcelFieldMatchService {
         const lists = await this.excelFieldMatchModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-        const total = await this.excelFieldMatchModel.countDocuments()
+        const total = await this.excelFieldMatchModel.countDocuments().exec()
     
         return {
             total,

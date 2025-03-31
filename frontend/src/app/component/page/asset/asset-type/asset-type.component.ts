@@ -14,6 +14,11 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
+import { formatJson, readExcelFile } from '../../../../../tool/excel-helper'
+import { NzUploadModule } from 'ng-zorro-antd/upload'
+import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -27,28 +32,40 @@ import { findMenuItem } from '../../../tool-function'
         NzTableModule, 
         NzInputModule, 
         NzPaginationModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        NzUploadModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
 })
 export class AssetTypeComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Asset Type', 'asset-type')
-                                            
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
 
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {
@@ -158,6 +175,17 @@ export class AssetTypeComponent {
         }
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 
 }

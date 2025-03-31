@@ -79,7 +79,7 @@ export class InvRecordService {
             { $limit: limit },
         ]).exec()
 
-        const total = await this.invRecordModel.find(finalFilter).countDocuments()
+        const total = await this.invRecordModel.find(finalFilter).countDocuments().exec()
 
         return {
             total,

@@ -16,7 +16,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { ActivatedRoute, Router } from '@angular/router'
-import { timer } from 'rxjs'
+import { Subscription, timer } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { UserStoreService } from '../../../../../state/user.service'
@@ -45,24 +45,32 @@ import { findMenuItem } from '../../../tool-function'
     styleUrl: './write-off-form.component.css',
 })
 export class WriteOffFormComponent implements OnInit {
-
+    private rightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Asset List', 'asset-lists')
-                                                             
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
             }
         })
     }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
     userRightInside: any = {
         read: false,
         write: false,

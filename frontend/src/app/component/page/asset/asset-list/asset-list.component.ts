@@ -16,6 +16,9 @@ import { RepairRecordCreateComponent } from '../repair-record-create/repair-reco
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
+import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -33,25 +36,37 @@ import { findMenuItem } from '../../../tool-function'
         QRcodeComponent,
         RepairRecordCreateComponent,
         NzDatePickerModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
 })
 export class AssetListComponent {
+    private rightSubscription: Subscription
     constructor(
         private routeTo: Router,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
-                                                    
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Tax Information', 'tax-information')
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     searchForm: any = {
@@ -162,5 +177,17 @@ export class AssetListComponent {
     openRepairRecordDialog(data: any) {
         this.repairRecordDialog = true
         this.handleId = data._id
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 }

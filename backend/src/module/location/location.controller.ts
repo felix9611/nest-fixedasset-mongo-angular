@@ -3,7 +3,7 @@ import { CreateLocationBody, CreateLocationDto, ListLocationQuery, ListLocationQ
 import { AuthGuard } from '../auth/AuthGuard'
 import { LocationService } from './location.service'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @Controller('base/location')
 export class LocationController {
@@ -50,7 +50,7 @@ export class LocationController {
     @Get('getAll')
     @UseGuards(AuthGuard)
     async getAll() {
-        return this.locationService.findAll()
+        return await this.locationService.findAll()
     }
     
     @ApiOperation({ summary: 'Page and list'})
@@ -59,7 +59,17 @@ export class LocationController {
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListLocationRequestDto) {
-        return this.locationService.listPageRole(req)
+        return await this.locationService.listPage(req)
+    }
+
+    @ApiOperation({ summary: 'Batch Create' })
+    @ApiBody({ type: [CreateLocationBody] })
+    @ApiResponse({ description: 'If save successful', status: 201, type: LocationBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: CreateLocationBody[]) {
+        return await this.locationService.importData(createDatas)
     }
     
 }

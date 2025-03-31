@@ -14,38 +14,61 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { UserStoreService } from '../../../../state/user.service'
 import { findMenuItem } from '../../tool-function'
+import { Subscription } from 'rxjs'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
+    ],
     templateUrl: './department.component.html',
     styleUrl: './department.component.css',
 })
 export class DepartmentComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-
-        this.userStoreService.menuRole$.subscribe((data: any) => {
-        const answer = findMenuItem(data, 'Department', 'departments')
-                            
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Department', 'departments')
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                     // keep default value
             }
-            console.log(this.userRightInside, 'answer')
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
+                    
+    }
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {
         read: false,
         write: false,
         update: false,
-        delete: false
+        delete: false,
+        upload: false
     }
 
     searchForm: any = {
@@ -141,6 +164,18 @@ export class DepartmentComponent {
         this.editForm = res
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 
 }

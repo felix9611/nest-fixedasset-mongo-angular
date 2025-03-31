@@ -10,6 +10,13 @@ import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
 import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { AssetListFile, AssetListFileSchema } from './asset-list-file.schame'
 import { AssetListQueryService } from './asset-list-query.service'
+import { TaxInformation, TaxInformationSchema } from '../tax-information/tax-information.schame'
+import { Department, DepartmentSchema } from '../department/department.schame'
+import { AssetType, AssetTypeSchema } from '../asset-type/assetType.schame'
+import { AssetTypeService } from '../asset-type/assetType.service'
+import { TaxInformationService } from '../tax-information/tax-information.service'
+import { DepartmentService } from '../department/department.service'
+import { LocationService } from '../location/location.service'
 
 @Module({
     imports: [
@@ -18,10 +25,22 @@ import { AssetListQueryService } from './asset-list-query.service'
             { name: AssetListFile.name, schema: AssetListFileSchema },
             { name: ActionRecord.name, schema: ActionRecordSchema }, 
             { name: Location.name, schema: LocationSchema },
-            { name: InvRecord.name, schema: InvRecordSchema }
+            { name: InvRecord.name, schema: InvRecordSchema },
+            { name: TaxInformation.name, schema: TaxInformationSchema },
+            { name: AssetType.name, schema: AssetTypeSchema },
+            { name: Department.name, schema: DepartmentSchema }
         ]), AssetList
     ],
-    providers: [AssetListService, ActionRecordService, InvRecordService, AssetListQueryService],
+    providers: [
+        AssetListService, 
+        ActionRecordService, 
+        InvRecordService, 
+        AssetListQueryService, 
+        AssetTypeService, 
+        TaxInformationService, 
+        DepartmentService, 
+        LocationService
+    ],
     controllers: [AssetListController],
     exports: [AssetListService, AssetList]
 })

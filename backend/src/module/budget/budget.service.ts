@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Budget } from './budget.schame'
 import { Model } from 'mongoose'
-import { CreateBudgetDto, ListBudgetRequestDto, UpdateBudgetDto } from './budget.dto';
-import { ActionRecordService } from '../action-record/actionRecord.service';
+import { CreateBudgetDto, ListBudgetRequestDto, UpdateBudgetDto, UploadBudgetDto } from './budget.dto'
+import { ActionRecordService } from '../action-record/actionRecord.service'
+import { Department } from '../department/department.schame'
+import { Location } from '../location/location.schame'
 
 @Injectable()
 export class BudgetService {
     constructor(
         @InjectModel(Budget.name) private budgetModel: Model<Budget>,
+        @InjectModel(Location.name) private locationModel: Model<Location>,
+        @InjectModel(Department.name) private departmentModel: Model<Department>,
         private actionRecordService: ActionRecordService
     ) {}
 
@@ -21,7 +25,7 @@ export class BudgetService {
     async create(createData: UpdateBudgetDto) {
         const { _id, budgetName, year, month, ..._data } = createData
 
-        const checkData = await this.budgetModel.findOne({ budgetName, year, month, status: 1})
+        const checkData = await this.budgetModel.findOne({ budgetName, year, month, status: 1}).exec()
 
         if (checkData) {
             await this.actionRecordService.saveRecord({
@@ -65,7 +69,7 @@ export class BudgetService {
     async update(updateData: UpdateBudgetDto) {
         const { _id, ...data } = updateData
 
-        const checkData: any = await this.budgetModel.findOne({ _id })
+        const checkData: any = await this.budgetModel.findOne({ _id }).exec()
 
         if (checkData.status === 1) {
 
@@ -83,7 +87,7 @@ export class BudgetService {
                 createdAt: new Date()
             })
 
-            return await this.budgetModel.updateOne({ _id}, finalData)
+            return await this.budgetModel.updateOne({ _id}, finalData).exec()
 
         } else {
 
@@ -115,7 +119,7 @@ export class BudgetService {
     }
 
     async invalidate(_id: string) {
-        const checkData = await this.budgetModel.findOne({ _id })
+        const checkData = await this.budgetModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -136,7 +140,7 @@ export class BudgetService {
                 await this.budgetModel.updateOne({ _id}, {
                     status: 0,
                     updateAt: new Date()
-                })
+                }).exec()
         
                 await this.actionRecordService.saveRecord({
                     actionName: 'Void Budget',
@@ -158,7 +162,7 @@ export class BudgetService {
         }
     }
 
-    async listPageRole(request: ListBudgetRequestDto) {
+    async listPage(request: ListBudgetRequestDto) {
             const { page, limit, name, date, deptId, placeId } = request
     
             const skip = (page - 1) * limit
@@ -198,8 +202,8 @@ export class BudgetService {
                 { $unwind: { path: '$place', preserveNullAndEmptyArrays: false } },
                 { $unwind: { path: '$department', preserveNullAndEmptyArrays: false } } // Avoids errors if no match
               ]).skip(skip)
-              .limit(limit).exec();
-            const total = await this.budgetModel.find(filters).countDocuments()
+              .limit(limit).exec()
+            const total = await this.budgetModel.find(filters).countDocuments().exec()
     
             return {
                 total,
@@ -248,11 +252,90 @@ export class BudgetService {
               }
             },
             { $sort: { year: 1, month: 1 } }
-        ])
+        ]).exec()
           
     }
 
     getRandom10Digit(): string {
         return Math.floor(1000000000 + Math.random() * 9000000000).toString()
+    }
+
+    async importData(createDatas: UploadBudgetDto[]) {
+        let finalData: any[] = []
+        for (const data of createDatas) {
+            let { 
+                deptCode, 
+                deptName, 
+                placeCode, 
+                placeName, 
+                budgetNo, 
+                budgetName, 
+                year, 
+                month, 
+                budgetAmount, 
+                budgetFrom, 
+                budgetTo, 
+                budgetStatus, 
+                remark 
+            } = data
+
+            if (typeof budgetAmount === 'string') {
+                if (budgetAmount.includes('%')) {
+                    budgetAmount = Number(budgetAmount.replace('%', '')) / 100
+                } else {
+                    budgetAmount = Number(budgetAmount) / 100
+                }
+            } else {
+                budgetAmount = Number(budgetAmount) / 100
+            }
+
+            let deptId, placeId
+            if (deptCode || deptName) {
+                const departmentData = await this.departmentModel.findOne({ 
+                    ...deptCode ? { deptCode } : {},
+                    ...deptName ? { deptName } : {},
+                    status: 1 
+                }).exec()
+                if (departmentData?._id) {
+                    deptId = departmentData._id.toString()
+                }
+            }
+
+            if (placeCode || placeName) {
+                const locationData = await this.locationModel.findOne({ 
+                    ...placeCode ? { placeCode } : {},
+                    ...placeName ? { placeName } : {}, 
+                    status: 1 
+                }).exec()
+                if (locationData?._id) {
+                    placeId = locationData._id.toString()
+                }
+            }
+
+            const finalData = {
+                deptId,
+                placeId,
+                budgetNo,
+                budgetName,
+                year,
+                month,
+                budgetAmount,
+                budgetFrom,
+                budgetTo,
+                budgetStatus,
+                remark
+            }
+
+            const checkData = await this.budgetModel.findOne({ budgetNo, budgetName, year, month, status: 1 }).exec()
+
+            if (checkData?._id) {
+                await this.update({
+                    ...finalData,
+                    _id: checkData._id.toString()
+                })
+            } else {
+                await this.create(finalData)
+            }
+        }
     }
 }

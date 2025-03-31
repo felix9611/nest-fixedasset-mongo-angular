@@ -5,7 +5,7 @@ import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateUserDto, CreateUserRequestDto, ListUserRequestDto, UpdateUserDto } from './sysUser.dto'
 import { createUserKey } from './constants'
-import { hashPassword, salt } from 'src/tool/password-tools'
+import { hashPassword, salt } from '../../tool/password-tools'
 import { SysRole } from '../sys-role/role.schame'
 import { SysRoleService } from '../sys-role/role.service'
 import { Department } from '../department/department.schame'
@@ -25,7 +25,7 @@ export class SysUserService {
     const { key, userData } = createUserRequest
 
     if (key === createUserKey) {
-      const checkData = await this.sysUserModel.findOne({ username: userData.username, email: userData.email })
+      const checkData = await this.sysUserModel.findOne({ username: userData.username, email: userData.email }).exec()
 
       if (checkData) {
         return {
@@ -57,7 +57,7 @@ export class SysUserService {
   }
 
   async updateUser(userData: UpdateUserDto) {
-    const checkData = await this.sysUserModel.findOne({ _id: userData._id})
+    const checkData = await this.sysUserModel.findOne({ _id: userData._id }).exec()
 
     if (checkData?.status === 0) {
       return {
@@ -67,12 +67,12 @@ export class SysUserService {
       return await this.sysUserModel.updateOne({ _id: userData._id }, {
         ...userData,
         updateAt: new Date()
-      })
+      }).exec()
     }
   }
 
   async invalidateUser(_id: string) {
-    const checkData = await this.sysUserModel.findOne({ _id})
+    const checkData = await this.sysUserModel.findOne({ _id }).exec()
 
     if (checkData?.status === 0) {
       return {
@@ -82,7 +82,7 @@ export class SysUserService {
       const res = await this.sysUserModel.updateOne({ _id}, {
         status: 0,
         updateAt: new Date()
-      })
+      }).exec()
 
       if (res.modifiedCount === 1) {
         return {
@@ -97,12 +97,12 @@ export class SysUserService {
   }
 
   async updatePassword(username: string, password: string) {
-    const checkData = await this.sysUserModel.findOne({ username })
+    const checkData = await this.sysUserModel.findOne({ username }).exec()
 
     if (checkData) {
       const newPasswordSting = hashPassword(password, salt)
 
-      const res = await this.sysUserModel.updateOne({ username }, { password: newPasswordSting})
+      const res = await this.sysUserModel.updateOne({ username }, { password: newPasswordSting }).exec()
 
       if (res.modifiedCount === 1) {
         return {
@@ -124,7 +124,7 @@ export class SysUserService {
   }
 
   async getUserInfo(_id: string) {
-    const answer: any = await this.sysUserModel.findOne({ _id})
+    const answer: any = await this.sysUserModel.findOne({ _id}).exec()
 
     const roleLists = await this.sysRoleService.getRolelistsByIds(answer.roles)
     return {
@@ -171,7 +171,7 @@ export class SysUserService {
       { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
     ]).exec()
 
-    const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1}).limit(15).exec()
+    const loginRecords = await this.loginRecordModel.find({ username }).sort({ loginTime: -1 }).limit(15).exec()
   
     return {
       ...answer[0],
@@ -180,7 +180,7 @@ export class SysUserService {
   }
 
   async findOneUserAllData(username: string) {
-    return await this.sysUserModel.findOne({ username })
+    return await this.sysUserModel.findOne({ username }).exec()
   }
 
   async listUser(request: ListUserRequestDto) {
@@ -213,7 +213,7 @@ export class SysUserService {
     .limit(limit)
     .exec()
 
-    const total = await this.sysUserModel.countDocuments()
+    const total = await this.sysUserModel.countDocuments().exec()
 
     return {
       total,
@@ -225,7 +225,7 @@ export class SysUserService {
   }
 
   async updateAvatar(username: string, photo: string) {
-    const checkData = await this.sysUserModel.findOne({ username })
+    const checkData = await this.sysUserModel.findOne({ username }).exec()
 
     if (checkData?.status === 0 || !checkData) {
       return {

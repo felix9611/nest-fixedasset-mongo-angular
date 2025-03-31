@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
-import { DashboardReqDto, ListAssetReqDto, UpdateAssetDto } from './asset-list.dto'
+import { DashboardReqDto, ListAssetReqDto, UpdateAssetDto, UploadAssetListDto } from './asset-list.dto'
 import { AssetListQueryService } from './asset-list-query.service'
 
 @Controller('asset/asset-list')
@@ -70,5 +70,11 @@ export class AssetListController {
     @UseGuards(AuthGuard)
     async chatQueryData(@Body() query: DashboardReqDto) {
         return await this.assetListQueryService.queryMakerForDateAndData(query)
+    }
+
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: UploadAssetListDto[]) {
+        return await this.assetListService.importData(createDatas)
     }
 }

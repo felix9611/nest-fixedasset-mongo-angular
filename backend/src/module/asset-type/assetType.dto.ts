@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface AssetTypeCreateDto {
     typeCode: string
@@ -9,13 +9,35 @@ export interface AssetTypeCreateDto {
 }
 
 export interface AssetTypeUpdateDto extends AssetTypeCreateDto{
-    _id: string
+    _id?: string
 }
 
 export interface AssetTypeListSearchDto {
     name?: string,
     page: number,
     limit: number
+}
+
+export interface AssetTypeUploadDto {
+    typeCode: string
+    typeName: string
+    remark?: string
+    depreciationRate?: number | string
+}
+
+export class ImportAssetTypeBody {
+
+    @ApiProperty({ description: 'Type Code' })
+    typeCode: string
+
+    @ApiProperty({ description: 'Type Name' })
+    typeName: string
+
+    @ApiProperty({ description: 'Type for catelog' })
+    remark: string
+
+    @ApiProperty({ description: 'Item depreciation rate per year,  number or string' })
+    depreciationRate: any
 }
 
 export class CreateAssetTypeBody {

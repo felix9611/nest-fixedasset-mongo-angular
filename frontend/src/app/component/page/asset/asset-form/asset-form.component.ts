@@ -16,7 +16,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { ActivatedRoute, Router } from '@angular/router'
-import { debounceTime, Observable, Observer, Subject, timer } from 'rxjs'
+import { debounceTime, Observable, Observer, Subject, Subscription, timer } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
@@ -55,7 +55,7 @@ import { UserStoreService } from '../../../../../state/user.service'
     styleUrl: './asset-form.component.css',
 })
 export class AssetFormComponent implements OnInit {
-
+    private rightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
@@ -65,15 +65,23 @@ export class AssetFormComponent implements OnInit {
         this.changeEvent$.pipe(debounceTime(300)).subscribe(event => {
             this.preAction(event.file.originFileObj);
         })
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Asset List', 'asset-lists')
-                                                    
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {

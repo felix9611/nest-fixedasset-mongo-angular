@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { TaxInformation } from './tax-information.schame'
-import { UpdateDtoTaxInformation, TaxInformationListSearchDto } from './tax-information.dto'
+import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto } from './tax-information.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 
 @Injectable()
@@ -29,7 +29,7 @@ export class TaxInformationService {
             await this.taxInformationModel.updateOne({ _id: checkData._id}, {
                 ..._createData,
                 updatedAt: new Date()
-            })
+            }).exec()
 
             await this.actionRecordService.saveRecord({
                 actionName: 'Create Tax information for update',
@@ -92,7 +92,7 @@ export class TaxInformationService {
             return await this.taxInformationModel.updateOne(
                 { _id }, 
                 finalData
-            )
+            ).exec()
         } else {
 
 
@@ -113,7 +113,7 @@ export class TaxInformationService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.taxInformationModel.findOne({ _id, status: 1})
+        const data = await this.taxInformationModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
@@ -125,7 +125,7 @@ export class TaxInformationService {
     }
 
     async voidOne(_id: string) {
-        const checkData = await this.taxInformationModel.findOne({ _id })
+        const checkData = await this.taxInformationModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -147,7 +147,7 @@ export class TaxInformationService {
             const res = await this.taxInformationModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.acknowledged === true) {
                 await this.actionRecordService.saveRecord({
@@ -192,13 +192,13 @@ export class TaxInformationService {
             countryCode,
             countryName,
             status: 1
-        })
+        }).exec()
     }
 
     async findAll(): Promise<TaxInformation[]> {
         return this.taxInformationModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async listAssetTypeBySearch(req: TaxInformationListSearchDto) {
@@ -240,7 +240,7 @@ export class TaxInformationService {
             .skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.taxInformationModel.find(filters).countDocuments()
+        const total = await this.taxInformationModel.find(filters).countDocuments().exec()
 
         return {
             total,
@@ -250,5 +250,91 @@ export class TaxInformationService {
             lists
         }
 
+    }
+
+    async importData(importData: TaxInformationImportDto[]) {
+        let arrayTest: any = []
+        for (const data of importData) {
+            let { taxType, taxCode, taxName, nationCode, nationName, countryCode, countryName, remark, taxRate, importRate } = data
+
+            if (typeof taxRate === 'string') {
+                if (taxRate.includes('%')) {
+                    taxRate = Number(taxRate.replace('%', '')) / 100
+                } else {
+                    taxRate = Number(taxRate) / 100
+                }
+            } else {
+                taxRate = Number(taxRate)
+            }
+
+            if (typeof importRate === 'string') {
+                if (importRate.includes('%')) {
+                    importRate = Number(importRate.replace('%', '')) / 100
+                } else {
+                    importRate = Number(taxRate) / 100
+                }
+            } else {
+                importRate = Number(taxRate)
+            }
+
+            const checkData = await this.findCheckData(taxCode, taxName, nationCode, nationName, countryCode, countryName)
+
+
+            if (checkData) {
+                arrayTest.push({
+                    _id: checkData._id.toString(),
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
+                await this.update({
+                    _id: checkData._id.toString(),
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
+            } else {
+                arrayTest.push({
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
+                await this.create({
+                    taxType,
+                    taxCode, 
+                    taxName,
+                    nationCode,
+                    nationName,
+                    countryCode,
+                    countryName,
+                    taxRate,
+                    importRate, 
+                    remark
+                })
+            }
+        }
+
+        return arrayTest
     }
 }

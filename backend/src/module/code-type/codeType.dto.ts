@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface CreateCodeTypeDto {
     valueCode: string
@@ -8,7 +8,7 @@ export interface CreateCodeTypeDto {
 }
 
 export interface UpdateCodeTypeDto extends CreateCodeTypeDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListCodeTypeRequestDto {

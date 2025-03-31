@@ -11,6 +11,14 @@ import { StockTakeItem, StockTakeItemSchema } from './stock-take-item.schema'
 import { StockTakeService } from './stock-take.service'
 import { StockTakeController } from './stcok-take.controller'
 import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-file.schame'
+import { TaxInformation, TaxInformationSchema } from '../tax-information/tax-information.schame'
+import { AssetType, AssetTypeSchema } from '../asset-type/assetType.schame'
+import { Department, DepartmentSchema } from '../department/department.schame'
+import { Location, LocationSchema } from '../location/location.schame'
+import { AssetTypeService } from '../asset-type/assetType.service'
+import { TaxInformationService } from '../tax-information/tax-information.service'
+import { DepartmentService } from '../department/department.service'
+import { LocationService } from '../location/location.service'
 
 @Module({
     imports: [
@@ -20,10 +28,23 @@ import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-fil
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: AssetList.name, schema: AssetListSchema },
             { name: AssetListFile.name, schema: AssetListFileSchema },
-            { name: InvRecord.name, schema: InvRecordSchema }
+            { name: InvRecord.name, schema: InvRecordSchema },
+            { name: TaxInformation.name, schema: TaxInformationSchema },
+            { name: Location.name, schema: LocationSchema },
+            { name: AssetType.name, schema: AssetTypeSchema },
+            { name: Department.name, schema: DepartmentSchema }
         ]), 
     ],
-    providers: [ActionRecordService, StockTakeService, AssetListService, InvRecordService],
+    providers: [
+        ActionRecordService, 
+        StockTakeService, 
+        AssetListService, 
+        InvRecordService, 
+        AssetTypeService, 
+        TaxInformationService, 
+        DepartmentService, 
+        LocationService
+    ],
     exports: [],
     controllers: [StockTakeController]
 })

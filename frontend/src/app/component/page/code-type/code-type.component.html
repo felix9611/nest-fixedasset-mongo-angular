@@ -10,6 +10,22 @@
             <div *ngIf="userRightInside.write" (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
                 Create
             </div>
+            <div *ngIf="userRightInside.upload" class="w-[200px] border-1 border-[#D17600] text-center px-1 py-2 rounded-lg">
+                <app-download-excel-template 
+                    class="text-[#D17600] hover:text-[#B06400]" 
+                    buttonLabel="Download Excel Template" 
+                    excelFileName="CODE_TYPE_template.xlsx" 
+                    [excelFieldList]="excelFieldList" 
+                />
+            </div>
+            <div *ngIf="userRightInside.upload" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+                <app-upload-dialog
+                    uploadButtonLabel="Upload"
+                    uploadApiUrl="/base/code-type/batch-create"
+                    [excelFieldList]="excelFieldList"
+                    [dbFieldList]="dbFieldList"
+                />
+            </div>
         </div>
         <nz-table
                 [nzData]="dataLists"

@@ -15,7 +15,7 @@ export class SysRoleService {
     async findAll(): Promise<SysRole[]> {
         return this.sysRoleModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async create(createData: UpdateSysRoleDto) {
@@ -63,7 +63,7 @@ export class SysRoleService {
     async update(updateData: UpdateSysRoleDto) {
         const { _id, code, name, ..._data } = updateData
 
-        const checkData = await this.sysRoleModel.findOne({ _id, status: 1})
+        const checkData = await this.sysRoleModel.findOne({ _id, status: 1}).exec()
         if (checkData) {
             const finalData = {
                 name,
@@ -81,7 +81,7 @@ export class SysRoleService {
                 createdAt: new Date()
             })
 
-            return await this.sysRoleModel.updateOne({ _id}, finalData)
+            return await this.sysRoleModel.updateOne({ _id}, finalData).exec()
         } else {
             await this.actionRecordService.saveRecord({
                 actionName: 'Update Role',
@@ -100,7 +100,7 @@ export class SysRoleService {
     }
 
     async updateRoleMenuPermission(_id: string, menuIds: any) {
-        const checkData = await this.sysRoleModel.findOne({ _id })
+        const checkData = await this.sysRoleModel.findOne({ _id }).exec()
         if (checkData) {
             const finalData = {
                 menuIds,
@@ -116,7 +116,7 @@ export class SysRoleService {
                 createdAt: new Date()
             })
 
-            return await this.sysRoleModel.updateOne({ _id}, finalData)
+            return await this.sysRoleModel.updateOne({ _id}, finalData).exec()
 
         } else {
             await this.actionRecordService.saveRecord({
@@ -138,7 +138,7 @@ export class SysRoleService {
     }
 
     async invalidateRole(_id: string) {
-        const checkData = await this.sysRoleModel.findOne({ _id })
+        const checkData = await this.sysRoleModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -160,7 +160,7 @@ export class SysRoleService {
             const res = await this.sysRoleModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
@@ -187,7 +187,7 @@ export class SysRoleService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.sysRoleModel.findOne({ _id, status: 1})
+        const data = await this.sysRoleModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
@@ -220,7 +220,7 @@ export class SysRoleService {
         const lists = await this.sysRoleModel.find(filters).skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.sysRoleModel.countDocuments()
+        const total = await this.sysRoleModel.countDocuments().exec()
 
         return {
             total,
@@ -232,11 +232,11 @@ export class SysRoleService {
     }
 
     async getRolelistsByIds(ids: string[]) {
-        return await this.sysRoleModel.find({ _id: { $in: ids }, status: 1 })
+        return await this.sysRoleModel.find({ _id: { $in: ids }, status: 1 }).exec()
     }
 
     async checkRoleExist(name: string, code: string) {
-        return await this.sysRoleModel.findOne({ name, code, status: 1})
+        return await this.sysRoleModel.findOne({ name, code, status: 1 }).exec()
     }
 
     async loadRoleWithMenu(roleIds: any) {
@@ -308,6 +308,6 @@ export class SysRoleService {
                     }
                 }
             }
-        ])
+        ]).exec()
     }
 }

@@ -3,7 +3,7 @@ import { DepartmentService } from './department.service';
 import { CreateDeptBody, DepartmentBody, ListDepartmentQuery, ListDepartmentQueryRes, ListDeptRequestDto, UpdateDeptBody, UpdateDeptDto } from './department.dto';
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { ReturnMsg } from 'src/tool/open-api-body'
+import { ReturnMsg } from '../../tool/open-api-body'
 
 @Controller('sys/department')
 export class DepartmentController {
@@ -60,6 +60,16 @@ export class DepartmentController {
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListDeptRequestDto) {
         return this.deptService.listPageRole(req)
+    }
+
+    @ApiOperation({ summary: 'Batch Create Department' })
+    @ApiBody({ type: [CreateDeptBody] })
+    @ApiResponse({ description: 'If save successful', status: 201, type: DepartmentBody })
+    @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
+    @Post('batch-create')
+    @UseGuards(AuthGuard)
+    async importData(@Body() createDatas: UpdateDeptBody[]) {
+        return await this.deptService.importData(createDatas)
     }
     
 }

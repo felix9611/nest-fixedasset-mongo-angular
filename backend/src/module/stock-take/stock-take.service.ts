@@ -19,7 +19,7 @@ export class StockTakeService {
     async create(createData: StockTakeForm, username?: string) {
         const { actionName, ..._data } = createData
 
-        const checkData = await this.stockTakeModel.findOne({ actionName, status: 1 })
+        const checkData = await this.stockTakeModel.findOne({ actionName, status: 1 }).exec()
 
         if (checkData) {
 
@@ -65,7 +65,7 @@ export class StockTakeService {
 
 
     async getOneStockTake(_id: string) {
-        const data = await this.stockTakeModel.findOne({ _id })
+        const data = await this.stockTakeModel.findOne({ _id }).exec()
 
         if (data) {
 
@@ -94,7 +94,7 @@ export class StockTakeService {
     async update(updateData: UpdateStockTakeForm) {
         const { _id, ..._data } = updateData
 
-        const checkForm = await this.stockTakeModel.findOne({ _id})
+        const checkForm = await this.stockTakeModel.findOne({ _id }).exec()
 
         if (checkForm?.status === 0) {
 
@@ -132,7 +132,7 @@ export class StockTakeService {
             }
 
 
-            await this.stockTakeModel.updateOne({ _id }, finalData)
+            await this.stockTakeModel.updateOne({ _id }, finalData).exec()
 
             await this.actionRecordService.saveRecord({
                 actionName: 'Update Stock Take',
@@ -153,7 +153,7 @@ export class StockTakeService {
 
     async finishOrVoid(_id: string, status: number, username?: string) {
 
-        const checkForm = await this.stockTakeModel.findOne({ _id })
+        const checkForm = await this.stockTakeModel.findOne({ _id }).exec()
 
         if (checkForm?.status === 0) {
 
@@ -196,7 +196,7 @@ export class StockTakeService {
             }
 
 
-            await this.stockTakeModel.updateOne({ _id }, finalData)
+            await this.stockTakeModel.updateOne({ _id }, finalData).exec()
 
             await this.actionRecordService.saveRecord({
                 actionName: 'Update Stock Take',
@@ -243,7 +243,7 @@ export class StockTakeService {
             { $limit: limit },
         ]).exec()
 
-        const total = await this.stockTakeItemModel.find(finalFilter).countDocuments()
+        const total = await this.stockTakeItemModel.find(finalFilter).countDocuments().exec()
     
         return {
             total,

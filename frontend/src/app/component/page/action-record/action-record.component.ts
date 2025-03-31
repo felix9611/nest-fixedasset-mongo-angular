@@ -12,6 +12,7 @@ import { DepartmentForm } from './interface'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -20,17 +21,24 @@ import { UserStoreService } from '../../../../state/user.service'
     templateUrl: './action-record.component.html',
     styleUrl: './action-record.component.css',
 })
+
 export class ActionRecordComponent {
+    private rightSubscription: Subscription
     constructor(
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Action Log', 'action-record')
-                                            
             this.userRightInside = {
-                read: answer.read
+                read: answer?.read ?? false // keep default value
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {

@@ -13,35 +13,58 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
-import * as XLSX from 'xlsx'
-import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
+import { NzUploadModule } from 'ng-zorro-antd/upload'
 import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
+import { Subscription } from 'rxjs'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule, NzUploadModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        NzUploadModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
+    ],
     templateUrl: './vendor.component.html',
     styleUrl: './vendor.component.css',
 })
 export class VendorComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+    
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Vendor', 'vendor')
-
-            this.excelFileSetting.code = answer.excelFunctionCode                 
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete,
-                upload: answer.upload
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
+        
+    }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {
@@ -88,7 +111,7 @@ export class VendorComponent {
 
     ngOnInit() {
         this.loadVendorLists()
-        
+        this.preLoadExcelSetting()
     }
 
     dbFieldList: string[] = []
@@ -177,36 +200,4 @@ export class VendorComponent {
         this.searchForm = {}
         this.loadVendorLists()
     }
-
-    upLoadDialog: boolean = false
-    openUploadDialog() {
-        this.upLoadDialog = true
-    }
-
-    closeUploadDialog() {
-        this.upLoadDialog = false
-    }
-
-    async uploadAction(file: any) {
-        const data = await readExcelFile(file.file)
-        const reData = formatJson(this.excelFieldList, this.dbFieldList, data)
-        
-        if (reData.length > 0 ) {
-            const res = await postApiWithAuth('/base/vendor/batch-create', reData)
-            if (res) {
-                this.message.success('In Uploading')
-                this.closeUploadDialog()
-            } else {
-                this.message.info('Oooops, may something is wrong, please try again!')
-            }
-            
-        } else {
-            this.message.error('Ooooops, may data is wrong, please check again.')
-        }
-    }
-
-    downloadTemplateExcel() {
-        downloadTempExcelFile(this.excelFieldList, 'vendors_template.xlsx')
-    }
-
 }

@@ -28,6 +28,55 @@ export interface ListRepairRecordDto {
     placeIds: string[]
 }
 
+export interface UploadRepairRecordDto {
+    assetCode: string
+    assetName: string
+    repairReason: string
+    maintenanceReriod: string | boolean
+    maintenanceName: string
+    maintenanceDate: string
+    maintenanceFinishDate: string
+    repairInvoiceDate: string
+    repairInvoiceNo: string
+    repairAmount: string | number
+    remark: string
+}
+
+export class UploadRepairRecordBody {
+    @ApiProperty({ description: 'Asset Code' })
+    assetCode: string
+
+    @ApiProperty({ description: 'Asset Name' })
+    assetName: string
+
+    @ApiProperty({ description: 'Repair Reason' })
+    repairReason: string
+
+    @ApiProperty({ description: 'True = Yes, False = No' })
+    maintenanceReriod: string
+
+    @ApiProperty({ description: 'Maintenance Name' })
+    maintenanceName: string
+
+    @ApiProperty({ description: 'Maintenance Date' })
+    maintenanceDate: string
+
+    @ApiProperty({ description: 'Maintenance Finish Date' })
+    maintenanceFinishDate: string
+
+    @ApiProperty({ description: 'Repair Invoice Date' })
+    repairInvoiceDate: string
+
+    @ApiProperty({ description: 'Repair Invoice No.' })
+    repairInvoiceNo: string
+
+    @ApiProperty({ description: 'Repair Amount' })
+    repairAmount: number
+
+    @ApiProperty({ description: 'Remark' })
+    remark: string
+}
+
 export class CreateRepairRecordBody {
     @ApiProperty({ description: 'Asset Data ID' })
     assetId: string

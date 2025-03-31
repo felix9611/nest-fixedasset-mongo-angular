@@ -4,7 +4,7 @@
             <div class="w-[150px]">
                 <input class="h-full" nz-input type="text" id="name" name="name" placeholder="Input Name/Code" [(ngModel)]="searchForm.name" />
             </div>
-            <div>
+            <div class="w-[245px]">
                 <nz-range-picker
                     nzSize="large"
                     class="h-full"
@@ -14,7 +14,7 @@
                     [(ngModel)]="searchForm.date"
                 ></nz-range-picker>
             </div>
-            <div class="w-[150px]">
+            <div class="w-[200px]">
                 <nz-select 
                     nzSize="large"
                     class="h-full"
@@ -29,7 +29,7 @@
                     }
                 </nz-select>
             </div>
-            <div class="w-[150px]">
+            <div class="w-[200px]">
                 <nz-select 
                     nzSize="large"
                     class="h-full"
@@ -44,11 +44,27 @@
                     }
                 </nz-select>
             </div>
-            <div (click)="loadBudgetLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
+            <div (click)="loadBudgetLists()" class="w-[80px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
                 Search
             </div>
-            <div *ngIf="userRightInside.write" (click)="showDialog()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+            <div *ngIf="userRightInside.write" (click)="showDialog()" class="w-[80px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
                 Create
+            </div>
+            <div *ngIf="userRightInside.upload" class="w-[180px] border-1 border-[#D17600] text-center py-2 rounded-lg">
+                <app-download-excel-template 
+                    class="text-[#D17600] hover:text-[#B06400]" 
+                    buttonLabel="Download Excel Template" 
+                    excelFileName="budget_template.xlsx" 
+                    [excelFieldList]="excelFieldList" 
+                />
+            </div>
+            <div *ngIf="userRightInside.upload" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+                <app-upload-dialog
+                    uploadButtonLabel="Upload"
+                    uploadApiUrl="/base/budget/batch-create"
+                    [excelFieldList]="excelFieldList"
+                    [dbFieldList]="dbFieldList"
+                />
             </div>
         </div>
         <nz-table

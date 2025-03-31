@@ -15,13 +15,13 @@ export class VendorService {
     async findAll(): Promise<Vendor[]> {
         return this.vendorModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async create(createData: UpdateVendorDto) {
         const { vendorCode, vendorName, _id, ..._data } = createData
 
-        const checkData = await this.vendorModel.findOne({ vendorCode, vendorName, status: 1})
+        const checkData = await this.vendorModel.findOne({ vendorCode, vendorName, status: 1 }).exec()
 
         if (checkData) {
             await this.actionRecordService.saveRecord({
@@ -54,7 +54,7 @@ export class VendorService {
     async update(updateData: UpdateVendorDto) {
         const { _id, ...data } = updateData
 
-        const checkData = await this.vendorModel.findOne({ _id })
+        const checkData = await this.vendorModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
@@ -85,12 +85,12 @@ export class VendorService {
                 createdAt: new Date()
             })
 
-            return await this.vendorModel.updateOne({ _id}, finalData)
+            return await this.vendorModel.updateOne({ _id}, finalData).exec()
         }
     }
 
     async getOneById(_id: string) {
-        const data = await this.vendorModel.findOne({ _id, status: 1})
+        const data = await this.vendorModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
@@ -102,7 +102,7 @@ export class VendorService {
     }
 
     async invalidateDepartment(_id: string) {
-        const checkData = await this.vendorModel.findOne({ _id })
+        const checkData = await this.vendorModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
 
@@ -124,7 +124,7 @@ export class VendorService {
             const res = await this.vendorModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
 
@@ -194,7 +194,7 @@ export class VendorService {
             const lists = await this.vendorModel.find(filters).skip(skip)
                 .limit(limit)
                 .exec()
-            const total = await this.vendorModel.countDocuments()
+            const total = await this.vendorModel.countDocuments().exec()
     
             return {
                 total,
@@ -203,5 +203,24 @@ export class VendorService {
                 totalPages: Math.ceil(total / limit),
                 lists,
             }
+    }
+
+    async importData(data: CreateVendorDto[]) {
+        for (const item of data) {
+            const { vendorCode, vendorName, ..._dto } = item
+
+            const checkData = await this.vendorModel.findOne({ vendorCode, vendorName, status: 1 }).exec()
+
+            if (checkData) {
+                await this.update({
+                    vendorCode,
+                    vendorName,
+                    ..._dto,
+                    _id: checkData._id.toString()
+                })
+            } else {
+                await this.create(item)
+            }
+        }
     }
 }

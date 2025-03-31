@@ -23,6 +23,7 @@ import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-
 import { DashboardComponent } from './page/dashboard/dashboard.component'
 import { MenuListComponent } from './page/menu/menu.component'
 import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
+import { AccessGuard } from '../../state/AccessGuard'
 
 export const pagesRoutes: Routes = [
     {

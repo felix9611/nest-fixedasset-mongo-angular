@@ -17,6 +17,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { StockTakeForm } from './interface'
 import { findMenuItem } from '../../../tool-function'
 import { UserStoreService } from '../../../../../state/user.service'
+import { Subscription } from 'rxjs'
 
 @Component({
     standalone: true,
@@ -36,23 +37,31 @@ import { UserStoreService } from '../../../../../state/user.service'
     templateUrl: './stock-take-list.component.html',
     styleUrl: './stock-take-list.component.css',
 })
-export class StockTakeListComponent implements OnInit{
+export class StockTakeListComponent implements OnInit {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private routeTo: Router,
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
-                                                    
             this.userRightInside = {
-                read: answer.read,
-                write: answer.write,
-                update: answer.update,
-                delete: answer.delete
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
             }
-            console.log(this.userRightInside, 'answer')
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     ngOnInit(): void {

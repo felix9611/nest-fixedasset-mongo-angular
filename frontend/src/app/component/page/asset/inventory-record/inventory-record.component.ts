@@ -15,6 +15,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -35,16 +36,23 @@ import { findMenuItem } from '../../../tool-function'
     styleUrl: './inventory-record.component.css',
 })
 export class InventoryRecordListComponent {
+    private rightSubscription: Subscription
     constructor(
         private userStoreService: UserStoreService
     ) {
-        this.userStoreService.menuRole$.subscribe((data: any) => {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Inventory Record', 'inventory-record')
-                                                    
             this.userRightInside = {
-                read: answer.read
+                read: answer?.read ?? false
+                 // keep default value
             }
         })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
     }
 
     userRightInside: any = {
