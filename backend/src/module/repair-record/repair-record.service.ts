@@ -3,14 +3,16 @@ import { InjectModel } from '@nestjs/mongoose'
 import { RepairRecord } from './repair-record.schema'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { CreateRepairRecordDto, ListRepairRecordDto, UpdateRepairRecordDto } from './repair-record.dto'
+import { CreateRepairRecordDto, ListRepairRecordDto, UpdateRepairRecordDto, UploadRepairRecordDto } from './repair-record.dto'
 import { AssetListService } from '../asset-list/asset-list.service'
 import { create } from 'domain'
+import { AssetList } from '../asset-list/asset-list.schame'
 
 @Injectable()
 export class RepairRecordService {
     constructor(
         @InjectModel(RepairRecord.name) private repairRecordModel: Model<RepairRecord>,
+        @InjectModel(AssetList.name) private assetListModel: Model<AssetList>,
         private actionRecordService: ActionRecordService,
         private assetListService: AssetListService
     ) {}
@@ -277,4 +279,36 @@ export class RepairRecordService {
         }
     }
 
+    async importData(createDatas: UploadRepairRecordDto[]) {
+        for (const data of createDatas) {
+            const { assetCode, assetName, ..._rrData } = data
+
+            const assetData = await this.assetListModel.findOne({
+                ...assetCode ? { assetCode } : {},
+                ...assetName ? { assetName } : {},
+                status: 1
+            }).exec()
+
+            if (assetData) {
+                const finalData = {
+                    assetId: assetData._id.toString(),
+                    ..._rrData,
+                    createdAt: new Date(),
+                    status: 1
+                }
+
+                const create = new this.repairRecordModel(finalData)
+                await create.save()
+
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Upload Repair Record',
+                    actionMethod: 'POST',
+                    actionFrom: 'Repair Record',
+                    actionData: finalData,
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+            }
+        }
+    }
 }
