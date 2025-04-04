@@ -359,28 +359,23 @@ export class AssetListService {
 
 
     async uploadFile(updateFiles: AssetListFileDto[], assetId: string) {
-        for (const file of updateFiles) {
-            await this.actionRecordService.saveRecord({
-                actionName: 'Upload Asset Files',
-                actionMethod: 'POST',
-                actionFrom: 'Asset(Files)',
-                actionData: {
-                    assetId,
-                    filename: file.fileName,
-                    fileType: file.fileType,
-                    status: 1
-                },
-                actionSuccess: 'Sussess',
-                createdAt: new Date()
-            })
+        const itemsData = updateFiles.map((item) => ({
+            ...item,
+            assetId,
+            status: 1,
+            createdAt: new Date()
+        }))
 
-            const create = new this.assetListFileModel({
-                ...file,
-                assetId,
-                status: 1
-            })
-            return create.save()
-        }
+        await this.actionRecordService.saveRecord({
+            actionName: 'Upload Asset Files',
+            actionMethod: 'POST',
+            actionFrom: 'Asset(Files)',
+            actionData: itemsData,
+            actionSuccess: 'Sussess',
+            createdAt: new Date()
+        })
+
+        return await this.assetListFileModel.insertMany(itemsData)
     }
 
     async getListFiles(assetId: string) {
