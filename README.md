@@ -16,10 +16,10 @@
 <p>The system is <strong>cloud-based</strong>, significantly reducing IT infrastructure costs and improving usability, with no installation required.</p>
 
 <p>🔗 <strong><a href="https://fixedasset-prod-felix9611-d3fc9544.koyeb.app/login" target="_blank">Online Demo Front from Koyeb</a></strong></p>
-<p>🔗 <strong><a href="https://felix-fixedasset-nest.ngrok.app/login" target="_blank">Online Demo Front from Ngrok and my Raspberry Pi5 server</a></strong></p>
+<p>🔗 <strong><a href="https://fixedasset.felix9611.com/login" target="_blank">Online Demo Front from Cxloudflare and my Raspberry Pi5 server</a></strong></p>
 <p><strong>Username:</strong> <code>Demo</code><br>
 <strong>Password:</strong> <code>888888</code></p>
-<p><em>Note: Backend hosted on self-hosted Raspberry Pi5 with Ngrok, Frontend on Koyeb.</em></p>
+<p><em>Note: Backend hosted on self-hosted Raspberry Pi5 with Cloudflare, Frontend on Koyeb.</em></p>
 
 <h2>📸 Example Screenshots</h2>
 
@@ -123,7 +123,7 @@ http://localhost:4200
 <ul>
   <li><strong>Database:</strong> <del>Mongodb Atlas</del><strong>New experiment!</strong> Self-hosted in My Raspberry Pi5 server</li>
   <li><strong>Backend:</strong> <del>AWS runing in Linux & Nginx</del> <strong>New experiment!</strong> Fullset self-hosted server power by my Raspberry Pi5 server</li>
-  <li><strong>Frontend:</strong> Koyeb OR Ngrok + Raspberry Pi5 runing in Angualr SSR</li>
+  <li><strong>Frontend:</strong> Koyeb OR Cloudflare + Raspberry Pi5 runing in Angualr SSR</li>
 </ul>
 
 <h2>📈 Business Impact</h2>
@@ -132,4 +132,3 @@ http://localhost:4200
   <li><strong>Improved Data Security</strong> through JWT-based user authentication.</li>
   <li><strong>Enhanced Decision-Making</strong> with real-time data visualization and comprehensive reporting.</li>
 </ul>
-
