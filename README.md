@@ -16,7 +16,7 @@
 <p>The system is <strong>cloud-based</strong>, significantly reducing IT infrastructure costs and improving usability, with no installation required.</p>
 
 <p>🔗 <strong><a href="https://fixedasset-prod-felix9611-d3fc9544.koyeb.app/login" target="_blank">Online Demo Front from Koyeb</a></strong></p>
-<p>🔗 <strong><a href="https://fixedasset.felix9611.com/login" target="_blank">Online Demo Front from Cxloudflare and my Raspberry Pi5 server</a></strong></p>
+<p>🔗 <strong><a href="https://fixedasset.felix9611.com/login" target="_blank">Online Demo Front from Cloudflare and my Raspberry Pi5 server</a></strong></p>
 <p><strong>Username:</strong> <code>Demo</code><br>
 <strong>Password:</strong> <code>888888</code></p>
 <p><em>Note: Backend hosted on self-hosted Raspberry Pi5 with Cloudflare, Frontend on Koyeb.</em></p>
