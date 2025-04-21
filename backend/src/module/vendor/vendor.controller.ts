@@ -54,8 +54,8 @@ export class VendorController {
     }
     
     @ApiOperation({ summary: 'Page and list'})
-        @ApiBody({ type: ListVendorQuery })
-        @ApiResponse({ description: 'If successful', status: 201, type: ListVendorQueryRes })
+    @ApiBody({ type: ListVendorQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: ListVendorQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
     async listAndPage(@Body() req: ListVendorRequestDto) {
