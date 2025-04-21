@@ -12,7 +12,7 @@ export class SysRole extends BaseSchema {
     code: string
 
     @Prop({ type: SchemaTypes.String})
-    remark?: string
+    remark: string
 
     @Prop({ type: SchemaTypes.Mixed })
     menuIds: any
