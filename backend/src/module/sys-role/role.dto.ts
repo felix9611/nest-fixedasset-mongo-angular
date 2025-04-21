@@ -1,4 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger"
+import { exec } from "child_process"
+import { CommonPageAndList, CommonPageAndListResponse } from "src/tool/open-api-body"
+import { SysMenuBody } from "../sys-menu/sys-menu.dto"
 
 export interface CreateSysRoleDto {
     name: string
@@ -54,8 +57,19 @@ export class CreateSysRole {
 export class UpdateSysRole extends CreateSysRole {
     @ApiProperty({ description: 'ID' })
     _id: string
+}
 
-    
+export class UpdateRoleMenuPermissionBody {
+    @ApiProperty({ description: 'ID' })
+    id: string
+
+    @ApiProperty({ description: 'Menu ID Lists' })
+    menuIds: string[]
+}
+
+export class ListPermissionBody {
+    @ApiProperty({ description: 'Menu ID Lists' })
+    menuIds: string[]
 }
 
 export class SysRoleBody extends UpdateSysRole {
@@ -67,4 +81,38 @@ export class SysRoleBody extends UpdateSysRole {
 
     @ApiProperty({ description: 'Updated At' })
     updatedAt: string
+}
+
+export class ListSysRoleQuery extends CommonPageAndList {
+    @ApiProperty({ description: 'For search data keywords' })  
+    name: string
+}
+
+
+export class SysRoleQueryRes extends CommonPageAndListResponse {
+    @ApiProperty({ type: [SysRoleBody], description: 'Data List' })
+    lists: SysRoleBody[]
+}
+
+export class SysMenuBodyWithPerm extends SysMenuBody {
+    @ApiProperty({ description: 'Read Right' })
+    read: boolean
+
+    @ApiProperty({ description: 'Write Right' })
+    write: boolean
+
+    @ApiProperty({ description: 'Delete Right' })
+    delete: boolean
+
+    @ApiProperty({ description: 'Update Right' })
+    update: boolean
+
+    @ApiProperty({ description: 'Upload Right' })
+    upload: boolean
+}
+
+
+export class SysRoleBodyWithMenu extends SysRoleBody {
+    @ApiProperty({ description: 'Menu Lists', type: SysMenuBodyWithPerm, isArray: true })
+    menuLists: SysMenuBodyWithPerm[]
 }

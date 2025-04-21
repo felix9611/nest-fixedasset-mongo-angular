@@ -48,6 +48,12 @@ export class UserDetailDto {
     @ApiProperty({ description: 'User Status' })
     status: number
 
+    @ApiProperty({ description: 'Created At' })
+    createdAt: string
+
+    @ApiProperty({ description: 'Updated At' })
+    updatedAt: string
+
     @ApiProperty({ description: 'Department'})
     department: DepartmentBody
 

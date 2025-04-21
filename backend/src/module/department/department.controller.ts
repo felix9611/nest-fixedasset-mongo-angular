@@ -24,6 +24,7 @@ export class DepartmentController {
     @ApiResponse({ description: 'If not save successful',status: 200,type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
+
     async update(@Body() updateDto: UpdateDeptDto) {
         return await this.deptService.update(updateDto)
     }
