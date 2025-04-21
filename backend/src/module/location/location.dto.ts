@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
+import { IsOptional } from '@nestjs/class-validator'
 
 export interface CreateLocationDto {
     placeCode: string
@@ -49,6 +50,7 @@ export class LocationBody extends UpdateLocationBody {
 
 export class ListLocationQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
+    @IsOptional()
     name: string
 }
 
