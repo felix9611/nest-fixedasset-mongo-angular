@@ -10,7 +10,7 @@ import { UpdateSysRole } from '../sys-role/role.dto'
 export class SysMenuController {
     constructor(private menuService: SysMenuService){}
 
-    @ApiOperation({ summary: 'Create Department' })
+    @ApiOperation({ summary: 'Create Menu' })
     @ApiBody({ type: UpdateSysRole })
     @ApiResponse({ description: 'If save successful', status: 201, type: SysMenuBody })
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
@@ -20,7 +20,7 @@ export class SysMenuController {
         return await this.menuService.create(createData)
     }
 
-    @ApiOperation({ summary: 'Update Department' })
+    @ApiOperation({ summary: 'Update Menu' })
     @ApiBody({ type: UpdateSysRole })
     @ApiResponse({ description: 'If save successful', status: 201, type: ReturnMsg })
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
@@ -30,7 +30,7 @@ export class SysMenuController {
         return await this.menuService.update(updateDto)
     }
 
-    @ApiOperation({ summary: 'Get Department by id' })
+    @ApiOperation({ summary: 'Get Menu by id' })
     @ApiResponse({ description: 'If save successful', status: 201, type: SysMenuBody })
     @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
