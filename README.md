@@ -7,7 +7,7 @@
 <p>If you find this project helpful, please click ⭐ Star! This helps more people discover it.</p>
 
 <h2>🌟 Project Overview</h2>
-<p>This is a full-stack <strong>Fixed Asset Management System</strong> built with <strong>Spring Boot</strong> and <strong>Angular SSR</strong>, designed for managing fixed assets within facilities. The system includes:</p>
+<p>This is a full-stack <strong>Fixed Asset Management System</strong> built with <strong>Nest.js</strong> and <strong>Angular SSR</strong>, designed for managing fixed assets within facilities. The system includes:</p>
 <ul>
   <li>Purchase and maintenance record management</li>
   <li>Asset write-off tracking</li>
@@ -15,11 +15,10 @@
 </ul>
 <p>The system is <strong>cloud-based</strong>, significantly reducing IT infrastructure costs and improving usability, with no installation required.</p>
 
-<p>🔗 <strong><a href="https://fixedasset-prod-felix9611-d3fc9544.koyeb.app/login" target="_blank">Online Demo Front from Koyeb</a></strong></p>
-<p>🔗 <strong><a href="https://fixedasset.felix9611.com/login" target="_blank">Online Demo Front from Cloudflare and my Raspberry Pi5 server</a></strong></p>
+<p>🔗 <strong><a href="https://pos.felix9611.com/login" target="_blank">Online Demo Front from Cloudflare DNS Tunnel and my Raspberry Pi5 server</a></strong></p>
 <p><strong>Username:</strong> <code>Demo</code><br>
 <strong>Password:</strong> <code>888888</code></p>
-<p><em>Note: Backend hosted on self-hosted Raspberry Pi5 with Cloudflare, Frontend on Koyeb.</em></p>
+<p><em>Note: Backend and Frontend both hosted on self-hosted Raspberry Pi5 with Cloudflare</em></p>
 
 <h2>📸 Example Screenshots</h2>
 
@@ -121,9 +120,9 @@ http://localhost:4200
 
 <h2>🌐 Deployment</h2>
 <ul>
-  <li><strong>Database:</strong> <del>Mongodb Atlas</del><strong>New experiment!</strong> Self-hosted in My Raspberry Pi5 server</li>
-  <li><strong>Backend:</strong> <del>AWS runing in Linux & Nginx</del> <strong>New experiment!</strong> Fullset self-hosted server power by my Raspberry Pi5 server</li>
-  <li><strong>Frontend:</strong> Koyeb OR Cloudflare + Raspberry Pi5 runing in Angualr SSR</li>
+  <li><strong>Database:</strong><strong>New experiment!</strong> Self-hosted in My Raspberry Pi5 server</li>
+  <li><strong>Backend:</strong><strong>New experiment!</strong> Fullset self-hosted server power by my Raspberry Pi5 server</li>
+  <li><strong>Frontend:</strong>Cloudflare Tunnel DNS + Raspberry Pi5 runing in Angualr SSR</li>
 </ul>
 
 <h2>📈 Business Impact</h2>
