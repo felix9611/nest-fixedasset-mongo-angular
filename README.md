@@ -15,7 +15,7 @@
 </ul>
 <p>The system is <strong>cloud-based</strong>, significantly reducing IT infrastructure costs and improving usability, with no installation required.</p>
 
-<p>🔗 <strong><a href="https://pos.felix9611.com/login" target="_blank">Online Demo Front from Cloudflare DNS Tunnel and my Raspberry Pi5 server</a></strong></p>
+<p>🔗 <strong><a href="https://fixedasset.felix9611.com/login" target="_blank">Online Demo Front from Cloudflare DNS Tunnel and my Raspberry Pi5 server</a></strong></p>
 <p><strong>Username:</strong> <code>Demo</code><br>
 <strong>Password:</strong> <code>888888</code></p>
 <p><em>Note: Backend and Frontend both hosted on self-hosted Raspberry Pi5 with Cloudflare</em></p>
