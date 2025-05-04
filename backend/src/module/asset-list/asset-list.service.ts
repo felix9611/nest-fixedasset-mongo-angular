@@ -276,9 +276,15 @@ export class AssetListService {
             { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } },
+            
+            { 
+                $addFields: { 
+                    assetCodeInt: { $toInt: "$assetCode" } 
+                } 
+            },
+            { $sort: { assetCodeInt: 1 } } ,
             { $skip: skip },
-            { $limit: limit },
-            { $sort: { assetCodeInt: 1 } } 
+            { $limit: limit }, 
         ]).exec()
 
         const total = await this.assetListModel.find(filters).countDocuments().exec()
