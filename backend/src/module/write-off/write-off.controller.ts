@@ -5,7 +5,7 @@ import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
 
-@Controller('aaset/write-off')
+@Controller('asset/write-off')
 export class WriteOffController {
     constructor(private writeOffService: WriteOffService) {}
 

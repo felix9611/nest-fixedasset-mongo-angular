@@ -204,7 +204,7 @@ export class WriteOffFormComponent implements OnInit {
             remainingValue: this.editForm.remainingValue
         }
 
-        const res = await postApiWithAuth('/aaset/write-off/create', finalForm)
+        const res = await postApiWithAuth('/asset/write-off/create', finalForm)
         
         if (res.finish) {
             this.message.info(res.msg)
