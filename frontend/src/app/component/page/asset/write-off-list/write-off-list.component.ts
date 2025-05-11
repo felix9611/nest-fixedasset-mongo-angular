@@ -100,7 +100,7 @@ export class WriteOffListComponent {
 
 
     async loadWriteOffLists() {
-        const res = await postApiWithAuth('/aaset/write-off/list', this.searchForm)
+        const res = await postApiWithAuth('/asset/write-off/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
