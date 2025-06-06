@@ -130,7 +130,7 @@ export class RepairRecordCreateComponent implements OnInit {
             remark: this.editForm.remarkRepair
         }
 
-        const res = await postApiWithAuth('/aaset/repair-record/create', finalForm)
+        const res = await postApiWithAuth('/asset/repair-record/create', finalForm)
         
         if (res.finish) {
             this.message.info(res.msg)
