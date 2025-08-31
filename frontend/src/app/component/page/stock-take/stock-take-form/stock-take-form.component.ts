@@ -134,6 +134,7 @@ export class StockTakeFormComponent implements OnInit {
         if (event) {
             const data = await getApiWithAuth(`/asset/asset-list/code/${event}`)
             this.itemForm.assetId = data._id
+            this.itemForm.assetCode = data.assetCode
             this.itemForm.assetName = data.assetName
             this.itemForm.placeId = data.placeId
             this.placeCheckStatus(data.placeId)
@@ -171,7 +172,7 @@ export class StockTakeFormComponent implements OnInit {
     }
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     backToList() {
