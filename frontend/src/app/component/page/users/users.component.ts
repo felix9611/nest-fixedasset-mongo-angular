@@ -13,8 +13,10 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { imgToBase64, uploadImgToBase64 } from '../../../../tool/imageUpload'
-import { Observable, Observer } from 'rxjs'
+import { Observable, Observer, Subscription } from 'rxjs'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
 
 @Component({
     // selector: 'app-footer',
@@ -35,10 +37,37 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
     styleUrl: './users.component.css',
 })
 export class UsersComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'User', 'users')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false
+                 // keep default value
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
+
 
     searchForm: any = {
         page: 1,
@@ -176,7 +205,7 @@ export class UsersComponent {
 
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     async getOneData(id:string) {

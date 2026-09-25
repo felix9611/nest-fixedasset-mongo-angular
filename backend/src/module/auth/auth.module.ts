@@ -10,7 +10,7 @@ import { jwtConstants } from './constants'
   imports: [SysUserMoudule, JwtModule.register({
     global: true,
     secret: jwtConstants.secret,
-    signOptions: { expiresIn: '24h' },
+    signOptions: { expiresIn: '48h' },
   })],
   providers: [AuthService],
   controllers: [AuthController],

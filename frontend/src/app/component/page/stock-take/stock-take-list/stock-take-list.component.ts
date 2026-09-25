@@ -15,6 +15,9 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { StockTakeForm } from './interface'
+import { findMenuItem } from '../../../tool-function'
+import { UserStoreService } from '../../../../../state/user.service'
+import { Subscription } from 'rxjs'
 
 @Component({
     standalone: true,
@@ -34,15 +37,43 @@ import { StockTakeForm } from './interface'
     templateUrl: './stock-take-list.component.html',
     styleUrl: './stock-take-list.component.css',
 })
-export class StockTakeListComponent implements OnInit{
+export class StockTakeListComponent implements OnInit {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
-        private routeTo: Router
-    ) {}
+        private routeTo: Router,
+        private userStoreService: UserStoreService
+    ) {
+
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
 
     ngOnInit(): void {
         this.loadLocationList()
         this.loadStockTakeLists()
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
     }
 
     dataLists: any[] = []
@@ -100,7 +131,7 @@ export class StockTakeListComponent implements OnInit{
     }
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     getToDetail(id: string) {

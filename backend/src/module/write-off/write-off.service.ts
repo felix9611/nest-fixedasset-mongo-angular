@@ -93,10 +93,10 @@ export class WriteOffService {
 
         const skip = (page - 1) * limit
 
-        const finalFilter = {
+        const finalFilter: any = {
             status: 1,
-            ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {},
-            ... placeIds && placeIds.length > 0 ? { lastPlaceId: { $in: placeIds } } : {}
+            ...(dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {}),
+            ...(placeIds && placeIds.length > 0 ? { lastPlaceId: { $in: placeIds } } : {})
         }
 
         const lists = await this.writeOffModel.aggregate([
@@ -130,7 +130,7 @@ export class WriteOffService {
                     { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
                     { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } }
                 ],
-                  as: 'assetlist'
+                  as: ''
                 }
             },
             {

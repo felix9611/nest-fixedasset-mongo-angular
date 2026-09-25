@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common'
 import { ActionRecordService } from './actionRecord.service'
 import { ActionRecordListDto, ListActionRecordRes  } from './actionRecord.dto'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { CommonPageAndList } from 'src/tool/open-api-body'
+import { CommonPageAndList } from '../../tool/open-api-body'
 
 @Controller('action-records')
 export class ActionRecordController {

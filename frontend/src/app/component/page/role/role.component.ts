@@ -15,6 +15,11 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { buildTreeForUI } from './function'
 import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { UserStoreService } from '../../../../state/user.service'
+import { read, write } from 'fs'
+import { update } from 'plotly.js-dist-min'
+import { findMenuItem } from '../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -36,9 +41,36 @@ import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } f
 })
 export class RoleComponent implements OnInit{
     @ViewChild('nzTreeComponent', { static: false }) nzTreeComponent!: NzTreeComponent
+    private rightSubscription: Subscription
     constructor(
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Role', 'role')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false
+                 // keep default value
+            }
+        })         
+    }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+                this.rightSubscription.unsubscribe()
+        }
+    }
+    
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         page: 1,
@@ -50,10 +82,12 @@ export class RoleComponent implements OnInit{
         code: '',
         name: '',
         remark: '',
+        menuIds: [],
         read: false,
         write: false,
         delete: false,
         update: false,
+        upload: false
     }
 
     okText: string = 'Create'
@@ -67,6 +101,7 @@ export class RoleComponent implements OnInit{
     ngOnInit() {
         this.loadSysRoleLists()
         this.loadAllMenuItems()
+       
     }
 
     async submitForm() {
@@ -86,18 +121,24 @@ export class RoleComponent implements OnInit{
                 code: '',
                 name: '',
                 remark: '',
+                menuIds: [],
                 read: false,
                 write: false,
                 delete: false,
                 update: false,
+                upload: false
             }
 
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadSysRoleLists()
-
-            
         }
+    }
+
+    async loadAllMenuItems() {
+        const data = await getApiWithAuth('/sys/menu/all-menu')
+        this.menuItems = buildTreeForUI(data)
+        console.log(this.menuItems, 'test')
     }
 
     async loadSysRoleLists() {
@@ -138,7 +179,7 @@ export class RoleComponent implements OnInit{
 
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     async getOneData(id:string) {
@@ -158,11 +199,7 @@ export class RoleComponent implements OnInit{
 
     handleMenuItemsIds: any = []
 
-    async loadAllMenuItems() {
-        const data = await getApiWithAuth('/sys/menu/all-menu')
-        this.menuItems = buildTreeForUI(data)
-        console.log(this.menuItems, 'test')
-    }
+
 
     async openMenuDialog(id: string) {
         this.menuDialog = true

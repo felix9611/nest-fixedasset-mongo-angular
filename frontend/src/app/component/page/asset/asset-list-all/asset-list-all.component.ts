@@ -12,6 +12,9 @@ import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -31,11 +34,36 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
     styleUrl: './asset-list-all.component.css',
 })
 export class AssetListAllComponent {
+    private rightSubscription: Subscription
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService, 
+        private userStoreService: UserStoreService,
         private routeTo: Router
-    ) {}
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List Report', 'asset-list-all')
+            this.userRightInside = {
+                read: answer?.read ?? false
+                 // keep default value
+            }
+        })
+        this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List Report', 'asset-list-all')
+                                                            
+            this.userRightInside = {
+                read: answer.read
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false
+    }
 
     searchForm: any = {
         page: 1,
@@ -88,7 +116,7 @@ export class AssetListAllComponent {
 
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     openEdit(id: string) {

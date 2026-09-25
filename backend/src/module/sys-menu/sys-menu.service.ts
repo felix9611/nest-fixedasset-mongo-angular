@@ -4,6 +4,7 @@ import { SysMenu } from './sys-menu.schame'
 import { InjectModel } from '@nestjs/mongoose'
 import { SysMenuDto, SysMenuList, UpdateSysMenuDto } from './sys-menu.dto'
 import { ActionRecordService } from '../action-record/actionRecord.service'
+import { SysRole } from '../sys-role/role.schame'
 
 interface MenuItem {
   _id: string;
@@ -24,13 +25,14 @@ interface MenuItem {
 export class SysMenuService {
   constructor(
       @InjectModel(SysMenu.name) private sysMenuModel: Model<SysMenu>,
+      @InjectModel(SysRole.name) private sysRoleModel: Model<SysRole>,
       private actionRecordService: ActionRecordService
   ) {}
 
   async create(createData: UpdateSysMenuDto) {
     let { mainId, name, _id, ..._data } = createData
 
-    const checkData = await this.sysMenuModel.findOne({ name,  })
+    const checkData = await this.sysMenuModel.findOne({ name }).exec()
 
     if (checkData) {
       await this.actionRecordService.saveRecord({
@@ -73,7 +75,7 @@ export class SysMenuService {
   async update(updateData: UpdateSysMenuDto) {
     const { _id, ...data } = updateData
 
-    const checkData = await this.sysMenuModel.findOne({ _id })
+    const checkData = await this.sysMenuModel.findOne({ _id }).exec()
 
     if (checkData?.status === 0) {
       await this.actionRecordService.saveRecord({
@@ -103,12 +105,12 @@ export class SysMenuService {
           createdAt: new Date()
       })
 
-      return await this.sysMenuModel.updateOne({ _id}, finalData)
+      return await this.sysMenuModel.updateOne({ _id}, finalData).exec()
     }
   }
 
   async getOneById(_id: string) {
-    const data = await this.sysMenuModel.findOne({ _id, status: 1})
+    const data = await this.sysMenuModel.findOne({ _id, status: 1 }).exec()
 
     if (data) {
       return data
@@ -120,7 +122,7 @@ export class SysMenuService {
   }
 
   async invalidate(_id: string) {
-    const checkData = await this.sysMenuModel.findOne({ _id })
+    const checkData = await this.sysMenuModel.findOne({ _id }).exec()
 
     if (checkData?.status === 0) {
 
@@ -142,7 +144,7 @@ export class SysMenuService {
         const res = await this.sysMenuModel.updateOne({ _id}, {
             status: 0,
             updateAt: new Date()
-        })
+        }).exec()
     
         if (res.modifiedCount === 1) {
             await this.actionRecordService.saveRecord({
@@ -188,9 +190,7 @@ export class SysMenuService {
           name: '$_id.name'
         }
       }
-    ])
-
-
+    ]).exec()
   }
 
   async listAllMenu(query: SysMenuList) {
@@ -206,14 +206,78 @@ export class SysMenuService {
 
 
   async getTreeAllMenuById(ids: string[]) {
-    const result: any = await this.sysMenuModel.find({ status: 1, $or: [
-      { _id: { $in: ids} },
-      { mainId:{ $in: ids}  }
-    ]}).exec()
-    const plainResult = result.map(doc => doc.toObject())
-    const final = this.buildSortedTree(plainResult)
+      const result: any = await this.sysMenuModel.find({ status: 1, $or: [
+        { _id: { $in: ids} },
+        { mainId:{ $in: ids}  }
+      ]}).exec()  // GET first round datas
+
+      const initialIds: any = [...new Set(
+        result
+          .map((record: any) => record.mainId)
+          .filter((mainId: any) => mainId !== '')
+      )] // GET first round ids
+      const additionalRecords = await this.sysMenuModel.find({
+        status: 1,
+      _id: { $in: initialIds }
+      }).exec() // GET second round data
+
+      const finalResult = Array.from(
+        new Map(
+          [...result, ...additionalRecords].map(doc => [doc._id.toString(), doc])
+        ).values()
+      ) // first round datas + second round data
+
+    const plainResult = finalResult.map(doc => doc.toObject())
+    const final = this.buildSortedTree(plainResult) // tree finalResult
 
     return final
+  }
+
+
+  async getTreeAllMenuRoleById(ids: string[], roleIds: string[]) {
+
+    const vaildRole = await this.sysRoleModel.find({ _id: { $in: roleIds }}).exec()
+
+    if (vaildRole.length === 0) {
+      throw new Error('No valid role found!')
+    } else {
+      const vaildRoleIds = vaildRole.map((item: any) => item._id.$toString())
+
+      const result: any = await this.sysMenuModel.aggregate([
+        {
+          $match: { 
+            status: 1, 
+              $or: [
+              { _id: { $in: ids} },
+              { mainId:{ $in: ids}  }
+            ]
+          }
+        },
+        {
+          $lookup: {
+            from: 'sysroles',
+            let: { idStr: { $toObjectId: '$_id' }, mainId: "$mainId" },
+            pipeline: [
+              {
+                $match: {
+                  _id: { $in: vaildRoleIds },
+                  $expr: {
+                    $or: [
+                      { $in: ['$$idStr', '$menuIds'] },
+                      { $in: ['$$mainId', '$menuIds'] },
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'role'
+          }
+        },
+        { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } }
+      ]).exec()
+  
+      return result
+    }
   }
 
   async getAllMenu() {

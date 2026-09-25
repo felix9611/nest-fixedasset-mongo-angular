@@ -22,6 +22,8 @@ import { StockTakeListComponent } from './page/stock-take/stock-take-list/stock-
 import { StockTakeFormComponent } from './page/stock-take/stock-take-form/stock-take-form.component'
 import { DashboardComponent } from './page/dashboard/dashboard.component'
 import { MenuListComponent } from './page/menu/menu.component'
+import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
+import { AccessGuard } from '../../state/AccessGuard'
 
 export const pagesRoutes: Routes = [
     {
@@ -55,6 +57,11 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'excel-field-matchs',
+        component: ExcelFieldMatchComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'write-off',
         component: WriteOffFormComponent,
         canActivate: [AuthGuard]
@@ -80,7 +87,7 @@ export const pagesRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'department',
+        path: 'departments',
         component: DepartmentComponent,
         canActivate: [AuthGuard]
     },

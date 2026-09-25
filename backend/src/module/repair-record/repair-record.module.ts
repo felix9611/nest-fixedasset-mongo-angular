@@ -10,6 +10,14 @@ import { InvRecordService } from '../InvRecord/InvRecord.service'
 import { RepairRecordController } from './repair-record.controller'
 import { RepairRecordService } from './repair-record.service'
 import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-file.schame'
+import { TaxInformation, TaxInformationSchema } from '../tax-information/tax-information.schame'
+import { Location, LocationSchema } from '../location/location.schame'
+import { AssetType, AssetTypeSchema } from '../asset-type/assetType.schame'
+import { Department, DepartmentSchema } from '../department/department.schame'
+import { LocationService } from '../location/location.service'
+import { DepartmentService } from '../department/department.service'
+import { TaxInformationService } from '../tax-information/tax-information.service'
+import { AssetTypeService } from '../asset-type/assetType.service'
 
 @Module({
     imports: [
@@ -18,11 +26,24 @@ import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-fil
             { name: ActionRecord.name, schema: ActionRecordSchema },
             { name: AssetList.name, schema: AssetListSchema },
             { name: AssetListFile.name, schema: AssetListFileSchema },
-            { name: InvRecord.name, schema: InvRecordSchema }
+            { name: InvRecord.name, schema: InvRecordSchema },
+            { name: TaxInformation.name, schema: TaxInformationSchema },
+            { name: Location.name, schema: LocationSchema },
+            { name: AssetType.name, schema: AssetTypeSchema },
+            { name: Department.name, schema: DepartmentSchema }
         ]), 
         RepairRecord
     ],
-    providers: [ActionRecordService, RepairRecordService, AssetListService, InvRecordService],
+    providers: [
+        ActionRecordService, 
+        RepairRecordService, 
+        AssetListService, 
+        InvRecordService, 
+        AssetTypeService, 
+        TaxInformationService, 
+        DepartmentService, 
+        LocationService
+    ],
     exports: [RepairRecord],
     controllers: [RepairRecordController]
 })

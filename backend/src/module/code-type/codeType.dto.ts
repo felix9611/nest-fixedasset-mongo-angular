@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface CreateCodeTypeDto {
     valueCode: string
@@ -8,7 +8,7 @@ export interface CreateCodeTypeDto {
 }
 
 export interface UpdateCodeTypeDto extends CreateCodeTypeDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListCodeTypeRequestDto {
@@ -20,39 +20,39 @@ export interface ListCodeTypeRequestDto {
 export class CreateCodeTypeBody {
 
     @ApiProperty({ description: 'Value Code' })
-    valueCode: string
+    valueCode!: string
 
     @ApiProperty({ description: 'Value Name' })
-    valueName: string
+    valueName!: string
 
     @ApiProperty({ description: 'Type for catelog' })
-    type: string
+    type!: string
 }
 
 export class UpdateCodeTypeBody extends CreateCodeTypeBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class CodeTypeBody extends UpdateCodeTypeBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ListCodeTypeQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
-    name: string
+    name?: string
 }
 
 export class ListCodeTypeQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [CodeTypeBody], description: 'Data List' })
-    lists: CodeTypeBody[]
+    lists?: CodeTypeBody[]
 }

@@ -16,9 +16,11 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { ActivatedRoute, Router } from '@angular/router'
-import { timer } from 'rxjs'
+import { Subscription, timer } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
 
 @Component({
     // selector: 'app-footer',
@@ -43,12 +45,38 @@ import { MatIconModule } from '@angular/material/icon'
     styleUrl: './write-off-form.component.css',
 })
 export class WriteOffFormComponent implements OnInit {
-
+    private rightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     editForm: AssetFormDto = {
         _id: '',
@@ -176,7 +204,7 @@ export class WriteOffFormComponent implements OnInit {
             remainingValue: this.editForm.remainingValue
         }
 
-        const res = await postApiWithAuth('/aaset/write-off/create', finalForm)
+        const res = await postApiWithAuth('/asset/write-off/create', finalForm)
         
         if (res.finish) {
             this.message.info(res.msg)

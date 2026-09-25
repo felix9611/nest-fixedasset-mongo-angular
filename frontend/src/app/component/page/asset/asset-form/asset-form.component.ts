@@ -16,13 +16,15 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { ActivatedRoute, Router } from '@angular/router'
-import { debounceTime, Observable, Observer, Subject, timer } from 'rxjs'
+import { debounceTime, Observable, Observer, Subject, Subscription, timer } from 'rxjs'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
 import { NzUploadChangeParam, NzUploadFile, NzUploadModule } from 'ng-zorro-antd/upload'
 import { NzIconModule } from 'ng-zorro-antd/icon'
 import { uploadImgToBase64 } from '../../../../../tool/imageUpload'
 import { FileViewComponent } from '../../../components/file-view-dialog/file-view-dialog.component'
+import { findMenuItem } from '../../../tool-function'
+import { UserStoreService } from '../../../../../state/user.service'
 // import { UploadComponentComponent } from '../../../components/upload-component/upload-component.component'
 
 @Component({
@@ -53,18 +55,40 @@ import { FileViewComponent } from '../../../components/file-view-dialog/file-vie
     styleUrl: './asset-form.component.css',
 })
 export class AssetFormComponent implements OnInit {
-
+    private rightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
-        private message: NzMessageService
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
     ) {
         this.changeEvent$.pipe(debounceTime(300)).subscribe(event => {
             this.preAction(event.file.originFileObj);
         })
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Asset List', 'asset-lists')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
+            }
+        })
     }
 
-    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false
+    }
 
     private changeEvent$ = new Subject<NzUploadChangeParam>()
 

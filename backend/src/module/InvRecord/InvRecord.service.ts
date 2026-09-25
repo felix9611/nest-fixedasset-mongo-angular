@@ -37,7 +37,7 @@ export class InvRecordService {
 
         const skip = (page - 1) * limit
 
-        const finalFilter = {
+        const finalFilter: any = {
             ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {},
             ... assetCode? { assetCode } : {}
         }
@@ -79,7 +79,7 @@ export class InvRecordService {
             { $limit: limit },
         ]).exec()
 
-        const total = await this.invRecordModel.find(finalFilter).countDocuments()
+        const total = await this.invRecordModel.find(finalFilter).countDocuments().exec()
 
         return {
             total,

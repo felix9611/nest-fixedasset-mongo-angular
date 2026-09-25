@@ -13,6 +13,9 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -33,11 +36,28 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
     styleUrl: './inventory-record.component.css',
 })
 export class InventoryRecordListComponent {
+    private rightSubscription: Subscription
     constructor(
-        private message: NzMessageService,
-        private modalService: NzModalService, 
-        private routeTo: Router
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Inventory Record', 'inventory-record')
+            this.userRightInside = {
+                read: answer?.read ?? false
+                 // keep default value
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false
+    }
 
     searchForm: any = {
         page: 1,
@@ -59,7 +79,7 @@ export class InventoryRecordListComponent {
 
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
 

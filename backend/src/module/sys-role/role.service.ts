@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { SysRole } from './role.schame'
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose'
 import { CreateSysRoleDto, ListRoleRequestDto, UpdateSysRoleDto } from './role.dto';
 import { ActionRecordService } from '../action-record/actionRecord.service';
@@ -15,7 +15,7 @@ export class SysRoleService {
     async findAll(): Promise<SysRole[]> {
         return this.sysRoleModel.find({
             status: 1
-        }).exec();
+        }).exec()
     }
 
     async create(createData: UpdateSysRoleDto) {
@@ -63,7 +63,7 @@ export class SysRoleService {
     async update(updateData: UpdateSysRoleDto) {
         const { _id, code, name, ..._data } = updateData
 
-        const checkData = await this.sysRoleModel.findOne({ _id, status: 1})
+        const checkData = await this.sysRoleModel.findOne({ _id, status: 1}).exec()
         if (checkData) {
             const finalData = {
                 name,
@@ -81,7 +81,7 @@ export class SysRoleService {
                 createdAt: new Date()
             })
 
-            return await this.sysRoleModel.updateOne({ _id}, finalData)
+            return await this.sysRoleModel.updateOne({ _id}, finalData).exec()
         } else {
             await this.actionRecordService.saveRecord({
                 actionName: 'Update Role',
@@ -100,7 +100,7 @@ export class SysRoleService {
     }
 
     async updateRoleMenuPermission(_id: string, menuIds: any) {
-        const checkData = await this.sysRoleModel.findOne({ _id })
+        const checkData = await this.sysRoleModel.findOne({ _id }).exec()
         if (checkData) {
             const finalData = {
                 menuIds,
@@ -116,7 +116,7 @@ export class SysRoleService {
                 createdAt: new Date()
             })
 
-            return await this.sysRoleModel.updateOne({ _id}, finalData)
+            return await this.sysRoleModel.updateOne({ _id}, finalData).exec()
 
         } else {
             await this.actionRecordService.saveRecord({
@@ -138,7 +138,7 @@ export class SysRoleService {
     }
 
     async invalidateRole(_id: string) {
-        const checkData = await this.sysRoleModel.findOne({ _id })
+        const checkData = await this.sysRoleModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -160,7 +160,7 @@ export class SysRoleService {
             const res = await this.sysRoleModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
@@ -187,7 +187,7 @@ export class SysRoleService {
     }
 
     async getOneById(_id: string) {
-        const data = await this.sysRoleModel.findOne({ _id, status: 1})
+        const data = await this.sysRoleModel.findOne({ _id, status: 1 }).exec()
 
         if (data) {
             return data
@@ -220,7 +220,7 @@ export class SysRoleService {
         const lists = await this.sysRoleModel.find(filters).skip(skip)
             .limit(limit)
             .exec()
-        const total = await this.sysRoleModel.countDocuments()
+        const total = await this.sysRoleModel.find(filters).countDocuments().exec()
 
         return {
             total,
@@ -232,10 +232,82 @@ export class SysRoleService {
     }
 
     async getRolelistsByIds(ids: string[]) {
-        return await this.sysRoleModel.find({ _id: { $in: ids }, status: 1 })
+        return await this.sysRoleModel.find({ _id: { $in: ids }, status: 1 }).exec()
     }
 
     async checkRoleExist(name: string, code: string) {
-        return await this.sysRoleModel.findOne({ name, code, status: 1})
+        return await this.sysRoleModel.findOne({ name, code, status: 1 }).exec()
+    }
+
+    async loadRoleWithMenu(roleIds: any) {
+        const objectIds = roleIds.map(id => {
+            if (id && Types.ObjectId.isValid(id)) {
+                return new Types.ObjectId(id);
+            }
+            throw new Error(`Invalid ObjectId: ${id}`);
+        })
+    
+        return await this.sysRoleModel.aggregate([
+            {
+                $match: {
+                    _id: { $in: objectIds }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'sysmenus', // Make sure this matches your DB collection name
+                    let: {
+                        menuIds: {
+                            $map: {
+                                input: '$menuIds',
+                                as: 'menuId',
+                                in: { $cond: [{ $ne: ['$$menuId', ''] }, { $toObjectId: '$$menuId' }, null] }
+                            }
+                        }
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $or: [
+                                        { $in: ['$_id', '$$menuIds'] },  // Match _id in menuIds
+                                        { $and: [{ $ne: ['$mainId', ''] }, { $in: [{ $toObjectId: '$mainId' }, '$$menuIds'] } ] }  // Match mainId as string directly
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'menuLists'
+                }
+            },
+            {
+                $addFields: {
+                    "menuLists": {
+                        $cond: {
+                            if: { $eq: ["$menuLists", []] },
+                            then: [],
+                            else: {
+                                $map: {
+                                    input: "$menuLists",
+                                    as: "menu",
+                                    in: {
+                                        $mergeObjects: [
+                                            "$$menu",
+                                            {
+                                                read: "$read",
+                                                write: "$write",
+                                                delete: "$delete",
+                                                update: "$update",
+                                                upload: "$upload"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]).exec()
     }
 }

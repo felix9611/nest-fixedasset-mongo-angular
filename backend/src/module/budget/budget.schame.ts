@@ -6,37 +6,37 @@ export type BudgetDocument = HydratedDocument<Budget>
 @Schema()
 export class Budget extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
-    deptId: Types.ObjectId
+    deptId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
-    placeId: Types.ObjectId
+    placeId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
-    budgetNo: string
+    budgetNo!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    budgetName: string
+    budgetName!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    year: string
+    year!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    month: string
+    month!: string
 
     @Prop({ type: SchemaTypes.Number, required: true })
-    budgetAmount: number
+    budgetAmount!: number
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    budgetFrom: string
+    budgetFrom!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    budgetTo: string
+    budgetTo!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    budgetStatus: string
+    budgetStatus!: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const BudgetSchema = SchemaFactory.createForClass(Budget)

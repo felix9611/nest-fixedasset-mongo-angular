@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CommonPageAndList, CommonPageAndListResponse } from 'src/tool/open-api-body'
+import { CommonPageAndList, CommonPageAndListResponse } from '../../tool/open-api-body'
 
 export interface CreateDeptDto {
     deptCode: string
@@ -8,7 +8,7 @@ export interface CreateDeptDto {
 }
 
 export interface UpdateDeptDto extends CreateDeptDto {
-    _id: string
+    _id?: string
 }
 
 export interface ListDeptRequestDto {
@@ -20,39 +20,39 @@ export interface ListDeptRequestDto {
 export class CreateDeptBody {
 
     @ApiProperty({ description: 'Department Code' })
-    deptCode: string
+    deptCode!: string
 
     @ApiProperty({ description: 'Department Name' })
-    deptName: string
+    deptName!: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class UpdateDeptBody extends CreateDeptBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class DepartmentBody extends UpdateDeptBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ListDepartmentQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
-    name: string
+    name?: string
 }
 
 export class ListDepartmentQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [DepartmentBody], description: 'Data List' })
-    lists: DepartmentBody[]
+    lists?: DepartmentBody[]
 }

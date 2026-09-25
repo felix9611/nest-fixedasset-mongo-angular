@@ -18,6 +18,9 @@ import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     standalone: true,
@@ -41,11 +44,39 @@ import { MatIconModule } from '@angular/material/icon'
     styleUrl: './stock-take-form.component.css',
 })
 export class StockTakeFormComponent implements OnInit {
+    private rightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false,
+        upload: false
+    }
 
     theId: any = ''
 
@@ -141,7 +172,7 @@ export class StockTakeFormComponent implements OnInit {
     }
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     backToList() {

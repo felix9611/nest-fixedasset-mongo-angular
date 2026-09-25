@@ -3,20 +3,22 @@ import { InjectModel } from '@nestjs/mongoose'
 import { RepairRecord } from './repair-record.schema'
 import { Model } from 'mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
-import { CreateRepairRecordDto, ListRepairRecordDto, UpdateRepairRecordDto } from './repair-record.dto'
+import { CreateRepairRecordDto, ListRepairRecordDto, UpdateRepairRecordDto, UploadRepairRecordDto } from './repair-record.dto'
 import { AssetListService } from '../asset-list/asset-list.service'
 import { create } from 'domain'
+import { AssetList } from '../asset-list/asset-list.schame'
 
 @Injectable()
 export class RepairRecordService {
     constructor(
         @InjectModel(RepairRecord.name) private repairRecordModel: Model<RepairRecord>,
+        @InjectModel(AssetList.name) private assetListModel: Model<AssetList>,
         private actionRecordService: ActionRecordService,
         private assetListService: AssetListService
     ) {}
 
     async getOneById(_id: string) {
-        const data = await this.repairRecordModel.findOne({ _id})
+        const data = await this.repairRecordModel.findOne({ _id}).exec()
         if (data?.status === 0) {
             return {
                 msg: 'Oooops! This record has been removed!'
@@ -80,7 +82,7 @@ export class RepairRecordService {
     async update(updateData: UpdateRepairRecordDto) {
         const { _id, ..._data } = updateData
 
-        const checkData = await this.repairRecordModel.findOne({ _id })
+        const checkData = await this.repairRecordModel.findOne({ _id }).exec()
 
         if (checkData?.status === 1) {
 
@@ -99,7 +101,7 @@ export class RepairRecordService {
             })
 
 
-            return await this.repairRecordModel.updateOne({ _id}, finalData)
+            return await this.repairRecordModel.updateOne({ _id}, finalData).exec()
         } else {
 
             await this.actionRecordService.saveRecord({
@@ -120,7 +122,7 @@ export class RepairRecordService {
     }
 
     async invalidate(_id: string) {
-        const checkData = await this.repairRecordModel.findOne({ _id })
+        const checkData = await this.repairRecordModel.findOne({ _id }).exec()
 
         if (checkData?.status === 0) {
             await this.actionRecordService.saveRecord({
@@ -141,7 +143,7 @@ export class RepairRecordService {
             const res = await this.repairRecordModel.updateOne({ _id}, {
                 status: 0,
                 updateAt: new Date()
-            })
+            }).exec()
         
             if (res.modifiedCount === 1) {
                 await this.actionRecordService.saveRecord({
@@ -277,4 +279,62 @@ export class RepairRecordService {
         }
     }
 
+    async importData(createDatas: UploadRepairRecordDto[]) {
+        for (const data of createDatas) {
+            let { 
+                assetCode, 
+                assetName, 
+                maintenanceReriod, 
+                repairAmount, 
+                maintenanceDate,
+                maintenanceFinishDate,
+                repairInvoiceDate,
+                ..._rrData 
+            } = data
+
+            const assetData = await this.assetListModel.findOne({
+                ...assetCode ? { assetCode } : {},
+                ...assetName ? { assetName } : {},
+                status: 1
+            }).exec()
+
+            if (assetData?._id) {
+                if (typeof maintenanceReriod === 'string') {
+                    if (maintenanceReriod === 'Yes') {
+                        maintenanceReriod = true
+                    } else {
+                        maintenanceReriod = false
+                    }
+                }
+
+                if (typeof repairAmount === 'string') {
+                    repairAmount = Number(repairAmount)
+                }
+
+                const finalData = {
+                    assetId: assetData._id.toString(),
+                    maintenanceReriod,
+                    repairAmount,
+                    repairInvoiceDate,
+                    maintenanceFinishDate,
+                    maintenanceDate,
+                    ..._rrData,
+                    createdAt: new Date(),
+                    status: 1
+                }
+
+                const create = new this.repairRecordModel(finalData)
+                await create.save()
+
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Upload Repair Record',
+                    actionMethod: 'POST',
+                    actionFrom: 'Repair Record',
+                    actionData: finalData,
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+            }
+        }
+    }
 }

@@ -16,6 +16,7 @@ export class MainComponent {
     constructor(private userStoreService: UserStoreService) {
         this.userStoreService.loadUserInfo()
         this.userStoreService.loadMenus()
+        this.userStoreService.loadMenuRoles()
     }
     isCollapsed = false;
 

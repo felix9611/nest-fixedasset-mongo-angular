@@ -12,18 +12,70 @@ import moment from 'moment'
 import { LocationForm } from './interface'
 import { NzMessageService } from 'ng-zorro-antd/message'
 import { NzPaginationModule } from 'ng-zorro-antd/pagination'
+import { UserStoreService } from '../../../../state/user.service'
+import { findMenuItem } from '../../tool-function'
+import { Subscription } from 'rxjs'
+import { downloadTempExcelFile, formatJson, readExcelFile } from '../../../../tool/excel-helper'
+import { NzUploadModule } from 'ng-zorro-antd/upload'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
     standalone: true,
-    imports: [CommonModule, NzFormModule, NzButtonModule, FormsModule, NzModalModule, NzTableModule, NzInputModule, NzPaginationModule],
+    imports: [
+        CommonModule, 
+        NzFormModule, 
+        NzButtonModule, 
+        FormsModule, 
+        NzModalModule, 
+        NzTableModule, 
+        NzInputModule, 
+        NzPaginationModule, 
+        NzUploadModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
+    ],
     templateUrl: './location.component.html',
     styleUrl: './location.component.css',
 })
 export class LocationComponent {
-    constructor(
-        private message: NzMessageService
-    ) {}
+    private rightSubscription: Subscription
+        constructor(
+            private message: NzMessageService,
+            private userStoreService: UserStoreService
+        ) {
+            this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Location', 'location')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                // keep default value
+            }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
+        })
+                    
+    }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+    
+    
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false,
+        upload: false
+    }
 
     searchForm: any = {
         page: 1,
@@ -110,7 +162,7 @@ export class LocationComponent {
 
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     async getOneData(id:string) {
@@ -118,6 +170,18 @@ export class LocationComponent {
         this.editForm = res
         this.okText = 'Update'
         this.showDialog()
+    }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
     }
 
 }

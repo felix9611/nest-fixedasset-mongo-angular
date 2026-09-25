@@ -22,7 +22,7 @@ export function transformData(rawData: any[], chartType: string, showInLegend: b
     const month = monthMap[data[dateKeyName[1]]];
     
     dataMap[data[keyName]].dataPoints.push({ x: new Date(year, month).getTime(), y: data[valueName] });
-  });
+  })
 
   return Object.values(dataMap);
 }
@@ -37,7 +37,22 @@ export function transformDataNoDate(rawData: any[], chartType: string, showInLeg
     
 
     dataMap.dataPoints.push({ x: data[keyName], y: data[valueName] });
-  });
+  })
 
   return [dataMap]
+}
+
+export function transformDataPointsOnly(rawData: any[], keyName: string, valueName: string): any[] {
+
+
+  let dataPoints: any = []
+
+  rawData.forEach((data: any) => {
+    if (data[valueName] === 0) return;
+    
+
+    dataPoints.push({ label: data[keyName], y: data[valueName] });
+  })
+
+  return dataPoints
 }

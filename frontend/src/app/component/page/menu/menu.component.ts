@@ -13,6 +13,9 @@ import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
 import { NzRadioModule } from 'ng-zorro-antd/radio'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
+import { Subscription } from 'rxjs'
 
 @Component({
     standalone: true,
@@ -33,13 +36,41 @@ import { NzMessageService } from 'ng-zorro-antd/message'
     styleUrl: './menu.component.css',
 })
 export class MenuListComponent implements OnInit {
+    private rightSubscription: Subscription
     constructor(
-        private message: NzMessageService
-    ) {}
+        private message: NzMessageService,
+        private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Menu', 'menu')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                     // keep default value
+            }
+        })             
+    }
+    
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+                this.rightSubscription.unsubscribe()
+        }
+    }
+
 
     ngOnInit(): void {
         this.loadSysMenuLists()
         this.loadMainItemLists()
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
     }
 
     listOfData = [
@@ -80,7 +111,10 @@ export class MenuListComponent implements OnInit {
         icon: '',
         path: '',
         sort: 0,
-        type: ''
+        type: '',
+        menuIds: [],
+        excelFunctionCode: '',
+        excelFunctionName: ''
     }
 
     typeOptions = [
@@ -121,7 +155,10 @@ export class MenuListComponent implements OnInit {
             icon: '',
             path: '',
             sort: 0,
-            type: ''
+            type: '',
+            menuIds: [],
+            excelFunctionCode: '',
+            excelFunctionName: ''
         }
     }
 
@@ -143,7 +180,10 @@ export class MenuListComponent implements OnInit {
                 icon: '',
                 path: '',
                 sort: 0,
-                type: ''
+                type: '',
+                menuIds: [],
+                excelFunctionCode: '',
+                excelFunctionName: ''
             }
 
             this.message.success('Save successful!')

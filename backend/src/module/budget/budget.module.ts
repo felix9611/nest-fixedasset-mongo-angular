@@ -6,9 +6,18 @@ import { BudgetController } from './budget.controller'
 import { ActionRecord, ActionRecordSchema } from '../action-record/actionRecord.schame'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Location, LocationSchema } from '../location/location.schame'
+import { Department, DepartmentSchema } from '../department/department.schame'
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: Budget.name, schema: BudgetSchema }, { name: ActionRecord.name, schema: ActionRecordSchema }, { name: Location.name, schema: LocationSchema }]), Budget],
+    imports: [
+        MongooseModule.forFeature(
+            [
+                { name: Budget.name, schema: BudgetSchema }, 
+                { name: ActionRecord.name, schema: ActionRecordSchema }, 
+                { name: Location.name, schema: LocationSchema },
+                { name: Department.name, schema: DepartmentSchema }
+            ]
+        ), Budget],
     providers: [BudgetService, ActionRecordService],
     exports: [BudgetService, Budget],
     controllers: [BudgetController]

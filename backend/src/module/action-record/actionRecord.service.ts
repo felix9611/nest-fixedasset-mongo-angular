@@ -23,7 +23,7 @@ export class ActionRecordService {
                     .skip(skip)
                     .limit(limit)
                     .exec()
-        const total = await this.assetTypeModel.countDocuments()
+        const total = await this.assetTypeModel.countDocuments().exec()
         
         return {
             total,

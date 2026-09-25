@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment.development'
-import { LocalStorageService } from '../state/LocalStorageService'
+import { LocalStorageService } from '../state/localStorage.service'
 import { resolve } from 'path'
 import { rejects } from 'assert'
 @Injectable({

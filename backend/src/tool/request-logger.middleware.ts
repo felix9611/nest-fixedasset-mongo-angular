@@ -26,7 +26,9 @@ export class LoggerMiddleware implements NestMiddleware {
     res.write = function (chunk: any) {
       chunks.push(chunk);
       return oldWrite.apply(res, arguments);
-    };
+    }
+
+    const self = this
 
     res.end = function (chunk: any) {
       if (chunk) chunks.push(chunk);
@@ -34,10 +36,10 @@ export class LoggerMiddleware implements NestMiddleware {
       const responseBody = Buffer.concat(chunks).toString('utf8');
       const duration = Date.now() - start;
 
-      this.logger.log(`📤 [Response] ${method} ${originalUrl} - Status: ${res.statusCode} - Duration: ${duration}ms`);
+      self.logger.log(`📤 [Response] ${method} ${originalUrl} - Status: ${res.statusCode} - Duration: ${duration}ms`);
 
       oldEnd.apply(res, arguments);
-    }.bind(this);
+    }.bind(self);
 
     next();
   }

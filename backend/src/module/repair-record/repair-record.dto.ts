@@ -28,54 +28,103 @@ export interface ListRepairRecordDto {
     placeIds: string[]
 }
 
-export class CreateRepairRecordBody {
-    @ApiProperty({ description: 'Asset Data ID' })
-    assetId: string
+export interface UploadRepairRecordDto {
+    assetCode: string
+    assetName: string
+    repairReason: string
+    maintenanceReriod: string | boolean
+    maintenanceName: string
+    maintenanceDate: string
+    maintenanceFinishDate: string
+    repairInvoiceDate: string
+    repairInvoiceNo: string
+    repairAmount: string | number
+    remark: string
+}
+
+export class UploadRepairRecordBody {
+    @ApiProperty({ description: 'Asset Code' })
+    assetCode?: string
+
+    @ApiProperty({ description: 'Asset Name' })
+    assetName?: string
 
     @ApiProperty({ description: 'Repair Reason' })
-    repairReason: string
+    repairReason!: string
 
     @ApiProperty({ description: 'True = Yes, False = No' })
-    maintenanceReriod: boolean
+    maintenanceReriod!: string
 
     @ApiProperty({ description: 'Maintenance Name' })
-    maintenanceName: string
+    maintenanceName?: string
 
     @ApiProperty({ description: 'Maintenance Date' })
-    maintenanceDate: string
+    maintenanceDate?: string
 
     @ApiProperty({ description: 'Maintenance Finish Date' })
-    maintenanceFinishDate: string
+    maintenanceFinishDate?: string
 
     @ApiProperty({ description: 'Repair Invoice Date' })
-    repairInvoiceDate: string
+    repairInvoiceDate?: string
 
     @ApiProperty({ description: 'Repair Invoice No.' })
-    repairInvoiceNo: string
+    repairInvoiceNo?: string
 
     @ApiProperty({ description: 'Repair Amount' })
-    repairAmount: number
+    repairAmount?: number
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
+}
+
+export class CreateRepairRecordBody {
+    @ApiProperty({ description: 'Asset Data ID' })
+    assetId?: string
+
+    @ApiProperty({ description: 'Repair Reason' })
+    repairReason?: string
+
+    @ApiProperty({ description: 'True = Yes, False = No' })
+    maintenanceReriod?: boolean
+
+    @ApiProperty({ description: 'Maintenance Name' })
+    maintenanceName?: string
+
+    @ApiProperty({ description: 'Maintenance Date' })
+    maintenanceDate?: string
+
+    @ApiProperty({ description: 'Maintenance Finish Date' })
+    maintenanceFinishDate?: string
+
+    @ApiProperty({ description: 'Repair Invoice Date' })
+    repairInvoiceDate?: string
+
+    @ApiProperty({ description: 'Repair Invoice No.' })
+    repairInvoiceNo?: string
+
+    @ApiProperty({ description: 'Repair Amount' })
+    repairAmount?: number
+
+    @ApiProperty({ description: 'Remark' })
+    remark?: string
 }
 
 export class UpdateRepairRecordBody extends CreateRepairRecordBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class RepairRecordBody extends UpdateRepairRecordBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt?: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status?: number
 }
 
 export class ListRepairRecordQuery extends CommonPageAndList {
@@ -92,10 +141,10 @@ export class ListRepairRecordQuery extends CommonPageAndList {
     typeIds?: string[]
 
     @ApiProperty({ description: 'For search by location ids', required: false }) 
-    placeIds: string[]
+    placeIds?: string[]
 }
 
 export class ListRepairRecordQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [RepairRecordBody], description: 'Data List' })
-    lists: RepairRecordBody[]
+    lists?: RepairRecordBody[]
 }

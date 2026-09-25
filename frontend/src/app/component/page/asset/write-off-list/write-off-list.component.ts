@@ -13,6 +13,9 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { Router } from '@angular/router'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
+import { UserStoreService } from '../../../../../state/user.service'
+import { findMenuItem } from '../../../tool-function'
+import { Subscription } from 'rxjs'
 
 @Component({
     // selector: 'app-footer',
@@ -33,11 +36,38 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
     styleUrl: './write-off-list.component.css',
 })
 export class WriteOffListComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService, 
+        private userStoreService: UserStoreService,
         private routeTo: Router
-    ) {}
+     ) {
+    
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Write Off Record', 'write-off-list')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                // keep default value
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false
+    }
 
     searchForm: any = {
         page: 1,
@@ -70,7 +100,7 @@ export class WriteOffListComponent {
 
 
     async loadWriteOffLists() {
-        const res = await postApiWithAuth('/aaset/write-off/list', this.searchForm)
+        const res = await postApiWithAuth('/asset/write-off/list', this.searchForm)
         this.dataLists = res.lists
         this.totals = res.total
     }
@@ -86,7 +116,7 @@ export class WriteOffListComponent {
 
 
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     openEdit(id: string) {

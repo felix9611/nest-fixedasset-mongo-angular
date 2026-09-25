@@ -12,6 +12,12 @@ import { LocationSchema, Location } from '../location/location.schame'
 import { LocationService } from '../location/location.service'
 import { WriteOffController } from './write-off.controller'
 import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-file.schame'
+import { TaxInformation, TaxInformationSchema } from '../tax-information/tax-information.schame'
+import { AssetType, AssetTypeSchema } from '../asset-type/assetType.schame'
+import { Department, DepartmentSchema } from '../department/department.schame'
+import { DepartmentService } from '../department/department.service'
+import { TaxInformationService } from '../tax-information/tax-information.service'
+import { AssetTypeService } from '../asset-type/assetType.service'
 
 @Module({
     imports: [
@@ -21,7 +27,10 @@ import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-fil
             { name: AssetListFile.name, schema: AssetListFileSchema }, 
             { name: ActionRecord.name, schema: ActionRecordSchema }, 
             { name: Location.name, schema: LocationSchema },
-            { name: InvRecord.name, schema: InvRecordSchema }
+            { name: InvRecord.name, schema: InvRecordSchema },
+            { name: TaxInformation.name, schema: TaxInformationSchema },
+            { name: AssetType.name, schema: AssetTypeSchema },
+            { name: Department.name, schema: DepartmentSchema }
         ]),
         InvRecord
     ],
@@ -29,7 +38,10 @@ import { AssetListFile, AssetListFileSchema } from '../asset-list/asset-list-fil
         ActionRecordService,
         WriteOffService,
         AssetListService,
-        InvRecordService,
+        InvRecordService, 
+        AssetTypeService, 
+        TaxInformationService, 
+        DepartmentService, 
         LocationService
     ],
     controllers: [

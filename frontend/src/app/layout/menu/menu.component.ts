@@ -41,6 +41,8 @@ export class MenuComponent implements OnInit{
         })
     }
 
+    year: number = new Date().getFullYear()
+
     activeParent: any = null
     activeChild: any = null
     expandedMenus: any[] = []

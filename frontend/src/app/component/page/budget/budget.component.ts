@@ -14,6 +14,12 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
+import { findMenuItem } from '../../tool-function'
+import { UserStoreService } from '../../../../state/user.service'
+import { Subscription } from 'rxjs'
+import { downloadTempExcelFile } from '../../../../tool/excel-helper'
+import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
+import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -29,16 +35,48 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number'
         NzPaginationModule,
         NzSelectModule,
         NzDatePickerModule,
-        NzInputNumberModule
+        NzInputNumberModule,
+        DownloadExcelTemplateComponent,
+        UploadDialogComponent
     ],
     templateUrl: './budget.component.html',
     styleUrl: './budget.component.css',
 })
 export class BudgetComponent {
+    private rightSubscription: Subscription
     constructor(
         private message: NzMessageService,
-        private modalService: NzModalService
-    ) {}
+        private userStoreService: UserStoreService
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Budget', 'budget')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
+            }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
+        })
+                
+    }
+
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {
+        read: false,
+        write: false,
+        update: false,
+        delete: false,
+        upload: false
+    }
 
     searchForm: any = {
         date: [],
@@ -160,9 +198,8 @@ export class BudgetComponent {
         
     }
 
-
     dateFormat(data: string) {
-        return data ? moment(new Date(data)).format('DD-MM-YYYY HH:MM') : null
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     async getOneData(id:string) {
@@ -172,4 +209,17 @@ export class BudgetComponent {
         this.okText = 'Update'
         this.showDialog()
     }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
+    
 }

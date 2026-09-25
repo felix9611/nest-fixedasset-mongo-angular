@@ -6,34 +6,34 @@ export type RepairRecordDocument = HydratedDocument<RepairRecord>
 @Schema()
 export class RepairRecord extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true })
-    assetId: Types.ObjectId
+    assetId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.String, required: true })
-    repairReason: string
+    repairReason!: string
 
     @Prop({ type: SchemaTypes.Boolean, required: true })
-    maintenanceReriod: boolean
+    maintenanceReriod!: boolean
 
     @Prop({ type: SchemaTypes.String })
-    maintenanceName: string
+    maintenanceName?: string
 
     @Prop({ type: SchemaTypes.Date })
-    maintenanceDate: string
+    maintenanceDate?: string
 
     @Prop({ type: SchemaTypes.Date })
-    maintenanceFinishDate: string
+    maintenanceFinishDate?: string
 
     @Prop({ type: SchemaTypes.Date})
-    repairInvoiceDate: string
+    repairInvoiceDate?: string
 
     @Prop({ type: SchemaTypes.String })
-    repairInvoiceNo: string
+    repairInvoiceNo?: string
 
     @Prop({ type: SchemaTypes.Number })
-    repairAmount: number
+    repairAmount?: number
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 }
 
 export const RepairRecordSchema = SchemaFactory.createForClass(RepairRecord)
