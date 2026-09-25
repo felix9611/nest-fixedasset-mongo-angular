@@ -17,25 +17,25 @@ export interface ActionRecordListDto {
 
 export class ActionRecordBody {
     @ApiProperty({ description: 'Action Name' })
-    actionName: string | undefined
+    actionName?: string | undefined
 
     @ApiProperty({ description: 'Action Method' })
-    actionMethod: string | undefined
+    actionMethod?: string | undefined
 
     @ApiProperty({ description: 'Action From' })
-    actionFrom: string | undefined
+    actionFrom?: string | undefined
 
     @ApiProperty({ description: 'Data in action', example: {} })
-    actionData: object | undefined
+    actionData?: object | undefined
 
     @ApiProperty({ description: 'Success or not' })
     actionSuccess: string | undefined
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: Date | undefined
+    createdAt?: Date | undefined
 }
 
 export class ListActionRecordRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [ActionRecordBody], description: 'Data List' })
-    lists: ActionRecordBody[] | undefined
+    lists?: ActionRecordBody[] | undefined
 }
