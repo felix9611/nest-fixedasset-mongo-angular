@@ -46,8 +46,8 @@
 <h2>⚙️ Tech Stack</h2>
 <h3>Frontend:</h3>
 <ul>
-  <li>Angular 19.2</li>
-  <li>Node.js 20</li>
+  <li>Angular 22</li>
+  <li>Node.js 22</li>
   <li>Typescript</li>
   <li>Tailwind CSS</li>
   <li>Canvas.js 3.12.5</li>
@@ -55,8 +55,8 @@
 </ul>
 <h3>Backend:</h3>
 <ul>
-  <li>Nest.js 11.0</li>
-  <li>Mongoose 8.12.1 for database interaction</li>
+  <li>Nest.js 12.0</li>
+  <li>Mongoose 9.10 for database interaction</li>
   <li>MongoDB v8.0</li>
   <li>Nest.js OpenAPI UI 11.0 for API documentation</li>
 </ul>
