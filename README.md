@@ -132,3 +132,9 @@ http://localhost:4200
   <li><strong>Improved Data Security</strong> through JWT-based user authentication.</li>
   <li><strong>Enhanced Decision-Making</strong> with real-time data visualization and comprehensive reporting.</li>
 </ul>
+
+<h2>Version Update Note</h2>
+<ul>
+  <li><strong>Node updated to version 22 at 24 Sep 2026</strong></li>
+  <li><strong>Please remove package lock files and folder node_modules both Backend & Frontend folder, and reinstall node_modules</li>
+</ul>
