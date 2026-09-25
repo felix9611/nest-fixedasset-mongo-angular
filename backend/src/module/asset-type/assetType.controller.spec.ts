@@ -93,9 +93,11 @@ describe('AssetTypeController', () => {
     })
   })
 
+
   describe('remove', () => {
     it('should call service.voidOne and return the result', async () => {
       const id = '123';
+
       const result = { msg: 'Removed successfully' }
       mockAssetTypeService.voidOne.mockResolvedValue(result)
 
