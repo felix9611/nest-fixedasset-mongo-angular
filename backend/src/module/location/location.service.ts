@@ -66,7 +66,7 @@ export class LocationService {
 
         if (checkData.status === 1) {
 
-            const finalData = {
+            const finalData: any = {
                 ...data,
                 updatedAt: new Date()
             }

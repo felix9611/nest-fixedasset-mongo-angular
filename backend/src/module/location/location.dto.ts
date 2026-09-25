@@ -21,40 +21,40 @@ export interface ListLocationRequestDto {
 export class CreateLocationBody {
 
     @ApiProperty({ description: 'Locaation Code' })
-    placeCode: string
+    placeCode?: string
 
     @ApiProperty({ description: 'Locaation Name' })
-    placeName: string
+    placeName?: string
 
     @ApiProperty({ description: 'Remark' })
-    remark: string
+    remark?: string
 }
 
 export class UpdateLocationBody extends CreateLocationBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class LocationBody extends UpdateLocationBody {
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt?: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class ListLocationQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
     @IsOptional()
-    name: string
+    name?: string
 }
 
 export class ListLocationQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [LocationBody], description: 'Data List' })
-    lists: LocationBody[]
+    lists?: LocationBody[]
 }

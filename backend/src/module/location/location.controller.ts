@@ -69,7 +69,7 @@ export class LocationController {
     @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: CreateLocationBody[]) {
-        return await this.locationService.importData(createDatas)
+        return await this.locationService.importData(createDatas as CreateLocationDto[])
     }
     
 }

@@ -19,41 +19,41 @@ export interface ListRecordReqDto {
 
 export class InvRecordBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Asset Code' })
-    assetCode: string
+    assetCode!: string
 
     @ApiProperty({ description: 'Place From Id' })
-    placeFrom: string    
+    placeFrom!: string    
 
     @ApiProperty({ description: 'Place To Id' })
-    placeTo: string
+    placeTo!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: Date
 
     @ApiProperty({ description: 'Asset List Data', type: AssetListBody })
-    assetList: AssetListBody
+    assetList?: AssetListBody
 
     @ApiProperty({ description: 'Place From Date', type: LocationBody })
-    placeFromData: LocationBody   
+    placeFromData?: LocationBody   
 
     @ApiProperty({ description: 'Place To Date', type: LocationBody })
-    placeToData: LocationBody  
+    placeToData?: LocationBody  
 }
 
 export class ListRecordReqBody extends CommonPageAndList {
     @ApiProperty({ description: 'Asset Code' })
     @IsOptional()
-    assetCode: string
+    assetCode?: string
 
     @ApiProperty({ description: 'Date Range', isArray: true })
     @IsOptional()
-    dateRange: string[]
+    dateRange?: string[]
 }
 
 export class ListInvRecordResponse extends CommonPageAndListResponse {
     @ApiProperty({ description: 'Data List', type: InvRecordBody, isArray: true })
-    data: InvRecordBody[]
+    data?: InvRecordBody[]
 }

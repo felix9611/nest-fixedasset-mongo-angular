@@ -176,7 +176,7 @@ export class AssetListService {
             })
 
             return {
-                msg: 'This budget may be invalidated or not exist! Please contact admin!'
+                msg: 'This asset item may be invalidated or not exist! Please contact admin!'
             }
         }
     }

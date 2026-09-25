@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, UseGuards, Get } from '@nestjs/common'
 import { RepairRecordService } from './repair-record.service'
-import { CreateRepairRecordDto, UpdateRepairRecordDto, ListRepairRecordDto, CreateRepairRecordBody, RepairRecordBody, ListRepairRecordQuery, ListRepairRecordQueryRes, UpdateRepairRecordBody, UploadRepairRecordBody } from './repair-record.dto'
+import { CreateRepairRecordDto, UpdateRepairRecordDto, ListRepairRecordDto, CreateRepairRecordBody, RepairRecordBody, ListRepairRecordQuery, ListRepairRecordQueryRes, UpdateRepairRecordBody, UploadRepairRecordBody, UploadRepairRecordDto } from './repair-record.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
@@ -60,6 +60,6 @@ export class RepairRecordController {
     @Post('batch-create')
     @UseGuards(AuthGuard)
     async importData(@Body() createDatas: UploadRepairRecordBody[]) {
-        return await this.repairRecordService.importData(createDatas)
+        return await this.repairRecordService.importData(createDatas as UploadRepairRecordDto[])
     }
 }

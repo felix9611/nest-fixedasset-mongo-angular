@@ -49,114 +49,114 @@ export interface UploadBudgetDto {
 export class ImportBudgetBody {
 
     @ApiProperty({ description: 'Dept Code' })
-    deptCode: string
+    deptCode?: string
 
     @ApiProperty({ description: 'Dept Name' })
-    deptName: string
+    deptName?: string
 
     @ApiProperty({ description: 'Location Code' })
-    placeCode: string
+    placeCode?: string
 
     @ApiProperty({ description: 'Location Name' })
-    placeName: string
+    placeName?: string
 
     @ApiProperty({ description: 'Budget Name' })
-    budgetName: string
+    budgetName?: string
 
     @ApiProperty({ description: 'Year' })
-    year: string
+    year?: string
 
     @ApiProperty({ description: 'Month' })
-    month: string
+    month?: string
 
     @ApiProperty({ description: 'Budget Amount' })
-    budgetAmount: number
+    budgetAmount?: number
 
     @ApiProperty({ description: 'Budget Date Range From' })
-    budgetFrom: Date
+    budgetFrom?: Date
 
     @ApiProperty({ description: 'Budget Date Range To' })
-    budgetTo: string
+    budgetTo?: string
 
     @ApiProperty({ description: 'Budget Status' })
-    budgetStatus: string
+    budgetStatus?: string
 
     @ApiProperty({ description: 'Remark' })
     remark?: string
 
     @ApiProperty({ description: 'Value Name' })
-    valueName: string
+    valueName?: string
 
     @ApiProperty({ description: 'Type for catelog' })
-    type: string
+    type?: string
 }
 
 export class CreateBudgetBody {
 
     @ApiProperty({ description: 'Dept Id' })
-    deptId: string
+    deptId?: string
 
     @ApiProperty({ description: 'Location Id' })
-    placeId: string
+    placeId?: string
 
     @ApiProperty({ description: 'Budget Name' })
-    budgetName: string
+    budgetName?: string
 
     @ApiProperty({ description: 'Year' })
-    year: string
+    year?: string
 
     @ApiProperty({ description: 'Month' })
-    month: string
+    month?: string
 
     @ApiProperty({ description: 'Budget Amount' })
-    budgetAmount: number
+    budgetAmount?: number
 
     @ApiProperty({ description: 'Budget Date Range From' })
-    budgetFrom: Date
+    budgetFrom?: Date
 
     @ApiProperty({ description: 'Budget Date Range To' })
-    budgetTo: string
+    budgetTo?: string
 
     @ApiProperty({ description: 'Budget Status' })
-    budgetStatus: string
+    budgetStatus?: string
 
     @ApiProperty({ description: 'Remark' })
     remark?: string
 
     @ApiProperty({ description: 'Value Name' })
-    valueName: string
+    valueName?: string
 
     @ApiProperty({ description: 'Type for catelog' })
-    type: string
+    type?: string
 }
 
 export class UpdateBudgetBody extends CreateBudgetBody {
 
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 }
 
 export class BudgetBody extends UpdateBudgetBody {
 
     @ApiProperty({ description: 'Budget No, response only' })
-    budgetNo: string
+    budgetNo!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt?: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status?: number
 }
 
 export class ListBudgetQuery extends CommonPageAndList {
     @ApiProperty({ description: 'For search data keywords' })  
-    name: string
+    name?: string
 }
 
 export class ListBudgetueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: [BudgetBody], description: 'Data List' })
-    lists: BudgetBody[]
+    lists?: BudgetBody[]
 }

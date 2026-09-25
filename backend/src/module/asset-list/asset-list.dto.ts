@@ -123,274 +123,274 @@ export interface UploadAssetListDto {
 
 export class AssetListFileCreateBody {
     @ApiProperty({ description: 'File Name' })
-    fileName: string
+    fileName?: string
 
     @ApiProperty({ description: 'File Type' })
-    fileType: string
+    fileType?: string
 
     @ApiProperty({ description: 'Base64 String' })
-    base64: string
+    base64?: string
 }
 
 
 export class AssetListFileBody extends AssetListFileCreateBody {
     @ApiProperty({ description: 'Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Asset Id' })
-    assetId: string
+    assetId!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 
 export class CreateAssetBody {
     @ApiProperty({ description: 'Asset Name' })
-    assetName: string
+    assetName!: string
 
     @ApiProperty({ description: 'Unit' })
-    unit: string
+    unit!: string
 
     @ApiProperty({ description: 'Type Id' })
-    typeId: string
+    typeId!: string
 
     @ApiProperty({ description: 'Dept Id' })
-    deptId: string
+    deptId!: string
 
     @ApiProperty({ description: 'Location Id' })
-    placeId: string
+    placeId!: string
 
     @ApiProperty({ description: 'Purchase Date' })
-    purchaseDate: string
+    purchaseDate!: string
 
     @ApiProperty({ description: 'Description' })
     @IsOptional()
-    description: string
+    description?: string
 
     @ApiProperty({ description: 'Sponsor or Not' })
-    sponsor: boolean
+    sponsor?: boolean
 
     @ApiProperty({ description: 'Sponsor Name' })
     @IsOptional()
-    sponsorName: string
+    sponsorName?: string
 
     @ApiProperty({ description: 'Cost' })
-    cost: number
+    cost?: number
 
     @ApiProperty({ description: 'Serial No.' })
     @IsOptional()
-    serialNo: string
+    serialNo?: string
 
     @ApiProperty({ description: 'Invoice No.' })
     @IsOptional()
-    invoiceNo: string
+    invoiceNo?: string
     
     @ApiProperty({ description: 'Invoice Date' })
     @IsOptional()
-    invoiceDate: string
+    invoiceDate?: string
 
     @ApiProperty({ description: 'Invoice Remark' })
     @IsOptional()
-    invoiceRemark: string
+    invoiceRemark?: string
 
     @ApiProperty({ description: 'Vendor Id' })
     @IsOptional()
-    vendorId: string
+    vendorId?: string
 
     @ApiProperty({ description: 'Remark' })
     @IsOptional()
-    remark: string
+    remark?: string
 
     @ApiProperty({ description: 'Tax Info Id' })
     @IsOptional()
-    taxInfofId: string
+    taxInfofId?: string
 
     @ApiProperty({ description: 'Tax Country Code' })
     @IsOptional()
-    taxCountryCode: string
+    taxCountryCode?: string
 
     @ApiProperty({ description: 'Tax Code' })
     @IsOptional()
-    taxCode: string
+    taxCode?: string
 
     @ApiProperty({ description: 'Tax Rate' })
     @IsOptional()
-    taxRate: number
+    taxRate?: number
 
     @ApiProperty({ description: 'Include Tax or Not' })
     @IsOptional()
-    includeTax: boolean
+    includeTax?: boolean
 
     @ApiProperty({ description: 'After/Before Tax' })
     @IsOptional()
-    afterBeforeTax: number
+    afterBeforeTax?: number
 
     @ApiProperty({ description: 'Account Code' })
     @IsOptional()
-    accountCode: string
+    accountCode?: string
 
     @ApiProperty({ description: 'Account Name' })    
     @IsOptional()
-    accountName: string
+    accountName?: string
 
     @ApiProperty({ description: 'Brand Code' })
     @IsOptional()
-    brandCode: string
+    brandCode?: string
 
     @ApiProperty({ description: 'Brand Name' })
     @IsOptional()
-    brandName: string
+    brandName?: string
 
     @ApiProperty({ description: 'Cheque No.' })
     @IsOptional()
-    chequeNo: string
+    chequeNo?: string
 
     @ApiProperty({ description: 'Maintenance Period Start' })
     @IsOptional()
-    maintenancePeriodStart: string
+    maintenancePeriodStart?: string
 
     @ApiProperty({ description: 'Maintenance Period End' })
     @IsOptional()
-    maintenancePeriodEnd: string
+    maintenancePeriodEnd?: string
     
     @ApiProperty({ description: 'Voucher No.' })    
     @IsOptional()
-    voucherNo: string
+    voucherNo?: string
 
     @ApiProperty({ description: 'Voucher Used Date' })
     @IsOptional()
-    voucherUsedDate: string
+    voucherUsedDate?: string
 
     @ApiProperty({ description: 'Asset List Files', type: AssetListFileCreateBody, isArray: true })   
     @IsOptional()
-    uploadAssetListFiles: AssetListFileCreateBody[]
+    uploadAssetListFiles?: AssetListFileCreateBody[]
 }
 
 export class UpdateAssetBody extends CreateAssetBody {
     @ApiProperty({ description: 'Asset Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Asset Code' })
-    assetCode: string
+    assetCode!: string
 }
 
 export class AssetListBody extends UpdateAssetBody {
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class AssetListFullBody extends UpdateAssetBody {
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt!: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt!: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 
     @ApiProperty({ description: 'Asset Type', type: AssetTypeBody })
-    assetType: AssetTypeBody
+    assetType!: AssetTypeBody
 
     @ApiProperty({ description: 'Department', type: DepartmentBody })
-    department: DepartmentBody
+    department!: DepartmentBody
 
     @ApiProperty({ description: 'Location', type: LocationBody })
-    location: LocationBody
+    location!: LocationBody
 
     @ApiProperty({ description: 'Sort Number' })
-    assetCodeInt: number
+    assetCodeInt!: number
 }
 
 export class AssetListQuery extends CommonPageAndList {
     @ApiProperty({ description: 'Asset Code' })
     @IsOptional()
-    assetCode: string
+    assetCode?: string
 
     @ApiProperty({ description: 'Asset Name' })
     @IsOptional()
-    assetName: string
+    assetName?: string
 
     @ApiProperty({ description: 'Asset Type Ids', isArray: true })
     @IsOptional()
-    typeIds: string[]
+    typeIds?: string[]
 
     @ApiProperty({ description: 'Location Ids', isArray: true })
     @IsOptional()
-    locationIds: string[]
+    locationIds?: string[]
 
     @ApiProperty({ description: 'Department Ids', isArray: true })
     @IsOptional()    
-    departmentIds: string[]
+    departmentIds?: string[]
 
     @ApiProperty({ description: 'Purchase Dates', isArray: true })
     @IsOptional()
-    purchaseDates: string[]
+    purchaseDates?: string[]
 }
 
 export class AssetListListQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: AssetListFullBody, isArray: true, description: 'Data List' })
-    lists: AssetListFullBody[]
+    lists?: AssetListFullBody[]
 }
 
 export class DashboardReqFilterBody {
     @ApiProperty({ description: 'Asset Type Ids', isArray: true })
     @IsOptional()
-    typeIds: string[]    
+    typeIds?: string[]    
 
     @ApiProperty({ description: 'Location Ids', isArray: true })
     @IsOptional()
-    locationIds: string[]
+    locationIds?: string[]
 
     @ApiProperty({ description: 'Department Ids', isArray: true })
     @IsOptional()    
-    departmentIds: string[]
+    departmentIds?: string[]
 
     @ApiProperty({ description: 'Purchase Dates', isArray: true })
     @IsOptional()
-    purchaseDates: string[]
+    purchaseDates?: string[]
 
     @ApiProperty({ description: 'Asset Code' })
     @IsOptional()
-    assetCode: string
+    assetCode?: string
 
     @ApiProperty({ description: 'Asset Name' })
     @IsOptional()
-    assetName: string 
+    assetName?: string 
 }
 
 export class DashboardReqBody {
     @ApiProperty({ description: 'Date Type' })
     @IsOptional()
-    dateType: boolean
+    dateType?: boolean
 
     @ApiProperty({ description: 'Date Type Value, YearMonth or YearQuarter or none' })
     @IsOptional()
-    dateTypeValue: string
+    dateTypeValue?: string
 
     @ApiProperty({ description: 'Data Type' })
     @IsOptional()
-    dataType: boolean
+    dataType?: boolean
 
     @ApiProperty({ description: 'Data Type Value, dept or type or location or none' })
-    dataTypeValue: string
+    dataTypeValue?: string
 
     @ApiProperty({ description: 'Value Field, counts or costs' })
-    valueField: string
+    valueField?: string
 
     @ApiProperty({ description: 'Filter', type: DashboardReqFilterBody })
-    filter: DashboardReqFilterBody
+    filter?: DashboardReqFilterBody
 }

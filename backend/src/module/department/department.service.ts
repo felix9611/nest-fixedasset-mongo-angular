@@ -37,7 +37,7 @@ export class DepartmentService {
                 msg: 'This department already exist!'
             }
         } else {
-            const finalData = {
+            const finalData: any = {
                 ..._data,
                 deptCode,
                 deptName,

@@ -7,22 +7,22 @@ export type WriteOffDocument = HydratedDocument<WriteOff>
 @Schema()
 export class WriteOff extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true, ref: 'AssetList' })
-    assetId: string
+    assetId!: string
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
-    lastPlaceId: string
+    lastPlaceId!: string
 
     @Prop({ type: SchemaTypes.String, required: true })
-    reason: string
+    reason!: string
 
     @Prop({ type: SchemaTypes.Date, required: true })
-    lastDay: string
+    lastDay!: string
 
     @Prop({ type: SchemaTypes.String })
-    disposalMethod: string
+    disposalMethod!: string
 
     @Prop({ type: SchemaTypes.Number })
-    remainingValue: number
+    remainingValue!: number
 }
 
 export const WriteOffSchema = SchemaFactory.createForClass(WriteOff)

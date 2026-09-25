@@ -167,7 +167,7 @@ export class BudgetService {
     
             const skip = (page - 1) * limit
     
-            const filters = {
+            const filters: any = {
                 ... name ? {budgetName: { $regex: name, $options: 'i' }}: {},
                 ... deptId ? { deptId: { $in: deptId } } : {},
                 ... placeId ? { placeId: { $in: placeId } } : {},

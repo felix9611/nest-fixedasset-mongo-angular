@@ -37,7 +37,7 @@ export class InvRecordService {
 
         const skip = (page - 1) * limit
 
-        const finalFilter = {
+        const finalFilter: any = {
             ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {},
             ... assetCode? { assetCode } : {}
         }

@@ -8,106 +8,106 @@ export type AssetListDocument = HydratedDocument<AssetList>
 @Schema()
 export class AssetList extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true})
-    assetCode: string
+    assetCode!: string
 
     @Prop({ type: SchemaTypes.String, required: true})
-    assetName: string
+    assetName!: string
 
     @Prop({ type: SchemaTypes.String, required: true})
-    unit: string
+    unit!: string
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'AssetType' })
-    typeId: Types.ObjectId
+    typeId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
-    deptId: Types.ObjectId
+    deptId!: Types.ObjectId
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
-    placeId: Types.ObjectId
+    placeId!: Types.ObjectId
 
     @Prop({ type: SchemaTypes.Date, set: (val: string | Date) => new Date(val),})
-    purchaseDate: Date
+    purchaseDate!: Date
 
     @Prop({ type: SchemaTypes.String })
-    description: string
+    description?: string
 
     @Prop({ type: SchemaTypes.Boolean, default: false})
-    sponsor: boolean
+    sponsor?: boolean
 
     @Prop({ type: SchemaTypes.String })
-    sponsorName: string
+    sponsorName?: string
     
     @Prop({ type: Types.Double, required: true })
-    cost: number
+    cost!: number
 
     @Prop({ type: SchemaTypes.String })
-    serialNo: string
+    serialNo?: string
 
     @Prop({ type: SchemaTypes.String })
-    invoiceNo: string
+    invoiceNo?: string
 
     @Prop({ type: SchemaTypes.Date})
-    invoiceDate: string
+    invoiceDate?: string
 
     @Prop({ type: SchemaTypes.String })
-    invoiceRemark: string
+    invoiceRemark?: string
 
     @Prop({ type: Types.ObjectId, ref: 'Vendor' })
-    vendorId: string
+    vendorId?: string
 
     @Prop({ type: SchemaTypes.String })
-    remark: string
+    remark?: string
 
     @Prop({ type: Types.ObjectId, ref: 'TaxInformation' })
-    taxInfofId: string
+    taxInfofId?: string
 
     @Prop({ type: SchemaTypes.String })
-    taxCountryCode: string
+    taxCountryCode?: string
 
     @Prop({ type: SchemaTypes.String })
-    taxCode: string
+    taxCode?: string
 
     @Prop({ type: Types.Double})
-    taxRate: number
+    taxRate?: number
 
     @Prop({ type: SchemaTypes.Boolean, default: false })
-    includeTax: boolean
+    includeTax?: boolean
 
     @Prop({ type: Types.Double})
-    afterBeforeTax: number
+    afterBeforeTax?: number
 
     @Prop({ type: SchemaTypes.String })
-    accountCode: string
+    accountCode?: string
 
     @Prop({ type: SchemaTypes.String })
-    accountName: string
+    accountName?: string
 
     @Prop({ type: SchemaTypes.String })
-    brandCode: string
+    brandCode?: string
 
     @Prop({ type: SchemaTypes.String })
-    brandName: string
+    brandName?: string
 
     @Prop({ type: SchemaTypes.String })
-    chequeNo: string
+    chequeNo?: string
 
     @Prop({ type: SchemaTypes.Date})
-    maintenancePeriodStart: string
+    maintenancePeriodStart?: string
 
     @Prop({ type: SchemaTypes.Date})
-    maintenancePeriodEnd: string
+    maintenancePeriodEnd?: string
 
     @Prop({ type: SchemaTypes.String})
-    voucherNo: string
+    voucherNo?: string
 
     @Prop({ type: SchemaTypes.Date})
-    voucherUsedDate: string
+    voucherUsedDate?: string
 
     @Prop({ type: SchemaTypes.Array})
-    assetListFiles: Types.Array<AssetListFile>
+    assetListFiles?: Types.Array<AssetListFile>
 
     @Prop({ type: SchemaTypes.String, ref: 'SysUser' })
-    staffName: string
+    staffName?: string
 }
 
 export const AssetListSchema = SchemaFactory.createForClass(AssetList)

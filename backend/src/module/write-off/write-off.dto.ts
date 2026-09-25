@@ -24,66 +24,66 @@ export interface ListWriteOffReqDto {
 
 export class CreateListWriteOffRecordBody {
     @ApiProperty({ description: 'Asset Id' })
-    assetId: string
+    assetId!: string
 
     @ApiProperty({ description: 'Location Id' })
-    lastPlaceId: string
+    lastPlaceId!: string
 
     @ApiProperty({ description: 'Write off reason' })
-    reason: string
+    reason?: string
 
     @ApiProperty({ description: 'Write off date' })
-    lastDay: any
+    lastDay!: any
 
     @ApiProperty({ description: 'Disposal Method' })
-    disposalMethod: string
+    disposalMethod!: string
 
     @ApiProperty({ description: 'Remaining Value' })
-    remainingValue: number
+    remainingValue!: number
 }
 
 export class WriteOffRecordBody extends CreateListWriteOffRecordBody {
     @ApiProperty({ description: 'Data Id' })
-    _id: string
+    _id!: string
 
     @ApiProperty({ description: 'Created At' })
-    createdAt: string
+    createdAt?: string
 
     @ApiProperty({ description: 'Updated At' })
-    updatedAt: string
+    updatedAt?: string
 
     @ApiProperty({ description: '1 = Active, 0 = inactive' })  
-    status: number
+    status!: number
 }
 
 export class WriteOffRecordFullBody extends WriteOffRecordBody {
     @ApiProperty({ description: 'Asset Data', type: AssetListBody })
-    assetlIST: AssetListBody
+    assetlIST!: AssetListBody
     
     @ApiProperty({ description: 'Location Data', type: LocationBody })
-    location: LocationBody
+    location!: LocationBody
 }
 
 export class ListWriteOffReqBody extends CommonPageAndList {
     @ApiProperty({ description: 'Location Ids', isArray: true })
     @IsOptional()
-    placeIds: string[]
+    placeIds?: string[]
 
     @ApiProperty({ description: 'Department Ids', isArray: true })
     @IsOptional()
-    deptIds: string[]
+    deptIds?: string[]
 
     @ApiProperty({ description: 'Asset Type Ids', isArray: true })
     @IsOptional()
-    typeIds: string[]
+    typeIds?: string[]
 
     @ApiProperty({ description: 'Date Range', isArray: true })
     @IsOptional()
-    dateRange: string[]
+    dateRange?: string[]
 }
 
 export class WriteOffQueryRes extends CommonPageAndListResponse {
     @ApiProperty({ type: WriteOffRecordFullBody, isArray: true, description: 'Data List' })
-    lists: WriteOffRecordFullBody[]
+    lists?: WriteOffRecordFullBody[]
 }
     
