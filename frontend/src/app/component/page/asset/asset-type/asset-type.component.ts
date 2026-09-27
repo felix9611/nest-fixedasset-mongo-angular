@@ -19,6 +19,7 @@ import { formatJson, readExcelFile } from '../../../../../tool/excel-helper'
 import { NzUploadModule } from 'ng-zorro-antd/upload'
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -35,7 +36,8 @@ import { UploadDialogComponent } from '../../../components/upload-dialog-compone
         NzInputNumberModule,
         NzUploadModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './asset-type.component.html',
     styleUrl: './asset-type.component.css',
