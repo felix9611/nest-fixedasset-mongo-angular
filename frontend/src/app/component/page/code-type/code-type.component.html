@@ -26,6 +26,17 @@
                     [dbFieldList]="dbFieldList"
                 />
             </div>
+            <div *ngIf="userRightInside.upload" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
+                <app-download-excel-data 
+                    [dataFieldList]="dbFieldList"
+                    buttonLabel="Download Excel Data"
+                    excelFileName="CODE_TYPE_data.xlsx"
+                    [excelFieldList]="excelFieldList"
+                    downloadDataApiPath="/base/code-type/filter/list"
+                    dataMode="post"
+                    [filterSet]="searchForm"
+                />
+            </div>
         </div>
         <nz-table
                 [nzData]="dataLists"
