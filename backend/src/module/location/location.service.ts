@@ -155,6 +155,26 @@ export class LocationService {
         }
     }
 
+    async listWithoutPage(request: ListLocationRequestDto) {
+            const { name } = request
+    
+            const filters = {
+                ... name ? {
+                    $or: [
+                        {
+                            placeName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            placeName: { $regex: name, $options: 'i' }
+                        }
+                    ],
+                } : {},
+                status: 1
+            }
+    
+            return await this.locationModel.find(filters).exec()
+    }
+
     async listPage(request: ListLocationRequestDto) {
             const { page, limit, name } = request
     
