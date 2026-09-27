@@ -34,7 +34,12 @@ export class DownloadExcelDataComponent {
             console.error('dataMode is not valid')
         }
 
-        saveJsonToExcel(this.dataFieldList, resultData, this.excelFieldList, this.excelFileName)
+        const today = new Date()
+        const dateString = today.toISOString().split('T')[0]
+        const timeString = today.toTimeString().split(' ')[0].replace(/:/g, '-')
+        const newFileName = `${this.excelFileName.split('.')[0]}_${dateString}_${timeString}.xlsx`
+
+        saveJsonToExcel(this.dataFieldList, resultData, this.excelFieldList, newFileName)
 
     }
 }
