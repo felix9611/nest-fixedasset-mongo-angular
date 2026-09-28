@@ -224,6 +224,20 @@ export class AssetListService {
         }
     }
 
+    async listWithFilter(request: ListAssetReqDto) {
+        const { assetCode, assetName, typeIds, placeIds, deptIds, purchaseDates } = request
+
+        const filters = {
+            status: 1,
+            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDate: { $gte: new Date(purchaseDates[0]), $lte: new Date(purchaseDates[1]) }} : {},
+            ...assetCode ? { assetCode } : {},
+            ...assetName?  { assetName: { $regex: assetName, $options: 'i' } } : {},
+            ...typeIds && typeIds?.length > 0 ? { typeId: { $in: typeIds} } : {},
+            ...placeIds && placeIds?.length > 0 ? { placeId: { $in: placeIds} } : {},
+            ...deptIds && deptIds?.length > 0 ? { deptId: { $in: deptIds} } : {}
+        }
+    }
+
     async listPage(request: ListAssetReqDto) {
 
         const { page, limit, assetCode, assetName, typeIds, placeIds, deptIds, purchaseDates } = request

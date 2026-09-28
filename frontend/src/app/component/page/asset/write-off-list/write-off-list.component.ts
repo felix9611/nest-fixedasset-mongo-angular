@@ -16,6 +16,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../../state/user.service'
 import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
+import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -31,6 +32,7 @@ import { Subscription } from 'rxjs'
         NzInputModule, 
         NzPaginationModule,
         NzDatePickerModule,
+        DownloadExcelDataComponent
     ],
     templateUrl: './write-off-list.component.html',
     styleUrl: './write-off-list.component.css',
@@ -53,6 +55,8 @@ export class WriteOffListComponent {
                 upload: answer.upload ?? false
                 // keep default value
             }
+            this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
+            this.preLoadExcelSetting()
         })
     }
 
@@ -61,6 +65,12 @@ export class WriteOffListComponent {
             this.rightSubscription.unsubscribe()
         }
     }
+
+    excelFileSetting: any = {
+        code: ''
+    }
+    dbFieldList: string[] = []
+    excelFieldList: string[] = []
 
     userRightInside: any = {
         read: false,
@@ -131,4 +141,9 @@ export class WriteOffListComponent {
         this.routeTo.navigate([`write-off`])
     }
 
+    async preLoadExcelSetting() {
+        const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
+        this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
+        this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
 }
