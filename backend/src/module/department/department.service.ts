@@ -160,7 +160,28 @@ export class DepartmentService {
         }
     }
 
-    async listPageRole(request: ListDeptRequestDto) {
+    async listWithFilters(request: ListDeptRequestDto) {
+            const { name } = request
+    
+    
+            const filters = {
+                ...name? {
+                    $or: [
+                        {
+                            deptName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            deptCode: { $regex: name, $options: 'i' }
+                        }
+                    ],
+                } : {},
+                status: 1
+            }
+    
+            return await this.departmentModel.find(filters).exec()
+    }
+
+    async listPage(request: ListDeptRequestDto) {
             const { page, limit, name } = request
     
             const skip = (page - 1) * limit
