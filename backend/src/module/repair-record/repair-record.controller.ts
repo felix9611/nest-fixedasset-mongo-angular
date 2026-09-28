@@ -19,9 +19,9 @@ export class RepairRecordController {
         return await this.repairRecordService.create(createData)
     }
 
-     @ApiOperation({ summary: 'Update Department' })
-        @ApiBody({ type: UpdateRepairRecordBody })
-        @ApiResponse({ description: 'If not save successful',status: 200, type: ReturnMsg })
+    @ApiOperation({ summary: 'Update Department' })
+    @ApiBody({ type: UpdateRepairRecordBody })
+    @ApiResponse({ description: 'If not save successful',status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() updateData: UpdateRepairRecordDto) {
@@ -45,6 +45,14 @@ export class RepairRecordController {
         return await this.repairRecordService.invalidate(id)
     }
 
+    @ApiOperation({ summary: 'List with filter' })
+    @ApiBody({ type: ListRepairRecordQuery })
+    @ApiResponse({ status: 200,  type: [RepairRecordBody] })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() query: ListRepairRecordDto) {
+        return await this.repairRecordService.listWithFilter(query)
+    }
     
     @ApiOperation({ summary: 'Lsit and page' })
     @ApiBody({ type: ListRepairRecordQuery })

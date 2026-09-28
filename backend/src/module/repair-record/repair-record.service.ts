@@ -171,6 +171,77 @@ export class RepairRecordService {
          }
     }
 
+    async listWithFilter(query: ListRepairRecordDto) {
+        const { dateRange, assetCode, deptIds, typeIds, placeIds } = query
+
+        const finalFilter = {
+            status: 1,
+            ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1]} } : {},
+        }
+
+        const lists = await this.repairRecordModel.aggregate([
+            {
+                $match: finalFilter
+            },
+            {
+                $lookup: {
+                    from: 'assetlists',
+                    let: { assetIdStr: { $toObjectId: '$assetId' } }, // assetId as assetIdStr
+                    pipeline: [
+                        { 
+                            $match: { 
+                                $expr: { $eq: ['$_id', '$$assetIdStr'] }, 
+                                ...assetCode ? { assetCode} : {},
+                                ...typeIds && typeIds.length > 0 ? { typeId: { $in: typeIds }} : {},
+                                ...deptIds && deptIds.length > 0 ? { deptId: { $in: typeIds }} : {},
+                                ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds }} : {}
+                            }
+                        },
+                        {
+                            $lookup: {
+                              from: 'locations', // Ensure correct collection name
+                              let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                              pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                              as: 'location'
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: 'departments', // Ensure correct collection name
+                                let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                                pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                                as: 'department'
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: 'assettypes', // Ensure correct collection name
+                                let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                                pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                                as: 'assettype'
+                            }
+                        },
+                        { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+                        { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+                        { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } }
+                    ],
+                  as: 'assetlist'
+                }
+            },
+            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } }
+        ]).exec()
+
+        let newLists = lists.map((item: any) => {
+            return {
+                ...item,
+                assetCode: item.assetlist?.assetCode ?? '',
+                assetName: item.assetlist?.assetName ?? ''
+            }
+        })
+
+        return newLists
+    }
+
     async listAndPage(query: ListRepairRecordDto) {
         const { page, limit, dateRange, assetCode, deptIds, typeIds, placeIds } = query
 
