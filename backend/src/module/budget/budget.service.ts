@@ -162,6 +162,55 @@ export class BudgetService {
         }
     }
 
+    async listWithFilter(request: ListBudgetRequestDto) {
+            const { name, date, deptId, placeId } = request
+    
+            const filters: any = {
+                ... name ? {budgetName: { $regex: name, $options: 'i' }}: {},
+                ... deptId ? { deptId: { $in: deptId } } : {},
+                ... placeId ? { placeId: { $in: placeId } } : {},
+                ... date && date?.length > 0 ? { budgetFrom: { $gte: new Date(date[0]), $lte: new Date(date[1]) } } : {},
+                status: 1
+            }
+
+            const lists = await await this.budgetModel.aggregate([
+                {
+                    $match: filters
+                },
+                {
+                  $lookup: {
+                    from: 'locations', // Ensure correct collection name
+                    let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                    as: 'place'
+                  }
+                },
+                {
+                    $lookup: {
+                      from: 'departments', // Ensure correct collection name
+                      let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                      pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                      as: 'department'
+                    }
+                  },
+                { $unwind: { path: '$place', preserveNullAndEmptyArrays: false } },
+                { $unwind: { path: '$department', preserveNullAndEmptyArrays: false } } // Avoids errors if no match
+              ]).exec()
+
+
+            let newLists = lists.map((item: any) => {
+                return {
+                    ...item,
+                    placeCode: item.place?.placeCode,
+                    placeName: item.place?.placeName,
+                    deptCode: item.department?.deptCode,
+                    deptName: item.department?.deptName
+                }
+            })
+
+            return newLists
+    }
+
     async listPage(request: ListBudgetRequestDto) {
             const { page, limit, name, date, deptId, placeId } = request
     

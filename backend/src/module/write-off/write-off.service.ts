@@ -88,6 +88,76 @@ export class WriteOffService {
         }
     }
 
+    async listWithFilter(query: ListWriteOffReqDto) {
+        const { placeIds, deptIds, typeIds, dateRange } = query
+
+        const finalFilter: any = {
+            status: 1,
+            ...(dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {}),
+            ...(placeIds && placeIds.length > 0 ? { lastPlaceId: { $in: placeIds } } : {})
+        }
+
+        const lists = await this.writeOffModel.aggregate([
+            {
+                $match: finalFilter 
+            },
+            {
+                $lookup: {
+                  from: 'assetlists',
+                  let: { assetIdStr: { $toObjectId: '$assetId' } }, // assetId as assetIdStr
+                  pipeline: [
+                    { $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } } },
+                    ...(deptIds && deptIds.length > 0 ? [{ $match: { deptId: { $in: deptIds }} }] : []),
+                    ...(typeIds && typeIds.length > 0 ? [{ $match: { typeId: { $in: typeIds }} }] : []),
+                    {
+                        $lookup: {
+                            from: 'departments', // Ensure correct collection name
+                            let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                            as: 'department'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'assettypes', // Ensure correct collection name
+                            let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                            as: 'assettype'
+                        }
+                    },
+                    { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+                    { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } }
+                ],
+                  as: 'assetlist'
+                }
+            },
+            {
+                $lookup: {
+                  from: 'locations',
+                  let: { placeIdStr: { $toObjectId: '$lastPlaceId' } }, // Convert lastPlaceId as placeIdStr
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                  as: 'location'
+                }
+            },
+            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } }
+        ]).exec()
+
+        let newLists = lists.map((item: any) => {
+            return {
+                ...item,
+                assetCode: item.assetlist.assetCode ?? '',
+                assetName: item.assetlist.assetName ?? '',
+                purchaseDate: item.assetlist.purchaseDate ?? '',
+                placeCode: item.location.placeCode ?? '',
+                placeName: item.location.placeName ?? '',
+            }
+        })
+
+        return newLists
+    }
+
+
     async listAndPage(query: ListWriteOffReqDto) {
         const { page, limit, placeIds, deptIds, typeIds, dateRange } = query
 
@@ -130,7 +200,7 @@ export class WriteOffService {
                     { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
                     { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } }
                 ],
-                  as: ''
+                  as: 'assetlist'
                 }
             },
             {

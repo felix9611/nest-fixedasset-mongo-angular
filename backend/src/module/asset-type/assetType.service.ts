@@ -173,6 +173,31 @@ export class AssetTypeService {
         }).exec()
     }
 
+    async listAssetTypesh(req: AssetTypeListSearchDto) {
+        const { name } = req
+
+        const filters = {
+            ...name? {
+                $or: [
+                    {
+                        typeCode: { $regex: name, $options: 'i' }
+                    },
+                    {
+                        typeName: { $regex: name, $options: 'i' }
+                    }
+                ]
+            } : {},
+            status: 1
+        }
+
+        const lists: AssetType[] = await this.assetTypeModel
+            .find(filters)
+            .exec()
+
+        return lists
+
+    }
+
     async listAssetTypeBySearch(req: AssetTypeListSearchDto) {
         const { name, page, limit } = req
         const skip = (page - 1) * limit

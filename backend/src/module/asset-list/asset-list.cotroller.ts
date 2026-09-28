@@ -50,6 +50,15 @@ export class AssetListController {
         return await this.assetListService.update(updateData)
     }
 
+    @ApiOperation({ summary: 'List with query' })
+    @ApiBody({ type: AssetListQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: [AssetListFullBody] })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithQuery(@Body() query: ListAssetReqDto) {
+        return await this.assetListService.listWithFilter(query)
+    }
+
     @ApiOperation({ summary: 'List and page' })
     @ApiBody({ type: AssetListQuery })
     @ApiResponse({ description: 'If successful', status: 201, type: AssetListListQueryRes })

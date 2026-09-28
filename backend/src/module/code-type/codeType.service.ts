@@ -169,6 +169,31 @@ export class CodeTypeService {
         }).exec()
     }
 
+    async getDatas(request: ListCodeTypeRequestDto) {
+        const { name } = request
+
+        const filters = {
+                ...name ? {
+                    $or: [
+                        {
+                            valueName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            valueName: { $regex: name, $options: 'i' }
+                        },
+                        {
+                            type: { $regex: name, $options: 'i' }
+                        }
+                    ],
+                } : {}, 
+                status: 1
+        }
+
+        const lists = await this.codeTypeModel.find(filters).exec()
+
+        return lists
+    }
+
     async listPageRole(request: ListCodeTypeRequestDto) {
             const { page, limit, name } = request
     

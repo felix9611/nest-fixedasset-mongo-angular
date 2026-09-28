@@ -224,6 +224,92 @@ export class AssetListService {
         }
     }
 
+    async listWithFilter(request: ListAssetReqDto) {
+        const { assetCode, assetName, typeIds, placeIds, deptIds, purchaseDates } = request
+
+        const filters = {
+            status: 1,
+            ... purchaseDates && purchaseDates.length > 0 ? { purchaseDate: { $gte: new Date(purchaseDates[0]), $lte: new Date(purchaseDates[1]) }} : {},
+            ...assetCode ? { assetCode } : {},
+            ...assetName?  { assetName: { $regex: assetName, $options: 'i' } } : {},
+            ...typeIds && typeIds?.length > 0 ? { typeId: { $in: typeIds} } : {},
+            ...placeIds && placeIds?.length > 0 ? { placeId: { $in: placeIds} } : {},
+            ...deptIds && deptIds?.length > 0 ? { deptId: { $in: deptIds} } : {}
+        }
+
+        const lists = await await this.assetListModel.aggregate([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                  from: 'locations', // Ensure correct collection name
+                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                  as: 'location'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'departments', // Ensure correct collection name
+                    let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    as: 'department'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'assettypes', // Ensure correct collection name
+                    let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    as: 'assettype'
+                }
+            },
+            { 
+                $addFields: { 
+                    assetCodeInt: { $toInt: "$assetCode" } 
+                } 
+            },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } },
+            
+            { 
+                $addFields: { 
+                    assetCodeInt: { $toInt: "$assetCode" } 
+                } 
+            },
+            { $sort: { assetCodeInt: 1 } } ,
+        ]).exec()
+
+        let newLists = lists.map((item: any) => {
+            return {
+                ...item,
+                sponsor: item.sponsor === true ? 'true' : 'false',
+                placeName: item.location ? item.location.name : '',
+                placeCode: item.location ? item.location.code : '',
+                deptName: item.department ? item.department.name : '',
+                deptCode: item.department ? item.department.code : '',
+                typeCode: item.assettype ? item.assettype.code : '',
+                typeName: item.assettype ? item.assettype.name : '',
+                vendorName: item.vendor ? item.vendor.vendorName : '',
+                vendorCode: item.vendor ? item.vendor.vendorCode : '',
+                vendorOtherName: item.vendor ? item.vendor.vendorOtherName : '',
+                vendorType: item.vendor ? item.vendor.type : '',
+                vendorEmail: item.vendor ? item.vendor.email : '',
+                vendorPhone: item.vendor ? item.vendor.phone : '',
+                vendorFax: item.vendor ? item.vendor.fax : '',
+                vendorAddress: item.vendor ? item.vendor.address : '',
+                vendorContactPerson: item.vendor ? item.vendor.contactPerson : '',
+                vendorRemark: item.vendor ? item.vendor.remark : '',
+
+            }
+        })
+
+        return newLists
+
+    }
+
     async listPage(request: ListAssetReqDto) {
 
         const { page, limit, assetCode, assetName, typeIds, placeIds, deptIds, purchaseDates } = request

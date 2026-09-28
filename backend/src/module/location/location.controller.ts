@@ -62,6 +62,15 @@ export class LocationController {
         return await this.locationService.listPage(req)
     }
 
+    @ApiOperation({ summary: 'List with filter'})
+    @ApiBody({ type: ListLocationQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: [LocationBody] })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListLocationRequestDto) {
+        return await this.locationService.listWithoutPage(req)
+    }
+
     @ApiOperation({ summary: 'Batch Create' })
     @ApiBody({ type: [CreateLocationBody] })
     @ApiResponse({ description: 'If save successful', status: 201, type: LocationBody })

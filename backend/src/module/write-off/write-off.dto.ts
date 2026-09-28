@@ -58,7 +58,7 @@ export class WriteOffRecordBody extends CreateListWriteOffRecordBody {
 
 export class WriteOffRecordFullBody extends WriteOffRecordBody {
     @ApiProperty({ description: 'Asset Data', type: AssetListBody })
-    assetlIST!: AssetListBody
+    assetList!: AssetListBody
     
     @ApiProperty({ description: 'Location Data', type: LocationBody })
     location!: LocationBody

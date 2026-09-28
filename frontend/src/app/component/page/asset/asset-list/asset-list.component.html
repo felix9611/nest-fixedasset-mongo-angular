@@ -11,14 +11,14 @@
                     [(ngModel)]="searchForm.purchaseDates"
                 ></nz-range-picker>
             </div>-->
-            <div class="w-[150px]">
+            <div class="w-[130px]">
                 <input class="h-full" nz-input type="text" name="assetCode" placeholder="Asset Code" [(ngModel)]="searchForm.assetCode" />
             </div>
-            <div class="w-[150px]">
+            <div class="w-[250px]">
                 <input class="h-full" nz-input type="text" name="assetName" placeholder="Asset Name" [(ngModel)]="searchForm.assetName" />
             </div>
             
-            <div class="w-[150px] h-full">
+            <div class="w-[130px] h-full">
                 <nz-select
                     nzSize="large"
                     class="w-full h-full" 
@@ -31,7 +31,7 @@
                     }
                 </nz-select>
             </div>
-            <div class="w-[150px] h-full">
+            <div class="w-[130px] h-full">
                 <nz-select
                     nzSize="large"
                     class="w-full h-full" 
@@ -44,7 +44,7 @@
                     }
                 </nz-select>
             </div>
-            <div class="w-[150px] h-full">
+            <div class="w-[130px] h-full">
                 <nz-select
                     nzSize="large"
                     class="w-full h-full" 
@@ -63,10 +63,10 @@
             <div *ngIf="userRightInside.write" (click)="goToCreate()" class="w-[100px] bg-[#54A4FF] hover:bg-[#2E7FDB] text-white text-center px-1 py-2 rounded-lg">
                 Create
             </div>
-            <div *ngIf="userRightInside.upload" class="w-[200px] border-1 border-[#D17600] text-center px-1 py-2 rounded-lg">
+            <div *ngIf="userRightInside.upload" class="w-[180px] border-1 border-[#D17600] text-center px-1 py-2 rounded-lg">
                 <app-download-excel-template 
                     class="text-[#D17600] hover:text-[#B06400]" 
-                    buttonLabel="Download Excel Template" 
+                    buttonLabel="Download Template" 
                     excelFileName="asset_list_template.xlsx" 
                     [excelFieldList]="excelFieldList" 
                 />
@@ -77,6 +77,17 @@
                     uploadApiUrl="/asset/asset-list/batch-create"
                     [excelFieldList]="excelFieldList"
                     [dbFieldList]="dbFieldList"
+                />
+            </div>
+            <div class="w-[120px] bg-[#ffac69] hover:bg-[#f0944a] text-white text-center px-1 py-2 rounded-lg">
+                <app-download-excel-data 
+                    [dataFieldList]="dbFieldList"
+                    buttonLabel="Download Data"
+                    excelFileName="Assets_data.xlsx"
+                    [excelFieldList]="excelFieldList"
+                    downloadDataApiPath="/asset/asset-list/filter/list"
+                    dataMode="post"
+                    [filterSet]="searchForm"
                 />
             </div>
         </div>

@@ -62,6 +62,15 @@ export class BudgetController {
         return this.budgetService.listPage(req)
     }
 
+    @ApiOperation({ summary: 'List with filter'})
+    @ApiBody({ type: ListBudgetQuery })
+    @ApiResponse({ description: 'If successful', status: 201, type: [BudgetBody] })
+    @Post('filter/list')
+    @UseGuards(AuthGuard)
+    async listWithFilter(@Body() req: ListBudgetRequestDto) {
+        return this.budgetService.listWithFilter(req)
+    }
+
     @ApiOperation({ summary: 'Create Budgete' })
     @ApiBody({ description: 'Create Budgete', type: [ImportBudgetBody] })
     @ApiResponse({ description: 'If save successful', status: 201, type: BudgetBody  })

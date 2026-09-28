@@ -19,6 +19,7 @@ import { findMenuItem } from '../../../tool-function'
 import { Subscription } from 'rxjs'
 import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
+import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -37,7 +38,8 @@ import { DownloadExcelTemplateComponent } from '../../../components/download-tem
         RepairRecordCreateComponent,
         NzDatePickerModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
@@ -49,7 +51,7 @@ export class AssetListComponent {
         private userStoreService: UserStoreService
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Tax Information', 'tax-information')
+            const answer = findMenuItem(data, 'Asset List', 'asset-list')
             this.userRightInside = {
                 read: answer?.read ?? false,
                 write: answer.write ?? false,
