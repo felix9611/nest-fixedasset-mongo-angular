@@ -32,6 +32,64 @@ export class InvRecordService {
         })
     }
 
+    async listRecordsWithoutPage(query: ListRecordReqDto) {
+        const { assetCode, dateRange } = query
+
+        const finalFilter: any = {
+            ... dateRange && dateRange.length > 0 ? { createdAt: { $gte: dateRange[0], $lte: dateRange[1] } } : {},
+            ... assetCode? { assetCode } : {}
+        }
+
+        const lists = await this.invRecordModel.aggregate([
+            {
+                $match: finalFilter
+            },
+            {
+                $lookup: {
+                  from: 'assetlists',
+                  let: { assetCodeStr: '$assetCode' },
+                  pipeline: [
+                    { $match: { $expr: { $eq: ['$assetCode', '$$assetCodeStr'] } } }
+                  ],
+                  as: 'assetlist'
+                }
+            },
+            {
+                $lookup: {
+                  from: 'locations',
+                  let: { placeFromObj: '$placeFrom'},
+                  pipeline: [{ $match: { $expr: { $eq: [{ $toString: '$_id' }, '$$placeFromObj'] } } }],
+                  as: 'placeFromData'
+                }
+            },
+            {
+                $lookup: {
+                  from: 'locations',
+                  let: { placeToObj: '$placeTo'},
+                  pipeline: [{ $match: { $expr: { $eq: [{ $toString: '$_id' }, '$$placeToObj'] } } }],
+                  as: 'placeToData'
+                }
+            },
+            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$placeFromData', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$placeToData', preserveNullAndEmptyArrays: true } }
+        ]).exec()
+
+        let newLists = lists.map((item: any) => {
+            return {
+                ...item,
+                assetCode: item.assetlist ? item.assetlist.assetCode : "",
+                assetName: item.assetlist ? item.assetlist.assetName : "",
+                placeCodeFrom: item.placeFromData ? item.placeFromData.placeCode : "",
+                placeNameFrom: item.placeFromData ? item.placeFromData.placeName : "",
+                placeCodeTo: item.placeToData ? item.placeToData.placeCode : "",
+                placeNameTo: item.placeToData ? item.placeToData.placeName : ""
+            }
+        })
+
+        return newLists
+     }
+
     async listRecord(query: ListRecordReqDto) {
         const { page, limit, assetCode, dateRange } = query
 

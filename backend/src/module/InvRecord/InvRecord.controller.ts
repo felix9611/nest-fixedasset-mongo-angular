@@ -14,4 +14,12 @@ export class InvRecordController {
     async list(@Body() query: ListRecordReqDto) {
         return await this.invReocrdService.listRecord(query)
     }
+
+    @ApiOperation({ summary: 'List without page'})
+    @ApiBody({ type: ListRecordReqBody })
+    @ApiResponse({ description: 'If successful', status: 201, type: [ListInvRecordResponse] })
+    @Post('filter/list')
+    async listWithoutPage(@Body() query: ListRecordReqDto) {
+        return await this.invReocrdService.listRecordsWithoutPage(query)
+    }
 }
