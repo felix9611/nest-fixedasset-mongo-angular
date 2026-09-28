@@ -4,6 +4,7 @@ import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImp
 import { AuthGuard } from '../auth/AuthGuard'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { TaxInformation } from './tax-information.schame'
 
 @Controller('base/tax-information')
 export class TaxInformationController {
@@ -49,7 +50,16 @@ export class TaxInformationController {
   @Post('list')
   @UseGuards(AuthGuard)
   async listAndPage(@Body() req: TaxInformationListSearchDto) {
-    return this.taxInformationService.listAssetTypeBySearch(req)
+    return this.taxInformationService.listTaxInfoBySearch(req)
+  }
+
+  @ApiOperation({ summary: 'Page and list'})
+  @ApiBody({ type: TaxInformationListQuery })
+  @ApiResponse({ description: 'If successful', status: 201, type: [TaxInformation] })
+  @Post('filter/list')
+  @UseGuards(AuthGuard)
+  async listTaxInfoBySearchWithoutPage(@Body() req: TaxInformationListSearchDto) {
+    return this.taxInformationService.listTaxInfoBySearchWithoutPage(req)
   }
 
   @ApiOperation({ summary: 'Void one by ID' })
