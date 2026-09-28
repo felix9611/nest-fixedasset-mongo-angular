@@ -46,7 +46,7 @@ export class AssetTypeController {
 
   @ApiOperation({ summary: 'List with filter'})
   @ApiBody({ type: AssetTypeQuery })
-  @ApiResponse({ description: 'If successful', status: 201, type: ListAssetTypeQueryRes })
+  @ApiResponse({ description: 'If successful', status: 201, type: [AssetTypeBody] })
   @Post('filter/list')
   @UseGuards(AuthGuard)
   async listWithFilter(@Body() req: AssetTypeListSearchDto) {

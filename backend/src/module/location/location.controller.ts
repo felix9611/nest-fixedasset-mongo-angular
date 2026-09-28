@@ -62,9 +62,9 @@ export class LocationController {
         return await this.locationService.listPage(req)
     }
 
-    @ApiOperation({ summary: 'List without page'})
+    @ApiOperation({ summary: 'List with filter'})
     @ApiBody({ type: ListLocationQuery })
-    @ApiResponse({ description: 'If successful', status: 201, type: ListLocationQueryRes })
+    @ApiResponse({ description: 'If successful', status: 201, type: [LocationBody] })
     @Post('filter/list')
     @UseGuards(AuthGuard)
     async listWithFilter(@Body() req: ListLocationRequestDto) {

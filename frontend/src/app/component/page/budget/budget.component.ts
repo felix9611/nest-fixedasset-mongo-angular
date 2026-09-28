@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs'
 import { downloadTempExcelFile } from '../../../../tool/excel-helper'
 import { DownloadExcelTemplateComponent } from '../../components/download-template-component/download-template-component.component'
 import { UploadDialogComponent } from '../../components/upload-dialog-component/upload-dialog-component.component'
+import { DownloadExcelDataComponent } from '../../components/download-excel-component/download-excel-data-component.component'
 
 @Component({
     // selector: 'app-footer',
@@ -37,7 +38,8 @@ import { UploadDialogComponent } from '../../components/upload-dialog-component/
         NzDatePickerModule,
         NzInputNumberModule,
         DownloadExcelTemplateComponent,
-        UploadDialogComponent
+        UploadDialogComponent,
+        DownloadExcelDataComponent
     ],
     templateUrl: './budget.component.html',
     styleUrl: './budget.component.css',
