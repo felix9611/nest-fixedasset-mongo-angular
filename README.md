@@ -3,7 +3,7 @@
 <h1>Fixed Asset Management System</h1>
 <p><strong>Nest.js & Angular SSR | Cloud-based Web Application for Asset Management</strong></p>
 <p>Current version: V1.7 Main </p>
-<p>Next version function: Unit test and Excel Data Export </p>
+<p>Next version function: Unit test</p>
 <p>If you find this project helpful, please click ⭐ Star! This helps more people discover it.</p>
 
 <h2>🌟 Project Overview</h2>
@@ -46,7 +46,7 @@
 <h2>⚙️ Tech Stack</h2>
 <h3>Frontend:</h3>
 <ul>
-  <li>Angular 22</li>
+  <li>Angular 21</li>
   <li>Node.js 22</li>
   <li>Typescript</li>
   <li>Tailwind CSS</li>

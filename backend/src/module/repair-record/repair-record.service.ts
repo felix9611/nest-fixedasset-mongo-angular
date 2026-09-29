@@ -234,6 +234,7 @@ export class RepairRecordService {
         let newLists = lists.map((item: any) => {
             return {
                 ...item,
+                maintenanceReriod: item.maintenanceReriod ? 'true' : 'false',
                 assetCode: item.assetlist?.assetCode ?? '',
                 assetName: item.assetlist?.assetName ?? ''
             }
