@@ -38,7 +38,7 @@ export class BudgetService {
             })
 
             return {
-                msg: 'This budget already exist!'
+                error: 'This budget data already exist!'
             }
         } else {
             const budgetNo = this.getRandom10Digit()
@@ -101,7 +101,7 @@ export class BudgetService {
             })
 
             return {
-                msg: 'This budget may be invalidated or not exist! Please contact admin!'
+                error: 'This budget may be voided or not exist! Please contact admin!'
             }
         }
     }
@@ -113,7 +113,7 @@ export class BudgetService {
             return data
         } else {
             return {
-                msg: 'This budget has been invalidated! Please contact admin!'
+                error: 'This budget has been voided! Please contact admin!'
             }
         }
     }
@@ -134,7 +134,7 @@ export class BudgetService {
             })
 
             return {
-                msg: 'This budget has been invalidated! Please contact admin!'
+                error: 'This budget has been Voided! Please contact admin!'
             }
         } else {
                 await this.budgetModel.updateOne({ _id}, {
@@ -156,7 +156,7 @@ export class BudgetService {
                 })
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Void successfully!'
                 }
 
         }

@@ -31,7 +31,7 @@ export class AssetTypeService {
             })
 
             return {
-                msg: 'This type already exist!'
+                error: 'This type already exist!'
             }
         } else {
             const finalData = {
@@ -90,7 +90,7 @@ export class AssetTypeService {
             })
 
             return {
-                msg: 'This asset type not exist!'
+                error: 'This asset type not exist!'
             }
             
 
@@ -104,7 +104,7 @@ export class AssetTypeService {
             return data
         } else {
             return {
-                msg: 'This asset type has been invalidated! Please contact admin!'
+                error: 'This asset type has been voided! Please contact admin!'
             }
         }
     }
@@ -126,7 +126,7 @@ export class AssetTypeService {
             })
 
             return {
-                msg: 'This asset type has been invalidated! Please contact admin!'
+                error: 'This asset type has been voided! Please contact admin!'
             }
         } else {
             const res = await this.assetTypeModel.updateOne({ _id}, {
@@ -149,11 +149,11 @@ export class AssetTypeService {
         
             if (res.modifiedCount === 1) {
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Void successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }

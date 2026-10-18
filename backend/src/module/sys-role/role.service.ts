@@ -24,7 +24,6 @@ export class SysRoleService {
         const checkData = await this.checkRoleExist(name, code)
 
         if (checkData) {
-
             await this.actionRecordService.saveRecord({
                 actionName: 'Create Role',
                 actionMethod: 'POST',
@@ -35,7 +34,7 @@ export class SysRoleService {
             })
 
             return {
-                msg: 'This role already exist!'
+                error: 'This role already exist!'
             }
         } else {
             const finalData = {
@@ -94,8 +93,8 @@ export class SysRoleService {
 
 
             return {
-                msg: 'This role has been invalidated! Please contact admin!'
-              }
+                error: 'This role has been voided! Please contact admin!'
+            }
         }
     }
 
@@ -132,7 +131,7 @@ export class SysRoleService {
             })
 
             return {
-                msg: 'This role has been invalidated! Please contact admin!'
+                error: 'This role has been voided! Please contact admin!'
             }
         }
     }
@@ -154,7 +153,7 @@ export class SysRoleService {
 
 
             return {
-                msg: 'This role has been invalidated! Please contact admin!'
+                error: 'This role has been voided! Please contact admin!'
             }
         } else {
             const res = await this.sysRoleModel.updateOne({ _id}, {
@@ -176,11 +175,11 @@ export class SysRoleService {
                     createdAt: new Date()
                 })
                 return {
-                  msg: 'Invalidate successfully!'
+                  message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                  error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }
@@ -193,7 +192,7 @@ export class SysRoleService {
             return data
         } else {
             return {
-                msg: 'This role has been invalidated! Please contact admin!'
+                error: 'This role has been invalidated! Please contact admin!'
             }
         }
     }

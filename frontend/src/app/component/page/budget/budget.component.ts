@@ -142,9 +142,9 @@ export class BudgetComponent {
         console.log(this.editForm)
         const res = await postApiWithAuth(url, this.editForm)
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadBudgetLists()
@@ -163,6 +163,8 @@ export class BudgetComponent {
                 budgetStatus: '',
                 remark: '',
             }
+            
+            this.okText = 'Create'
         }
     }
 
@@ -194,10 +196,13 @@ export class BudgetComponent {
 
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-        this.loadBudgetLists()
-        this.closeRemoveDialog()
-        
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadBudgetLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
     dateFormat(data: string) {
@@ -206,10 +211,14 @@ export class BudgetComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/base/budget/one/${id}`)
-        this.editForm = res
-        this.department = res.department
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.editForm = res
+            this.department = res.department
+            this.okText = 'Update'
+            this.showDialog()
+        }
     }
 
     excelFileSetting: any = {
