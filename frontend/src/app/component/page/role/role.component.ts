@@ -108,14 +108,13 @@ export class RoleComponent implements OnInit{
         const url = this.editForm._id === '' ? '/sys/role/create' : `/sys/role/update`
 
         const res = await postApiWithAuth(url, {
-            
             ...this.editForm,
             ...this.editForm._id ? { _id: this.editForm._id} : {},
         })
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.editForm = {
                 _id: '',
                 code: '',
@@ -166,15 +165,15 @@ export class RoleComponent implements OnInit{
 
     async handleRemove() {
         const url = `/sys/role/remove/${this.handleRemoveId}`
-
         const res: any = await getApiWithAuth(url)
 
-        if (res.msg) {
-            this.message.info(res.msg)
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadSysRoleLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
         }
-        this.loadSysRoleLists()
-        this.closeRemoveDialog()
-        
     }
 
 
@@ -184,9 +183,13 @@ export class RoleComponent implements OnInit{
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/sys/role/one/${id}`)
-        this.editForm = res
-        this.okText = 'Update'
-        this.showDialog()
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = res
+            this.okText = 'Update'
+            this.showDialog()
+        }
     }
 
     selectedMenusIds: any = []
@@ -202,15 +205,16 @@ export class RoleComponent implements OnInit{
 
 
     async openMenuDialog(id: string) {
-        this.menuDialog = true
         this.handleId = id
-
         const url = `/sys/role/one/${id}`
-
         const res: any = await getApiWithAuth(url)
 
-        this.selectedMenusIds = res.menuIds
-     //   this.defaultMenusIds = res.menuIds
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.selectedMenusIds = res.menuIds
+            this.menuDialog = true
+        }
     }
 
     closeMenuDialog() {
@@ -222,9 +226,9 @@ export class RoleComponent implements OnInit{
             id: this.handleId,
             menuIds: this.selectedMenusIds
         })
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || !res.error) {
             this.handleMenuItemsIds = []
             this.handleId = ''
 
