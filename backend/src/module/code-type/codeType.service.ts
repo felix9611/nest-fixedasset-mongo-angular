@@ -35,7 +35,7 @@ export class CodeTypeService {
             })
 
             return {
-                msg: 'This code type already exist!'
+                error: 'This code type already exist!'
             }
         } else {
             const finalData = {
@@ -95,7 +95,7 @@ export class CodeTypeService {
             })
 
             return {
-                msg: 'This code type has been invalidated! Please contact admin!'
+                error: 'This code type has been voided! Please contact admin!'
             }
         }
     }
@@ -107,7 +107,7 @@ export class CodeTypeService {
             return data
         } else {
             return {
-                msg: 'This code type has been invalidated! Please contact admin!'
+                error: 'This code type has been voided! Please contact admin!'
             }
         }
     }
@@ -129,7 +129,7 @@ export class CodeTypeService {
             })
 
             return {
-                msg: 'This code type has been invalidated! Please contact admin!'
+                error: 'This code type has been voided! Please contact admin!'
             }
         } else {
             const res = await this.codeTypeModel.updateOne({ _id}, {
@@ -152,11 +152,11 @@ export class CodeTypeService {
                 })
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
         }
