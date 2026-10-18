@@ -37,11 +37,10 @@ export class AssetListService {
         const res: any = await this.assetListModel.findOne({ _id }).exec()
         if (res?.status === 0) {
             return {
-                msg: 'This asset maybe voided! Please contact admin!'
+                error: 'This asset maybe voided! Please contact admin!'
             }
         } else {
             res.assetListFiles = await this.getListFiles(_id)
-
             return res
         }
     }
@@ -73,7 +72,7 @@ export class AssetListService {
             })
 
             return {
-                msg: 'This asset name already exist! Please check again!'
+                error: 'This asset name already exist! Please check again!'
             }
         } else {
             const assetCodeNew = await this.createNewAssetCode()
@@ -114,7 +113,7 @@ export class AssetListService {
                 return res
             } else {
                 return {
-                    msg: 'Oooops! Something wrong, please try again!'
+                    error: 'Oooops! Something wrong, please try again!'
                 }
             }
         }
@@ -161,7 +160,7 @@ export class AssetListService {
                 return res
             } else {
                 return {
-                    msg: 'Oooops! Something wrong, please try again!'
+                    error: 'Oooops! Something wrong, please try again!'
                 }
             }
 
@@ -176,7 +175,7 @@ export class AssetListService {
             })
 
             return {
-                msg: 'This asset item may be invalidated or not exist! Please contact admin!'
+                error: 'This asset item may be invalidated or not exist! Please contact admin!'
             }
         }
     }
@@ -197,7 +196,7 @@ export class AssetListService {
             })
 
             return {
-                msg: 'This budget has been invalidated! Please contact admin!'
+                error: 'This asset has been voided! Please contact admin!'
             }
         } else {
             await this.assetListModel.updateOne({ _id}, {
@@ -219,7 +218,7 @@ export class AssetListService {
             })
 
             return {
-              msg: 'Invalidate successfully!'
+                message: 'Invalidate successfully!'
             }
         }
     }
@@ -505,7 +504,7 @@ export class AssetListService {
     
                 return {
                     finished: true,
-                    msg: 'Void successfully!'
+                    msg: 'Remove successfully!'
                 }
             }
         } else {
@@ -521,7 +520,7 @@ export class AssetListService {
             })
 
             return {
-                msg: 'This file has been void! Please contact admin!'
+                error: 'This file has been removed! Please contact admin!'
             }
         }
     }

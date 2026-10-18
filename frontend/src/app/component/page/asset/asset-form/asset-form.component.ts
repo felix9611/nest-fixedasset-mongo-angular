@@ -203,8 +203,12 @@ export class AssetFormComponent implements OnInit {
     }
 
     async getOne() {
-        this.editForm = await getApiWithAuth(`/asset/asset-list/one/${ this.theId}`)
-        console.log(this.editForm, 'k')
+        const result = await getApiWithAuth(`/asset/asset-list/one/${ this.theId}`)
+        if (result.error) {
+            this.message.error(result.error)
+        } else {
+            this.editForm = result
+        }
     }
 
     typeLists: any[] = []
@@ -269,11 +273,13 @@ export class AssetFormComponent implements OnInit {
 
         const res = await postApiWithAuth(url, this.editForm)
 
-        if (!res.msg) {
+        if (!res.error) {
             this.message.info('Data save successfully!')
             timer(2500).subscribe(() => {
                 this.routeTo.navigate(['/asset-list'])
             })
+        } else {
+            this.message.error(res.error)
         }
     }
 
