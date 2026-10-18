@@ -50,7 +50,7 @@ export class SysUserService {
 
     } else {
       return {
-        msg: 'Key not match! Please contact admin!'
+        error: 'Key not match! Please contact admin!'
       }
     }
 
@@ -76,7 +76,7 @@ export class SysUserService {
 
     if (checkData?.status === 0) {
       return {
-        msg: 'This user has been invalidated! Please contact admin!'
+        error: 'This user has been voided! Please contact admin!'
       }
     } else {
       const res = await this.sysUserModel.updateOne({ _id}, {
@@ -86,11 +86,11 @@ export class SysUserService {
 
       if (res.modifiedCount === 1) {
         return {
-          msg: 'Invalidate successfully!'
+          message: 'Voided successfully!'
         }
       } else {
         return {
-          msg: 'Ooops! Something went wrong! Please try again!'
+          message: 'Ooops! Something went wrong! Please try again!'
         }
       }
     }
@@ -107,18 +107,18 @@ export class SysUserService {
       if (res.modifiedCount === 1) {
         return {
           renew: true,
-          msg: 'Renew password successfully!'
+          message: 'Renew password successfully!'
         }
       } else {
         return {
           renew: false,
-          msg: 'Ooops! Something went wrong! Please try again!'
+          error: 'Ooops! Something went wrong! Please try again!'
         }
       }
     } else {
       return {
         renew: false,
-        msg: 'This user has been invalidated or does not exist! Please contact admin!'
+        error: 'This user has been invalidated or does not exist! Please contact admin!'
       }
     }
   }
