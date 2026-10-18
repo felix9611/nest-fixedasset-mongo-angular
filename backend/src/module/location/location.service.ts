@@ -34,7 +34,7 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location already exist!'
+                error: 'This location already exist!'
             }
         } else {
             const finalData = {
@@ -94,7 +94,7 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                error: 'This location has been voided! Please contact admin!'
             }
         }
     }
@@ -106,7 +106,7 @@ export class LocationService {
             return data
         } else {
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                error: 'This location has been voided! Please contact admin!'
             }
         }
     }
@@ -127,30 +127,30 @@ export class LocationService {
             })
 
             return {
-                msg: 'This location has been invalidated! Please contact admin!'
+                error: 'This location has been voided! Please contact admin!'
             }
         } else {
-                await this.locationModel.updateOne({ _id}, {
+            await this.locationModel.updateOne({ _id}, {
+                status: 0,
+                 updateAt: new Date()
+            }).exec()
+        
+            await this.actionRecordService.saveRecord({
+                actionName: 'Void Location',
+                actionMethod: 'GET',
+                actionFrom: 'Location',
+                actionData: {
+                    _id,
                     status: 0,
                     updateAt: new Date()
-                }).exec()
-        
-                await this.actionRecordService.saveRecord({
-                    actionName: 'Void Location',
-                    actionMethod: 'GET',
-                    actionFrom: 'Location',
-                    actionData: {
-                        _id,
-                        status: 0,
-                        updateAt: new Date()
-                    },
-                    actionSuccess: 'Success',
-                    createdAt: new Date()
-                })
+                },
+                actionSuccess: 'Success',
+                createdAt: new Date()
+            })
 
-                return {
-                  msg: 'Invalidate successfully!'
-                }
+            return {
+                message: 'Invalidate successfully!'
+            }
 
         }
     }
