@@ -21,7 +21,7 @@ export class RepairRecordService {
         const data = await this.repairRecordModel.findOne({ _id}).exec()
         if (data?.status === 0) {
             return {
-                msg: 'Oooops! This record has been removed!'
+                error: 'Oooops! This record has been removed!'
             }
         } else {
             return data
@@ -33,7 +33,7 @@ export class RepairRecordService {
 
         const checkAsset: any = await this.assetListService.getById(assetId) 
 
-        if (checkAsset.msg) {
+        if (checkAsset.error) {
 
             await this.actionRecordService.saveRecord({
                 actionName: 'Create Repair Record',
@@ -45,7 +45,7 @@ export class RepairRecordService {
             })
 
             return {
-                msg: checkAsset.msg
+                error: checkAsset.error
             }
         } else {
             const finalData = {
@@ -54,8 +54,6 @@ export class RepairRecordService {
                 createdAt: new Date(),
                 status: 1
             }
-
-            
 
             const create = new this.repairRecordModel(finalData)
             const res = await create.save()
@@ -71,10 +69,13 @@ export class RepairRecordService {
 
                 return {
                     finish: true,
-                    msg: 'Save Success!'
+                    message: 'Save Success!'
                 }
             } else {
-                msg: 'Ooops! Something went wrong! Please try again!'
+                return {
+                    finish: false,
+                    error: 'Ooops! Something went wrong! Please try again!'
+                }
             }
         }
     }
@@ -114,7 +115,7 @@ export class RepairRecordService {
             })
 
             return {
-                msg: 'This record has been invalidated! Please contact admin!'
+                error: 'This record has been voided! Please contact admin!'
             }
         }
 
@@ -137,7 +138,7 @@ export class RepairRecordService {
             })
 
             return {
-                msg: 'This record has been invalidated! Please contact admin!'
+                error: 'This record has been invalidated! Please contact admin!'
             }
          } else {
             const res = await this.repairRecordModel.updateOne({ _id}, {
@@ -161,11 +162,11 @@ export class RepairRecordService {
 
 
                 return {
-                  msg: 'Invalidate successfully!'
+                    message: 'Invalidate successfully!'
                 }
             } else {
                 return {
-                  msg: 'Ooops! Something went wrong! Please try again!'
+                    error: 'Ooops! Something went wrong! Please try again!'
                 }
             }
          }

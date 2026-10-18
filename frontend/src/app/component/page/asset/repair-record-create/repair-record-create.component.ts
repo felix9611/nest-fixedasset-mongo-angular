@@ -132,13 +132,13 @@ export class RepairRecordCreateComponent implements OnInit {
 
         const res = await postApiWithAuth('/asset/repair-record/create', finalForm)
         
-        if (res.finish) {
-            this.message.info(res.msg)
+        if (res.finish === true) {
+            this.message.info(res.message)
             timer(2500).subscribe(() => {
                 this.closeDialog()
             })
         } else {
-            this.message.error(res.msg)
+            this.message.error(res.error)
         }
     }
 

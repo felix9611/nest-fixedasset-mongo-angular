@@ -118,7 +118,6 @@ export class CodeTypeComponent {
                 type: ''
             }
 
-            
             this.okText = 'Create'
         }
     }

@@ -147,11 +147,18 @@ export class RepairRecordListComponent {
 
     editTitle: string = ''
     async openEdit(data: any) {
-        this.editFormDialog = true
-        this.editTitle = `Edit Repair Record (Code: ${data.assetlist.assetCode})`
         const id = data._id
         const getUrl = `/asset/repair-record/one/${id}`
-        this.editForm = await getApiWithAuth(getUrl)
+        const res = await getApiWithAuth(getUrl)
+
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.editForm = res
+            this.okText = 'Update'
+            this.editFormDialog = true
+            this.editTitle = `Edit Repair Record (Code: ${data.assetlist.assetCode})`
+        }
     }
 
     async goToSave() {
@@ -163,7 +170,7 @@ export class RepairRecordListComponent {
             this.loadRepairRecordLists()
             this.closeEditDialog()
         } else {
-            this.message.error(res.msg)
+            this.message.error(res.error)
         }
     }
 
@@ -171,13 +178,16 @@ export class RepairRecordListComponent {
         this.editFormDialog = false
     }
 
-    async goToWriteOff() {
+    async goToDelete() {
         const res = await getApiWithAuth(`/asset/repair-record/void/${this.handleId}`)
 
-        this.message.info(res.msg)
-
-        this.closeRemoveDialog()
-        this.loadRepairRecordLists()
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.message.info(res.message)
+            this.closeRemoveDialog()
+            this.loadRepairRecordLists()
+        }
     }
 
     excelFileSetting: any = {
