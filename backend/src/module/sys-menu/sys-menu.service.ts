@@ -45,11 +45,9 @@ export class SysMenuService {
       })
 
       return {
-          msg: 'This System Menu already exist!'
+        error: 'This System Menu already exist!'
       }
     } else {
-
-
       const finalData = {
         ..._data,
         name,
@@ -88,7 +86,7 @@ export class SysMenuService {
       })
 
       return {
-          msg: 'This System Menu has been invalidated! Please contact admin!'
+        error: 'This System Menu has been voided! Please contact admin!'
       }
     } else {
       const finalData = {
@@ -116,7 +114,7 @@ export class SysMenuService {
       return data
     } else {
       return {
-        msg: 'This System Menu has been invalidated! Please contact admin!'
+        error: 'This System Menu has been voided! Please contact admin!'
       }
     }
   }
@@ -138,7 +136,7 @@ export class SysMenuService {
         })
 
         return {
-            msg: 'This System Menu has been invalidated! Please contact admin!'
+            error: 'This System Menu has been voided! Please contact admin!'
         }
     } else {
         const res = await this.sysMenuModel.updateOne({ _id}, {
@@ -162,11 +160,11 @@ export class SysMenuService {
 
 
             return {
-              msg: 'Invalidate successfully!'
+              message: 'Invalidate successfully!'
             }
         } else {
             return {
-              msg: 'Ooops! Something went wrong! Please try again!'
+              error: 'Ooops! Something went wrong! Please try again!'
             }
         }
     }
