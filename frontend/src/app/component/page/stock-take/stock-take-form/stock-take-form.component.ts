@@ -113,7 +113,12 @@ export class StockTakeFormComponent implements OnInit {
     }
 
     async getOne() {
-        this.editForm = await getApiWithAuth(`/asset/stock-take/one/${ this.theId}`)    
+        const res = await getApiWithAuth(`/asset/stock-take/one/${ this.theId}`)    
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.editForm = res
+        }
     }
 
     placeLists: any[] = []
@@ -124,9 +129,9 @@ export class StockTakeFormComponent implements OnInit {
     async updateForm() {
         const res = await postApiWithAuth('/asset/stock-take/update-form', this.editForm)
         if (res.finished) {
-            this.message.success(res.msg)
+            this.message.success(res.message)
         } else {
-            this.message.error(res.msg)
+            this.message.error(res.error)
         }
     }
 
