@@ -61,12 +61,12 @@ export class WriteOffService {
                 })
 
                 return {
-                    msg: 'End the write off process!',
+                    message: 'End the write off process!',
                     finish: true
                 }
             } else {
                 return {
-                    msg: 'Oooops! Maybe something wrong, please try again!'
+                    error: 'Oooops! Maybe something wrong, please try again!'
                 }
             }
 
@@ -83,7 +83,7 @@ export class WriteOffService {
             })
 
             return {
-                msg: 'This asset already write off or invalidate!'
+                error: 'This asset already write off or voided!'
             }
         }
     }

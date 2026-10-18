@@ -206,13 +206,13 @@ export class WriteOffFormComponent implements OnInit {
 
         const res = await postApiWithAuth('/asset/write-off/create', finalForm)
         
-        if (res.finish) {
-            this.message.info(res.msg)
+        if (res.finish === true) {
+            this.message.info(res.message)
             timer(2500).subscribe(() => {
                 this.backTo()
             })
         } else {
-            this.message.error(res.msg)
+            this.message.error(res.error)
         }
     }
 
