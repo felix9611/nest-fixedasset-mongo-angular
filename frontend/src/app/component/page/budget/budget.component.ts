@@ -163,6 +163,8 @@ export class BudgetComponent {
                 budgetStatus: '',
                 remark: '',
             }
+            
+            this.okText = 'Create'
         }
     }
 

@@ -166,6 +166,8 @@ export class UsersComponent {
                 email: '',
                 roles: []
             }
+
+            this.okText = 'Create'
         }
     }
 

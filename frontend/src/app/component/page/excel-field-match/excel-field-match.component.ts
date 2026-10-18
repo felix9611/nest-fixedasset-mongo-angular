@@ -115,6 +115,9 @@ export class ExcelFieldMatchComponent {
                 functionType: '',
                 fieldLists: []
             }
+
+            
+            this.okText = 'Create'
         }
     }
 
