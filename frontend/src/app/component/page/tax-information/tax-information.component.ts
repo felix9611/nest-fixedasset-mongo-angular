@@ -146,16 +146,15 @@ export class TaxInformationComponent {
     async submitForm() {
         const url = this.editForm._id === '' ? '/base/tax-information/create' : `/base/tax-information/update`
 
-        console.log(this.editForm)
         const res = await postApiWithAuth(url, {
             ...this.editForm,
             taxRate: this.editForm.taxRate / 100,
             importRate: this.editForm.importRate ? this.editForm.importRate / 100 : 0
         })
 
-        if (res.msg) {
-            this.message.error(res.msg)
-        } else if (res.matchedCount === 1 || !res.msg) {
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (res.matchedCount === 1 || res.message) {
             this.message.success('Save successful!')
             this.closeDialog()
             this.loadTaxInfoLists()
@@ -214,13 +213,15 @@ export class TaxInformationComponent {
 
     async handleRemove() {
         const url = `/base/tax-information/remove/${this.handleRemoveId}`
-
         const res: any = await getApiWithAuth(url)
 
-        this.message.info(res.msg)
-        this.loadTaxInfoLists()
-        this.closeRemoveDialog()
-        
+        if (res.message) {
+            this.message.info(res.message)
+            this.loadTaxInfoLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
 
@@ -230,13 +231,17 @@ export class TaxInformationComponent {
 
     async getOneData(id:string) {
         const res = await getApiWithAuth(`/base/tax-information/one/${id}`)
-        this.editForm = {
-            ...res,
-            taxRate: res.taxRate * 100,
-            importRate: res.importRate * 100
+        if (res.error) {
+            this.message.error(res.error)
+        } else if (!res.error) {
+            this.editForm = {
+                ...res,
+                taxRate: res.taxRate * 100,
+                importRate: res.importRate * 100
+            }
+            this.department = res.department
+            this.okText = 'Update'
+            this.showDialog()
         }
-        this.department = res.department
-        this.okText = 'Update'
-        this.showDialog()
     }
 }
