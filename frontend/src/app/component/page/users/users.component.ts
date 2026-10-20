@@ -17,6 +17,7 @@ import { Observable, Observer, Subscription } from 'rxjs'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { findMenuItem } from '../../tool-function'
 import { UserStoreService } from '../../../../state/user.service'
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 
 @Component({
     // selector: 'app-footer',
@@ -31,7 +32,8 @@ import { UserStoreService } from '../../../../state/user.service'
         NzInputModule, 
         NzPaginationModule,
         NzUploadModule,
-        NzSelectModule
+        NzSelectModule,
+        NzCheckboxModule
     ],
     templateUrl: './users.component.html',
     styleUrl: './users.component.css',
@@ -61,6 +63,12 @@ export class UsersComponent {
         }
     }
 
+    placeLists: any[] = []
+    async loadLocationList() {
+        const res = await getApiWithAuth('/base/location/getAll')
+        this.placeLists = res
+    }
+
     userRightInside: any = {
         read: false,
         write: false,
@@ -78,7 +86,7 @@ export class UsersComponent {
         _id: '',
         username: '',
         avatarBase64: '',
-        deptId: 0,
+        deptIds: [],
         email: '',
         roles: [],
     }
@@ -127,6 +135,7 @@ export class UsersComponent {
         this.loadUserLists()
         this.loadDeptLists()
         this.loadRoleLists()
+        this.loadLocationList()
     }
 
     async loadRoleLists() {
@@ -162,7 +171,7 @@ export class UsersComponent {
                 _id: '',
                 username: '',
                 avatarBase64: '',
-                deptId: 0,
+                deptIds: [],
                 email: '',
                 roles: []
             }

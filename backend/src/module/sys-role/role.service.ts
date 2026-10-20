@@ -239,7 +239,7 @@ export class SysRoleService {
     }
 
     async loadRoleWithMenu(roleIds: any) {
-        const objectIds = roleIds.map(id => {
+        const objectIds = roleIds.map((id: string) => {
             if (id && Types.ObjectId.isValid(id)) {
                 return new Types.ObjectId(id);
             }

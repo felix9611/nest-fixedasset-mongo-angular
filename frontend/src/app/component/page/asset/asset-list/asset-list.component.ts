@@ -46,6 +46,7 @@ import { DownloadExcelDataComponent } from '../../../components/download-excel-c
 })
 export class AssetListComponent {
     private rightSubscription: Subscription
+    private userRightSubscription: Subscription
     constructor(
         private routeTo: Router,
         private userStoreService: UserStoreService
@@ -63,13 +64,28 @@ export class AssetListComponent {
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
+
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.placeLists = data.locations
+                this.deptLists = data.departments
+                this.searchForm.placeIds = data.placeIds
+                this.searchForm.deptIds = data.deptIds
+            }
+        })
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
         }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
     }
+
+    superAdmin: boolean = false
 
     searchForm: any = {
         page: 1,
@@ -104,12 +120,16 @@ export class AssetListComponent {
 
     deptLists: any[] = []
     async loadDeptList() {
-        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        if (this.superAdmin === true) {
+            this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        }
     }
 
     placeLists: any[] = []
     async loadLocationList() {
-        this.placeLists = await getApiWithAuth('/base/location/getAll')
+        if (this.superAdmin === true) {
+            this.placeLists = await getApiWithAuth('/base/location/getAll')
+        }
     }
 
     async loadAssetListLists() {

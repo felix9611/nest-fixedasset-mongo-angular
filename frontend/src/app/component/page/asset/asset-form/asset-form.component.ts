@@ -56,6 +56,7 @@ import { UserStoreService } from '../../../../../state/user.service'
 })
 export class AssetFormComponent implements OnInit {
     private rightSubscription: Subscription
+    private userRightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
@@ -76,14 +77,26 @@ export class AssetFormComponent implements OnInit {
                  // keep default value
             }
         })
+
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.placeLists = data.locations
+                this.deptLists = data.departments
+            }
+        })
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
         }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
     }
 
+    superAdmin: boolean = false
     userRightInside: any = {
         read: false,
         write: false,
@@ -218,12 +231,16 @@ export class AssetFormComponent implements OnInit {
 
     deptLists: any[] = []
     async loadDeptList() {
-        this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        if (this.superAdmin === true) {
+            this.deptLists = await getApiWithAuth('/sys/department/getAll')
+        }
     }
 
     placeLists: any[] = []
     async loadLocationList() {
-        this.placeLists = await getApiWithAuth('/base/location/getAll')
+        if (this.superAdmin === true) {
+            this.placeLists = await getApiWithAuth('/base/location/getAll')
+        }
     }
 
     vendorLists: any[] = []

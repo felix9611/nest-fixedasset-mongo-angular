@@ -39,6 +39,7 @@ import { Subscription } from 'rxjs'
 })
 export class StockTakeListComponent implements OnInit {
     private rightSubscription: Subscription
+   private userRightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private routeTo: Router,
@@ -56,11 +57,21 @@ export class StockTakeListComponent implements OnInit {
                  // keep default value
             }
         })
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.searchForm.placeIds = data.placeIds
+                this.placeLists = data.locations
+            }
+        })
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
+        }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
         }
     }
 
@@ -68,6 +79,8 @@ export class StockTakeListComponent implements OnInit {
         this.loadLocationList()
         this.loadStockTakeLists()
     }
+
+    superAdmin: boolean = false
 
     userRightInside: any = {
         read: false,
@@ -110,7 +123,9 @@ export class StockTakeListComponent implements OnInit {
 
     placeLists: any[] = []
     async loadLocationList() {
-        this.placeLists = await getApiWithAuth('/base/location/getAll')
+        if (this.superAdmin === true) {
+            this.placeLists = await getApiWithAuth('/base/location/getAll')
+        }
     }
 
     async submitForm() {
