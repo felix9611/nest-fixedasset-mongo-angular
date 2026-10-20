@@ -42,11 +42,13 @@ export class SysUserService {
           password: newPasswordString,
           avatarBase64: userData.avatarBase64,
           email: userData.email,
-          deptId: userData.deptId,
+          deptIds: userData.deptIds,
           placeIds: userData.placeIds,
           roles: userData.roles,
           status: 1,
-          createdAt: new Date()
+          createdAt: new Date(),
+          updateAt: new Date(),
+          superAdmin: userData.superAdmin
         }
 
         return await this.sysUserModel.create(finalData)

@@ -8,7 +8,7 @@ export interface CreateUserDto {
     username: string
     password?: string
     avatarBase64?: string
-    deptId?: string[]
+    deptIds?: string[]
     email: string
     roles?: string[],
     placeIds?: string[]
