@@ -17,8 +17,14 @@ export class SysUser extends BaseSchema {
     @Prop({ type: SchemaTypes.String })
     avatarBase64?: string
 
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    superAdmin!: boolean
+
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
-    deptId!: Types.ObjectId
+    deptIds!: Types.ObjectId[]
+
+    @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
+    placeIds!: Types.ObjectId[]
 
     @Prop({ type: SchemaTypes.String })
     email?: string

@@ -8,9 +8,11 @@ export interface CreateUserDto {
     username: string
     password?: string
     avatarBase64?: string
-    deptId?: number
+    deptId?: string[]
     email: string
-    roles?: string[]
+    roles?: string[],
+    placeIds?: string[]
+    superAdmin?: boolean
 }
 
 export interface CreateUserRequestDto {

@@ -35,7 +35,7 @@ export class AuthService {
         msg: 'Password not match!'
       }
     } else {
-      const payload = { sub: user._id, username: user.username, departmentId: user.deptId }
+      const payload = { sub: user._id, username: user.username, departmentIds: user.deptIds, placeIds: user.placeIds, roles: user.roles, superAdmin: user.superAdmin }
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
         accessToken: await this.jwtService.signAsync(payload),

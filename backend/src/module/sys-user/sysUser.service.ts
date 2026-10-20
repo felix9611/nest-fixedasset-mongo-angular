@@ -10,6 +10,7 @@ import { SysRole } from '../sys-role/role.schame'
 import { SysRoleService } from '../sys-role/role.service'
 import { Department } from '../department/department.schame'
 import { LoginRecord } from './login-reocrd.schame'
+import { Location } from '../location/location.schame'
 
 export type User = any
 
@@ -18,6 +19,8 @@ export class SysUserService {
   constructor(
     @InjectModel(SysUser.name) private sysUserModel: Model<SysUser>,
     @InjectModel(LoginRecord.name) private loginRecordModel: Model<LoginRecord>,
+    @InjectModel(Department.name) private departmentModel: Model<Department>,
+    @InjectModel(Location.name) private locationModel: Model<Location>,
     private sysRoleService: SysRoleService
   ) {}
 
@@ -40,6 +43,7 @@ export class SysUserService {
           avatarBase64: userData.avatarBase64,
           email: userData.email,
           deptId: userData.deptId,
+          placeIds: userData.placeIds,
           roles: userData.roles,
           status: 1,
           createdAt: new Date()
@@ -127,6 +131,13 @@ export class SysUserService {
     const answer: any = await this.sysUserModel.findOne({ _id}).exec()
 
     const roleLists = await this.sysRoleService.getRolelistsByIds(answer.roles)
+
+    let departments: any[] = []
+    let locations: any[] = []
+
+    departments = await this.departmentModel.find({ _id: { $in: answer.deptIds }, status: 1 }).exec()
+    locations = await this.locationModel.find({ _id: { $in: answer.placeIds }, status: 1 }).exec()
+
     return {
       _id: answer?._id,
       username: answer?.username,
@@ -134,9 +145,12 @@ export class SysUserService {
       avatarBase64: answer?.avatarBase64,
       lastLogin: answer?.lastLogin,
       roles: answer?.roles,
-      deptId: answer?.deptId,
-      department: answer?.department,
-      roleLists
+      roleLists,
+      deptIds: answer?.deptIds,
+      departments,
+      placeIds: answer?.placeIds,
+      locations,
+      superAdmin: answer?.superAdmin
     }
 
   }
