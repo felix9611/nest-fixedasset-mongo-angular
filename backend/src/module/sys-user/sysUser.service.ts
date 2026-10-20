@@ -147,9 +147,9 @@ export class SysUserService {
       roles: answer?.roles,
       roleLists,
       deptIds: answer?.deptIds,
-      departments,
+      departments: departments,
       placeIds: answer?.placeIds,
-      locations,
+      locations:locations,
       superAdmin: answer?.superAdmin
     }
 
@@ -165,17 +165,29 @@ export class SysUserService {
         }
       },
       {
-          $lookup: {
-            from: 'departments', // Ensure correct collection name
-            let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
-            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
-            as: 'department'
-          }
+        $lookup: {
+          from: 'departments', // Make sure this matches your DB collection name
+          let: { deptIds: { $map: { input: '$deptIds', as: 'deptIds', in: { $toObjectId: '$$deptIds' } } } }, // Convert strings to ObjectIds
+          pipeline: [
+            { $match: { $expr: { $in: ['$_id', '$$deptIds'] } } }
+          ],
+          as: 'departments'
+        }
+      },
+      {
+        $lookup: {
+          from: 'locations', // Make sure this matches your DB collection name
+          let: { placeIds: { $map: { input: '$placeIds', as: 'placeIds', in: { $toObjectId: '$$placeIds' } } } }, // Convert strings to ObjectIds
+          pipeline: [
+            { $match: { $expr: { $in: ['$_id', '$$placeIds'] } } }
+          ],
+          as: 'locations'
+        }
       },
       {
         $lookup: {
           from: 'sysroles', // Make sure this matches your DB collection name
-          let: { roleIds: { $map: { input: '$roles', as: 'roleId', in: { $toObjectId: '$$roleId' } } } }, // Convert strings to ObjectIds
+          let: { roleIds: { $map: { input: '$roles', as: 'roleIds', in: { $toObjectId: '$$roleIds' } } } }, // Convert strings to ObjectIds
           pipeline: [
             { $match: { $expr: { $in: ['$_id', '$$roleIds'] } } }
           ],
@@ -194,7 +206,31 @@ export class SysUserService {
   }
 
   async findOneUserAllData(username: string) {
-    return await this.sysUserModel.findOne({ username }).exec()
+    const answer: any = await this.sysUserModel.findOne({ username }).exec()
+
+    const roleLists = await this.sysRoleService.getRolelistsByIds(answer.roles)
+
+    let departments: any[] = []
+    let locations: any[] = []
+
+    departments = await this.departmentModel.find({ _id: { $in: answer.deptIds }, status: 1 }).exec()
+    locations = await this.locationModel.find({ _id: { $in: answer.placeIds }, status: 1 }).exec()
+
+    return {
+      _id: answer?._id,
+      username: answer?.username,
+      email: answer?.email,
+      avatarBase64: answer?.avatarBase64,
+      lastLogin: answer?.lastLogin,
+      roles: answer?.roles,
+      roleLists,
+      deptIds: answer?.deptIds,
+      departments: departments,
+      placeIds: answer?.placeIds,
+      locations:locations,
+      superAdmin: answer?.superAdmin,
+      password: answer?.password
+    }
   }
 
   async listUser(request: ListUserRequestDto) {

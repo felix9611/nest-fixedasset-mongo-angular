@@ -30,10 +30,14 @@ export class HeaderComponent implements OnInit{
         username: '',
         accessToken: '',
         avatarBase64: '',
-        deptId: 0,
         roles: [],
         roleLists: [],
-        email: '', 
+        email: '',
+        loginRecords: [],
+        placeIds: [],
+        locations: [],
+        deptIds: [],
+        department: [],
     }
 
     ngOnInit() {
