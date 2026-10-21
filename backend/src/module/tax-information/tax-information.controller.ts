@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { TaxInformationService } from './tax-information.service'
 import { UpdateDtoTaxInformation, TaxInformationListSearchDto, TaxInformationImportDto, TaxInformationBody, TaxInformationCreateBody, TaxInformationUpdateBody, TaxInformationListQuery, TaxInformationListQueryRes } from './tax-information.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ReturnMsg } from 'src/tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { TaxInformation } from './tax-information.schame'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('base/tax-information')
 export class TaxInformationController {
@@ -16,8 +17,17 @@ export class TaxInformationController {
   @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
   @Post('create')
   @UseGuards(AuthGuard)
-  async create(@Body() createData: UpdateDtoTaxInformation) {
-    return this.taxInformationService.create(createData)
+  async create(@Body() createData: UpdateDtoTaxInformation, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.taxInformationService.create(createData)
+    } else {
+      throw new HttpException(
+        {
+          message: 'Access denied'
+        },
+        HttpStatus.FORBIDDEN,
+      )
+    }
   }
 
   @ApiOperation({ summary: 'Update Tax Information' })
@@ -25,14 +35,23 @@ export class TaxInformationController {
   @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
   @Post('update')
   @UseGuards(AuthGuard)
-  async update(@Body() createData: UpdateDtoTaxInformation) {
-    return this.taxInformationService.update(createData)
+  async update(@Body() createData: UpdateDtoTaxInformation, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.taxInformationService.update(createData)
+    } else {
+      throw new HttpException(
+        {
+          message: 'Access denied'
+        },
+        HttpStatus.FORBIDDEN,
+      )
+    }
   }
 
   @ApiOperation({ summary: 'Get by id' })
   @ApiResponse({ description: 'If save successful', status: 201, type: TaxInformationBody })
   @Get('one/:id')
-  async getOneById(@Param('id') id: string) {
+  async getOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
     return await this.taxInformationService.getOneById(id)
   }
 
@@ -66,8 +85,17 @@ export class TaxInformationController {
   @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
   @Get('remove/:id')
   @UseGuards(AuthGuard)
-  async remove(@Param('id') id: string) {
-    return this.taxInformationService.voidOne(id)
+  async remove(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.taxInformationService.voidOne(id)
+    } else {
+      throw new HttpException(
+        {
+          message: 'Access denied'
+        },
+        HttpStatus.FORBIDDEN,
+      )
+    }
   }
 
   @ApiOperation({ summary: 'Batch to Create Tax Information' })
@@ -76,7 +104,16 @@ export class TaxInformationController {
   @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
   @Post('batch-create')
   @UseGuards(AuthGuard)
-  async importData(@Body() importData: TaxInformationImportDto[]) {
-    return await this.taxInformationService.importData(importData)
+  async importData(@Body() importData: TaxInformationImportDto[], @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.taxInformationService.importData(importData)
+    } else {
+      throw new HttpException(
+        {
+          message: 'Access denied'
+        },
+        HttpStatus.FORBIDDEN,
+      )
+    }
   }
 }
