@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs'
 import { UploadDialogComponent } from '../../../components/upload-dialog-component/upload-dialog-component.component'
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
+import { NzMessageService } from 'ng-zorro-antd/message'
 
 @Component({
     // selector: 'app-footer',
@@ -49,7 +50,8 @@ export class AssetListComponent {
     private userRightSubscription: Subscription
     constructor(
         private routeTo: Router,
-        private userStoreService: UserStoreService
+        private userStoreService: UserStoreService,
+        private message: NzMessageService,
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
             const answer = findMenuItem(data, 'Asset List', 'asset-list')
@@ -133,9 +135,21 @@ export class AssetListComponent {
     }
 
     async loadAssetListLists() {
-        const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
-        this.dataLists = res.lists
-        this.totals = res.total
+        if (this.superAdmin === true) {
+            const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
+            this.dataLists = res.lists
+            this.totals = res.total
+        } else {
+            if (this.searchForm.placeIds.length === 0) {
+                this.message.error('Please select least one location')
+            } else if (this.searchForm.deptIds.length === 0) {
+                this.message.error('Please select least one department')
+            } else {
+                const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
+                this.dataLists = res.lists
+                this.totals = res.total
+            }
+        }
     }
 
     handleRomeve(id: string) {
