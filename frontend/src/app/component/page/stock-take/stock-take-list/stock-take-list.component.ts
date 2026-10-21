@@ -116,9 +116,19 @@ export class StockTakeListComponent implements OnInit {
     }
 
     async loadStockTakeLists() {
-        const res = await postApiWithAuth('/asset/stock-take/list', this.searchForm)
-        this.dataLists = res.lists
-        this.totals = res.total
+        if (this.superAdmin === true) {
+            const res = await postApiWithAuth('/asset/stock-take/list', this.searchForm)
+            this.dataLists = res.lists
+            this.totals = res.total
+        } else {
+            if (this.searchForm.placeIds.length === 0) {
+                this.message.error('Please select least one location')
+            } else {
+                const res = await postApiWithAuth('/asset/stock-take/list', this.searchForm)
+                this.dataLists = res.lists
+                this.totals = res.total
+            }
+        }
     }
 
     placeLists: any[] = []
