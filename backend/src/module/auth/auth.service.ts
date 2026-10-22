@@ -69,7 +69,5 @@ export class AuthService {
         msg: 'Invalid token!'
       }
     }
-    
   }
-  
 }

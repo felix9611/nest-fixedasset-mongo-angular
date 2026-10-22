@@ -20,12 +20,7 @@ export class SysUserController {
         if (user.superAdmin === true) {
             return await this.userService.createUser(createUserRequest)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -38,12 +33,7 @@ export class SysUserController {
         if (user.superAdmin === true) {
             return await this.userService.updateUser(updateRequesr)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -56,12 +46,7 @@ export class SysUserController {
         if (user.username) {
             return await this.userService.updatePassword(user.username, updatePw.password)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Tabarnak! 你老味臭閪黑客'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -74,12 +59,7 @@ export class SysUserController {
         if (user.username) {
             return await this.userService.updateAvatar(user.username, update.photo)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Tabarnak! 你老味臭閪黑客'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -92,12 +72,7 @@ export class SysUserController {
         if (user.username) {
             return await this.userService.updatePassword(updatePw.username, updatePw.password)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Tabarnak! 你老味臭閪黑客'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -109,12 +84,7 @@ export class SysUserController {
         if (user.superAdmin === true) {
             return await this.userService.invalidateUser(id)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Tabarnak! 你老味臭閪黑客'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -124,8 +94,12 @@ export class SysUserController {
     @ApiResponse({ description: 'If not successful', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
-    async getUserInfoById(@Param('id') id: string) {
-        return await this.userService.getUserInfo(id)
+    async getUserInfoById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.userService.getUserInfo(id)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'List and Page' })
@@ -137,14 +111,8 @@ export class SysUserController {
         if (user.superAdmin === true) {
             return await this.userService.listUser(requestBody)
         } else {
-            throw new HttpException(
-                {
-                  message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
-        
     }
 
 }
