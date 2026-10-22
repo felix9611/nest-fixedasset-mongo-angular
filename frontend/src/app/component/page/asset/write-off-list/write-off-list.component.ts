@@ -73,6 +73,9 @@ export class WriteOffListComponent {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
         }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
     }
 
     superAdmin: boolean = false
