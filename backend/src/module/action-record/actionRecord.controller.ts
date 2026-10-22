@@ -17,12 +17,7 @@ export class ActionRecordController {
         if (user.superAdmin === true) {
             return await this.actionRecordService.listAndPage(query)
         } else {
-            throw new HttpException(
-                {
-                  message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 }
