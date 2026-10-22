@@ -20,14 +20,8 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.create(createData)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
-        
     }
 
     @ApiOperation({ summary: 'Update Location' })
@@ -39,12 +33,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.update(updateDto)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -57,12 +46,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.getOneById(id)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -74,12 +58,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.invalidate(id)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -91,12 +70,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.findAll()
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
     
@@ -109,12 +83,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.listPage(req)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -127,12 +96,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.listWithoutPage(req)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -146,14 +110,7 @@ export class LocationController {
         if (user.superAdmin === true) {
             return await this.locationService.importData(createDatas as CreateLocationDto[])
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
-        
     }
-    
 }
