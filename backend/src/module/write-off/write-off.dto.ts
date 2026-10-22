@@ -16,10 +16,10 @@ export interface CreateWriteOffRecrod {
 export interface ListWriteOffReqDto {
     page: number
     limit: number
-    placeIds?: string
-    deptIds?: string[]
-    typeIds?: string[]
-    dateRange?: string[]
+    placeIds: string[]
+    deptIds: string[]
+    typeIds: string[]
+    dateRange: string[]
 }
 
 export class CreateListWriteOffRecordBody {
