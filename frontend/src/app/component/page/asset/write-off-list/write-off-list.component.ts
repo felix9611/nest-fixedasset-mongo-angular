@@ -39,6 +39,7 @@ import { DownloadExcelDataComponent } from '../../../components/download-excel-c
 })
 export class WriteOffListComponent {
     private rightSubscription: Subscription
+    private userRightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService,
@@ -58,13 +59,26 @@ export class WriteOffListComponent {
             this.excelFileSetting.code = answer?.excelFunctionCode ?? ''
             this.preLoadExcelSetting()
         })
+
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            if (data.superAdmin !== true) {
+                this.placeLists = data.locations
+                this.searchForm.placeIds = data.placeIds
+            }
+        })
     }
 
     ngOnDestroy() {
         if (this.userStoreService.menuRole$) {
             this.rightSubscription.unsubscribe()
         }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
     }
+
+    superAdmin: boolean = false
 
     excelFileSetting: any = {
         code: ''
@@ -108,11 +122,20 @@ export class WriteOffListComponent {
         this.placeLists = await getApiWithAuth('/base/location/getAll')
     }
 
-
     async loadWriteOffLists() {
-        const res = await postApiWithAuth('/asset/write-off/list', this.searchForm)
-        this.dataLists = res.lists
-        this.totals = res.total
+        if (this.superAdmin === true) {
+            const res = await postApiWithAuth('/asset/write-off/list', this.searchForm)
+            this.dataLists = res.lists
+            this.totals = res.total
+        } else {
+            if (this.searchForm.deptIds.length === 0) {
+                this.message.error('Please select least one department')
+            } else {
+                const res = await postApiWithAuth('/asset/write-off/list', this.searchForm)
+                this.dataLists = res.lists
+                this.totals = res.total
+            }
+        }
     }
 
     handleRomeve(id: string) {

@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AssetTypeService } from './assetType.service'
 import { AssetTypeBody, AssetTypeCreateDto, AssetTypeListSearchDto, AssetTypeUpdateDto, AssetTypeQuery, CreateAssetTypeBody, ListAssetTypeQueryRes, UpdateAssetTypeBody, ImportAssetTypeBody, AssetTypeUploadDto } from './assetType.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ReturnMsg } from '../../tool/open-api-body'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('asset/type')
 export class AssetTypeController {
@@ -15,8 +16,12 @@ export class AssetTypeController {
   @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
   @Post('create')
   @UseGuards(AuthGuard)
-  async create(@Body() createData: AssetTypeUpdateDto) {
-    return this.assetTypeService.create(createData)
+  async create(@Body() createData: AssetTypeUpdateDto, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.assetTypeService.create(createData)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 
   @ApiOperation({ summary: 'Update Asset Type' })
@@ -24,23 +29,31 @@ export class AssetTypeController {
   @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
   @Post('update')
   @UseGuards(AuthGuard)
-  async update(@Body() createData: AssetTypeUpdateDto) {
-    return this.assetTypeService.update(createData)
+  async update(@Body() createData: AssetTypeUpdateDto, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.assetTypeService.update(createData)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 
   @ApiOperation({ summary: 'Get one data by id'})
   @ApiResponse({ description: 'If successful', status: 201, type: AssetTypeBody })
   @ApiResponse({ description: 'If not successful', status: 200, type: ReturnMsg })
   @Get('one/:id')
-  async getOneById(@Param('id') id: string) {
-    return await this.assetTypeService.getOneById(id)
+  async getOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return await this.assetTypeService.getOneById(id)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 
   @ApiOperation({ summary: 'Get all data'})
   @ApiResponse({ description: 'If successful', status: 201, type: [AssetTypeBody] })
   @Get('getAll')
   @UseGuards(AuthGuard)
-  async getAll() {
+  async getAll(@Req() { user }: { user: JwtPayload }) {
     return this.assetTypeService.findAll()
   }
 
@@ -49,8 +62,12 @@ export class AssetTypeController {
   @ApiResponse({ description: 'If successful', status: 201, type: [AssetTypeBody] })
   @Post('filter/list')
   @UseGuards(AuthGuard)
-  async listWithFilter(@Body() req: AssetTypeListSearchDto) {
-    return this.assetTypeService.listAssetTypesh(req)
+  async listWithFilter(@Body() req: AssetTypeListSearchDto, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.assetTypeService.listAssetTypesh(req)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 
   @ApiOperation({ summary: 'Page and list'})
@@ -58,16 +75,24 @@ export class AssetTypeController {
   @ApiResponse({ description: 'If successful', status: 201, type: ListAssetTypeQueryRes })
   @Post('list')
   @UseGuards(AuthGuard)
-  async listAndPage(@Body() req: AssetTypeListSearchDto) {
-    return this.assetTypeService.listAssetTypeBySearch(req)
+  async listAndPage(@Body() req: AssetTypeListSearchDto, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.assetTypeService.listAssetTypeBySearch(req)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 
   @ApiOperation({ summary: 'Void data by Id'})
   @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
   @Get('remove/:id')
   @UseGuards(AuthGuard)
-  async remove(@Param('id') id: string) {
-    return this.assetTypeService.voidOne(id)
+  async remove(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.assetTypeService.voidOne(id)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 
   @ApiOperation({ summary: 'Import List of Asset Type' })
@@ -76,7 +101,11 @@ export class AssetTypeController {
   @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
   @Post('batch-create')
   @UseGuards(AuthGuard)
-  async importData(@Body() createDatas: AssetTypeUploadDto[]) {
-     return this.assetTypeService.importData(createDatas)
+  async importData(@Body() createDatas: AssetTypeUploadDto[], @Req() { user }: { user: JwtPayload }) {
+    if (user.superAdmin === true) {
+      return this.assetTypeService.importData(createDatas)
+    } else {
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+    }
   }
 }

@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { AssetListService } from './asset-list.service'
 import { AuthGuard } from '../auth/AuthGuard'
 import { AssetListBody, AssetListFileBody, AssetListFullBody, AssetListListQueryRes, AssetListQuery, CreateAssetBody, DashboardReqBody, DashboardReqDto, ListAssetReqDto, UpdateAssetBody, UpdateAssetDto, UploadAssetListDto } from './asset-list.dto'
 import { AssetListQueryService } from './asset-list-query.service'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('asset/asset-list')
 export class AssetListController {
@@ -27,8 +28,8 @@ export class AssetListController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: AssetListBody })
     @Get('code/:code')
     @UseGuards(AuthGuard)
-    async getByAssetCode(@Param('code') code: string) {
-        return await this.assetListService.getByAssetCode(code)
+    async getByAssetCode(@Param('code') code: string, @Req() { user }: { user: JwtPayload }) {
+        const data = await this.assetListService.getByAssetCode(code)
     }
 
     @ApiOperation({ summary: 'Create Asset List' })
@@ -37,8 +38,18 @@ export class AssetListController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: AssetListBody })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateAssetDto, @Req() req: any) {
-        return await this.assetListService.create(createData, req.user.username)
+    async create(@Body() createData: UpdateAssetDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === false) {
+            if (!user.departmentIds.includes(createData.deptId)) {
+               throw new HttpException({ message: 'Department access denied' }, HttpStatus.FORBIDDEN)
+            } else if (!user.departmentIds.includes(createData.placeId)) {
+                throw new HttpException({ message: 'Location access denied' }, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.assetListService.create(createData, user.username)
+            }
+        } else {
+            return await this.assetListService.create(createData, user.username)
+        }
     }
 
     @ApiOperation({ summary: 'Update Asset List' })
@@ -46,8 +57,18 @@ export class AssetListController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateData: UpdateAssetDto) {
-        return await this.assetListService.update(updateData)
+    async update(@Body() updateData: UpdateAssetDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === false) {
+            if (!user.departmentIds.includes(updateData.deptId)) {
+               throw new HttpException({ message: 'Department access denied' }, HttpStatus.FORBIDDEN)
+            } else if (!user.departmentIds.includes(updateData.placeId)) {
+                throw new HttpException({ message: 'Location access denied' }, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.assetListService.update(updateData)
+            }
+        } else {
+            return await this.assetListService.update(updateData)
+        }
     }
 
     @ApiOperation({ summary: 'List with query' })
@@ -55,8 +76,18 @@ export class AssetListController {
     @ApiResponse({ description: 'If successful', status: 201, type: [AssetListFullBody] })
     @Post('filter/list')
     @UseGuards(AuthGuard)
-    async listWithQuery(@Body() query: ListAssetReqDto) {
-        return await this.assetListService.listWithFilter(query)
+    async listWithQuery(@Body() query: ListAssetReqDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.assetListService.listWithFilter(query)
+        } else {
+            if ((query.deptIds ?? []).some(deptId => !user.departmentIds.includes(deptId))) {
+                throw new HttpException({ message: 'Department access denied' }, HttpStatus.FORBIDDEN)
+            } else if ((query.placeIds ?? []).some(placeId => !user.placeIds.includes(placeId))) {
+                throw new HttpException({ message: 'Location access denied' }, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.assetListService.listWithFilter(query)
+            }
+        }
     }
 
     @ApiOperation({ summary: 'List and page' })
@@ -64,16 +95,30 @@ export class AssetListController {
     @ApiResponse({ description: 'If successful', status: 201, type: AssetListListQueryRes })
     @Post('list')
     @UseGuards(AuthGuard)
-    async listAndPage(@Body() query: ListAssetReqDto) {
-        return await this.assetListService.listPage(query)
+    async listAndPage(@Body() query: ListAssetReqDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.assetListService.listPage(query)
+        } else {
+            if ((query.deptIds ?? []).some(deptId => !user.departmentIds.includes(deptId))) {
+                throw new HttpException({ message: 'Department access denied' }, HttpStatus.FORBIDDEN)
+            } else if ((query.placeIds ?? []).some(placeId => !user.placeIds.includes(placeId))) {
+                throw new HttpException({ message: 'Location access denied' }, HttpStatus.FORBIDDEN)
+            } else {
+                return await this.assetListService.listPage(query) 
+            }
+        }
     }
 
     @ApiOperation({ summary: 'List all' })
     @ApiResponse({ description: 'If successful', status: 201, type: AssetListFullBody, isArray: true })
     @Get('list-all')
     @UseGuards(AuthGuard)
-    async listAndPageGet() {
-        return await this.assetListService.listAllAsset()
+    async listAndPageGet(@Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.assetListService.listAllAsset()
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 
     @ApiOperation({ summary: 'Void one file by ID' })
@@ -113,7 +158,11 @@ export class AssetListController {
     @ApiResponse({ description: 'If save successful', status: 201, type: AssetListBody, isArray: true })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: UploadAssetListDto[]) {
-        return await this.assetListService.importData(createDatas)
+    async importData(@Body() createDatas: UploadAssetListDto[], @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.assetListService.importData(createDatas)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        }
     }
 }

@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common'
 import { VendorService } from './vendor.service';
 import { CreateVendorBody, CreateVendorDto, ListVendorQuery, ListVendorQueryRes, ListVendorRequestDto, UpdateVendorBody, UpdateVendorDto, VendorBody } from './vendor.dto';
 import { AuthGuard } from '../auth/AuthGuard';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReturnMsg } from 'src/tool/open-api-body';
+import { JwtPayload } from '../auth/auth.dto';
 
 @Controller('base/vendor')
 export class VendorController {
@@ -15,8 +16,17 @@ export class VendorController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('create')
     @UseGuards(AuthGuard)
-    async create(@Body() createData: UpdateVendorDto) {
-        return await this.vendorService.create(createData)
+    async create(@Body() createData: UpdateVendorDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.vendorService.create(createData)
+        } else {
+            throw new HttpException(
+                {
+                    message: 'Access denied'
+                },
+                HttpStatus.FORBIDDEN,
+            )
+        }
     }
 
     @ApiOperation({ summary: 'Update Vendor' })
@@ -24,8 +34,17 @@ export class VendorController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('update')
     @UseGuards(AuthGuard)
-    async update(@Body() updateDto: UpdateVendorDto) {
-        return await this.vendorService.update(updateDto)
+    async update(@Body() updateDto: UpdateVendorDto, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.vendorService.update(updateDto)
+        } else {
+            throw new HttpException(
+                {
+                    message: 'Access denied'
+                },
+                HttpStatus.FORBIDDEN,
+            )
+        }
     }
 
     @ApiOperation({ summary: 'Get one by ID' })
@@ -33,7 +52,7 @@ export class VendorController {
     @ApiResponse({ description: 'If no data', status: 200, type: ReturnMsg })
     @Get('one/:id')
     @UseGuards(AuthGuard)
-    async getOneById(@Param('id') id: string) {
+    async getOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
         return await this.vendorService.getOneById(id)
     }
 
@@ -41,8 +60,17 @@ export class VendorController {
     @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('remove/:id')
     @UseGuards(AuthGuard)
-    async removeById(@Param('id') id: string) {
-        return await this.vendorService.invalidateDepartment(id)
+    async removeById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.vendorService.invalidateDepartment(id)
+        } else {
+            throw new HttpException(
+                {
+                    message: 'Access denied'
+                },
+                HttpStatus.FORBIDDEN,
+            )
+        }
     }
 
     @ApiOperation({ summary: 'Get All Vendors' })
@@ -77,8 +105,17 @@ export class VendorController {
     @ApiResponse({ description: 'If not save successful', status: 200, type: ReturnMsg })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async batchCreate(@Body() createDatas: CreateVendorDto[]) {
-        return await this.vendorService.importData(createDatas)
+    async batchCreate(@Body() createDatas: CreateVendorDto[], @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.vendorService.importData(createDatas)
+        } else {
+            throw new HttpException(
+                {
+                    message: 'Access denied'
+                },
+                HttpStatus.FORBIDDEN,
+            )
+        }
     }
     
 }

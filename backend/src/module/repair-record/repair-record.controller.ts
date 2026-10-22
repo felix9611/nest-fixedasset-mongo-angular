@@ -1,9 +1,10 @@
-import { Body, Controller, Param, Post, UseGuards, Get } from '@nestjs/common'
+import { Body, Controller, Param, Post, UseGuards, Get, Req, HttpException, HttpStatus } from '@nestjs/common'
 import { RepairRecordService } from './repair-record.service'
 import { CreateRepairRecordDto, UpdateRepairRecordDto, ListRepairRecordDto, CreateRepairRecordBody, RepairRecordBody, ListRepairRecordQuery, ListRepairRecordQueryRes, UpdateRepairRecordBody, UploadRepairRecordBody, UploadRepairRecordDto } from './repair-record.dto'
 import { AuthGuard } from '../auth/AuthGuard'
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { ReturnMsg } from 'src/tool/open-api-body'
+import { JwtPayload } from '../auth/auth.dto'
 
 @Controller('asset/repair-record')
 export class RepairRecordController {
@@ -41,8 +42,12 @@ export class RepairRecordController {
     @ApiResponse({  description: 'Return message only', status: 200, type: ReturnMsg })
     @Get('void/:id')
     @UseGuards(AuthGuard)
-    async voidOneById(@Param('id') id: string) {
-        return await this.repairRecordService.invalidate(id)
+    async voidOneById(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.repairRecordService.invalidate(id)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        } 
     }
 
     @ApiOperation({ summary: 'List with filter' })
@@ -67,7 +72,11 @@ export class RepairRecordController {
     @ApiBody({ type: [UploadRepairRecordBody] })
     @Post('batch-create')
     @UseGuards(AuthGuard)
-    async importData(@Body() createDatas: UploadRepairRecordBody[]) {
-        return await this.repairRecordService.importData(createDatas as UploadRepairRecordDto[])
+    async importData(@Body() createDatas: UploadRepairRecordBody[], @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin === true) {
+            return await this.repairRecordService.importData(createDatas as UploadRepairRecordDto[])
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
+        } 
     }
 }
