@@ -20,12 +20,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return this.assetTypeService.create(createData)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -38,12 +33,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return this.assetTypeService.update(createData)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -55,12 +45,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return await this.assetTypeService.getOneById(id)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -69,16 +54,7 @@ export class AssetTypeController {
   @Get('getAll')
   @UseGuards(AuthGuard)
   async getAll(@Req() { user }: { user: JwtPayload }) {
-    if (user.superAdmin === true) {
-      return this.assetTypeService.findAll()
-    } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
-    }
+    return this.assetTypeService.findAll()
   }
 
   @ApiOperation({ summary: 'List with filter'})
@@ -90,12 +66,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return this.assetTypeService.listAssetTypesh(req)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -108,12 +79,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return this.assetTypeService.listAssetTypeBySearch(req)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -125,12 +91,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return this.assetTypeService.voidOne(id)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -144,12 +105,7 @@ export class AssetTypeController {
     if (user.superAdmin === true) {
       return this.assetTypeService.importData(createDatas)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
     }
   }
 }
