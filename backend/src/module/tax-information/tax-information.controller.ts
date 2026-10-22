@@ -21,12 +21,7 @@ export class TaxInformationController {
     if (user.superAdmin === true) {
       return this.taxInformationService.create(createData)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -39,12 +34,7 @@ export class TaxInformationController {
     if (user.superAdmin === true) {
       return this.taxInformationService.update(createData)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -89,12 +79,7 @@ export class TaxInformationController {
     if (user.superAdmin === true) {
       return this.taxInformationService.voidOne(id)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
     }
   }
 
@@ -108,12 +93,7 @@ export class TaxInformationController {
     if (user.superAdmin === true) {
       return this.taxInformationService.importData(importData)
     } else {
-      throw new HttpException(
-        {
-          message: 'Access denied'
-        },
-        HttpStatus.FORBIDDEN,
-      )
+      throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
     }
   }
 }
