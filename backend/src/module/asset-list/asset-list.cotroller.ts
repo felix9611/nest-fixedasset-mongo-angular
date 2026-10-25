@@ -30,6 +30,7 @@ export class AssetListController {
     @UseGuards(AuthGuard)
     async getByAssetCode(@Param('code') code: string, @Req() { user }: { user: JwtPayload }) {
         const data = await this.assetListService.getByAssetCode(code)
+        return data
     }
 
     @ApiOperation({ summary: 'Create Asset List' })

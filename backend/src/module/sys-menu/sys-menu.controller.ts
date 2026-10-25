@@ -21,12 +21,7 @@ export class SysMenuController {
         if (user.superAdmin === true) {
             return await this.menuService.create(createData)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -40,12 +35,7 @@ export class SysMenuController {
         if (user.superAdmin === true) {
             return await this.menuService.update(updateDto)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -58,12 +48,7 @@ export class SysMenuController {
         if (user.superAdmin === true) {
             return await this.menuService.getOneById(id)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -75,12 +60,7 @@ export class SysMenuController {
         if (user.superAdmin === true) {
             return await this.menuService.invalidate(id)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -93,12 +73,7 @@ export class SysMenuController {
         if (user.superAdmin === true) {
             return this.menuService.listAllMenu(req)
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 
@@ -127,12 +102,7 @@ export class SysMenuController {
         if (user.superAdmin === true) {
             return this.menuService.listAllMainIdMenu()
         } else {
-            throw new HttpException(
-                {
-                    message: 'Access denied'
-                },
-                HttpStatus.FORBIDDEN,
-            )
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 }

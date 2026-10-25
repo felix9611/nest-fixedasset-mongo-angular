@@ -143,5 +143,4 @@ export class SysRoleController {
     async listPermission(@Body() req: { roleIds: any }) {
         return this.sysRoleService.loadRoleWithMenu(req.roleIds)
     }
-
 }

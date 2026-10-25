@@ -14,6 +14,7 @@ import { AssetTypeService } from '../asset-type/assetType.service'
 import { TaxInformationService } from '../tax-information/tax-information.service'
 import { DepartmentService } from '../department/department.service'
 import { LocationService } from '../location/location.service'
+import { error } from 'console'
 
 
 @Injectable()
@@ -49,7 +50,7 @@ export class AssetListService {
         const res = await this.assetListModel.findOne({ assetCode }).exec()
         if (res?.status === 0) {
             return {
-                msg: 'This asset maybe voided! Please contact admin!'
+                error: 'This asset maybe voided! Please contact admin!'
             }
         } else {
             return res
