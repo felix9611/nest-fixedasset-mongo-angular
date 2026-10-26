@@ -285,7 +285,7 @@ export class AssetListService {
         return lists.map((item: any) => {
             return {
                 ...item,
-                sponsor: item.sponsor === true ? 'true' : 'false',
+                sponsor: item.sponsor === true ? 'yes' : 'no',
                 placeName: item.location.placeName ?? '',
                 placeCode: item.location.placeCode ?? '',
                 deptName: item.department.deptName ?? '',
