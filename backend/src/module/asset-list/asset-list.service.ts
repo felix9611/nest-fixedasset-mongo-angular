@@ -273,7 +273,6 @@ export class AssetListService {
             { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$assettype', preserveNullAndEmptyArrays: true } },
-            
             { 
                 $addFields: { 
                     assetCodeInt: { $toInt: "$assetCode" } 
@@ -292,22 +291,18 @@ export class AssetListService {
                 deptCode: item.department.deptCode ?? '',
                 typeCode: item.assettype.typeCode ?? '',
                 typeName: item.assettype.typeName ?? '',
-                vendorName: item.vendor.vendorName ?? '',
-                vendorCode: item.vendor.vendorCode ??'',
-                vendorOtherName: item.vendor.vendorOtherName ??'',
-                vendorType: item.vendor.type ??'',
-                vendorEmail: item.vendor.email ??'',
-                vendorPhone: item.vendor.phone ??'',
-                vendorFax: item.vendor.fax ??'',
-                vendorAddress: item.vendor.address ??'',
-                vendorContactPerson: item.vendor.contactPerson ??'',
-                vendorRemark: item.vendor.remark ??'',
-
+            /*    vendorName: item.vendor?.vendorName ?? '',
+                vendorCode: item.vendor?.vendorCode ??'',
+                vendorOtherName: item.vendor?.vendorOtherName ??'',
+                vendorType: item.vendor?.type ??'',
+                vendorEmail: item.vendor?.email ??'',
+                vendorPhone: item.vendor?.phone ??'',
+                vendorFax: item.vendor?.fax ??'',
+                vendorAddress: item.vendor?.address ??'',
+                vendorContactPerson: item.vendor?.contactPerson ??'',
+                vendorRemark: item.vendor?.remark ??'',*/
             }
         })
-
-       // return newLists
-
     }
 
     async listPage(request: ListAssetReqDto) {
