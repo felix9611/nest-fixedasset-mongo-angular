@@ -282,31 +282,31 @@ export class AssetListService {
             { $sort: { assetCodeInt: 1 } } ,
         ]).exec()
 
-        let newLists = lists.map((item: any) => {
+        return lists.map((item: any) => {
             return {
                 ...item,
-                sponsor: item.sponsor === true ? 'true' : 'false',
-                placeName: item.location ? item.location.name : '',
-                placeCode: item.location ? item.location.code : '',
-                deptName: item.department ? item.department.name : '',
-                deptCode: item.department ? item.department.code : '',
-                typeCode: item.assettype ? item.assettype.code : '',
-                typeName: item.assettype ? item.assettype.name : '',
-                vendorName: item.vendor ? item.vendor.vendorName : '',
-                vendorCode: item.vendor ? item.vendor.vendorCode : '',
-                vendorOtherName: item.vendor ? item.vendor.vendorOtherName : '',
-                vendorType: item.vendor ? item.vendor.type : '',
-                vendorEmail: item.vendor ? item.vendor.email : '',
-                vendorPhone: item.vendor ? item.vendor.phone : '',
-                vendorFax: item.vendor ? item.vendor.fax : '',
-                vendorAddress: item.vendor ? item.vendor.address : '',
-                vendorContactPerson: item.vendor ? item.vendor.contactPerson : '',
-                vendorRemark: item.vendor ? item.vendor.remark : '',
+                sponsor: item.sponsor === true ? 'yes' : 'no',
+                placeName: item.location.placeName ?? '',
+                placeCode: item.location.placeCode ?? '',
+                deptName: item.department.deptName ?? '',
+                deptCode: item.department.deptCode ?? '',
+                typeCode: item.assettype.typeCode ?? '',
+                typeName: item.assettype.typeName ?? '',
+                vendorName: item.vendor.vendorName ?? '',
+                vendorCode: item.vendor.vendorCode ??'',
+                vendorOtherName: item.vendor.vendorOtherName ??'',
+                vendorType: item.vendor.type ??'',
+                vendorEmail: item.vendor.email ??'',
+                vendorPhone: item.vendor.phone ??'',
+                vendorFax: item.vendor.fax ??'',
+                vendorAddress: item.vendor.address ??'',
+                vendorContactPerson: item.vendor.contactPerson ??'',
+                vendorRemark: item.vendor.remark ??'',
 
             }
         })
 
-        return newLists
+       // return newLists
 
     }
 
