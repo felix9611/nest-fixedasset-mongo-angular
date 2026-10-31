@@ -262,12 +262,12 @@ export class SysUserService {
             as: 'department'
           }
       },
+      { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
       { 
         $project: { 
           password: 0
         } 
       },
-      { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
       { $skip: skip },
       { $limit: limit },
     ])
