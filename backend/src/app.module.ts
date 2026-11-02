@@ -26,6 +26,7 @@ import { RepairRecordMoudule } from './module/repair-record/repair-record.module
 import { StockTakeMoudule } from './module/stock-take/stcok-take.module'
 import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.module'
 import { SysUserSchema } from './module/sys-user/sysUser.schame'
+import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { SysUserSchema } from './module/sys-user/sysUser.schame'
     SysUserMoudule,
     SysMenuMoudule,
     ExcelFieldMatchModule,
+    JobDashboardModule,
     MongooseModule.forRoot('mongodb://localhost/fixedasset'),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
