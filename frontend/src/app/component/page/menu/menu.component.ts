@@ -177,7 +177,7 @@ export class MenuListComponent implements OnInit {
         } else if (!res.error) {
             this.editForm = res
             this.okText = 'Update'
-            this.showEditDialog()
+            this.editDialogVisible = true
         }
     }
 } 

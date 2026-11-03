@@ -1,121 +1,57 @@
-import { Test, TestingModule } from '@nestjs/testing'
+/// <reference types="jest" />
+import { HttpException, HttpStatus } from '@nestjs/common'
 import { DepartmentController } from './department.controller'
 import { DepartmentService } from './department.service'
-import { AuthGuard } from '../auth/AuthGuard'
+import { JwtPayload } from '../auth/auth.dto'
 
 describe('DepartmentController', () => {
-    let controller: DepartmentController
-    let service: DepartmentService
-
-    const mockDepartmentService = {
-        create: jest.fn(),
-        update: jest.fn(),
-        getOneById: jest.fn(),
-        invalidateDepartment: jest.fn(),
-        findAll: jest.fn(),
-        listPageRole: jest.fn(),
-        importData: jest.fn(),
+    const dto = { _id: 'dept-123', deptCode: 'HR', deptName: 'Human Resources', remark: 'TESTING' }
+    const query = { page: 2, limit: 10, name: 'HR' }
+    const user: JwtPayload = {
+        sub: 'admin', username: 'admin', departmentIds: [], placeIds: [],
+        roles: [], superAdmin: true,
     }
+    const cases = [
+        { method: 'create', args: [dto], serviceMethod: 'create' },
+        { method: 'update', args: [dto], serviceMethod: 'update' },
+        { method: 'getOneById', args: ['dept-1'], serviceMethod: 'getOneById' },
+        { method: 'removeById', args: ['dept-1'], serviceMethod: 'invalidateDepartment' },
+        { method: 'getAll', args: [], serviceMethod: 'findAll' },
+        { method: 'listWithFilters', args: [query], serviceMethod: 'listWithFilters' },
+        { method: 'listAndPage', args: [query], serviceMethod: 'listPage' },
+        { method: 'importData', args: [[dto]], serviceMethod: 'importData' },
+    ] as const
+    let controller: DepartmentController
+    let service: Record<string, jest.Mock>
 
-    beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            controllers: [DepartmentController],
-            providers: [
-                {
-                    provide: DepartmentService,
-                    useValue: mockDepartmentService,
-                },
-            ],
-        })
-            .overrideGuard(AuthGuard)
-            .useValue({ canActivate: jest.fn(() => true) })
-            .compile()
-
-        controller = module.get<DepartmentController>(DepartmentController)
-        service = module.get<DepartmentService>(DepartmentService)
+    beforeEach(() => {
+        service = Object.fromEntries(cases.map(({ serviceMethod }) => [serviceMethod, jest.fn()]))
+        controller = new DepartmentController(service as unknown as DepartmentService)
     })
 
-    it('should be defined', () => {
-        expect(controller).toBeDefined()
-    })
-
-    describe('create', () => {
-        it('should create a department successfully', async () => {
-            const dto = { deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }
-            mockDepartmentService.create.mockResolvedValue(dto)
-
-            const result = await controller.create(dto)
-            expect(result).toEqual(dto)
-            expect(mockDepartmentService.create).toHaveBeenCalledWith(dto)
+    describe.each(cases)('$method', ({ method, args, serviceMethod }) => {
+        it('forwards super-admin requests and returns the service result', async () => {
+            const result = { message: 'result' }
+            service[serviceMethod].mockResolvedValue(result)
+            expect(await controller[method](...([...args, { user }] as [any, any]))).toBe(result)
+            expect(service[serviceMethod]).toHaveBeenCalledTimes(1)
+            expect(service[serviceMethod]).toHaveBeenCalledWith(...args)
         })
-    });
 
-    describe('update', () => {
-        it('should update a department successfully', async () => {
-            const dto = { id: '1',  deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }
-            mockDepartmentService.update.mockResolvedValue(dto)
-
-            const result = await controller.update(dto)
-            expect(result).toEqual(dto)
-            expect(mockDepartmentService.update).toHaveBeenCalledWith(dto)
+        it('rejects non-super admin requests with 403 without calling the service', async () => {
+            const request = controller[method](...([...args, { user: { ...user, superAdmin: false } }] as [any, any]))
+            await expect(request).rejects.toBeInstanceOf(HttpException)
+            await expect(request).rejects.toMatchObject({
+                status: HttpStatus.FORBIDDEN, response: { message: 'Access denied' },
+            })
+            expect(service[serviceMethod]).not.toHaveBeenCalled()
         })
-    })
 
-    describe('removeById', () => {
-        it('should invalidate a department by ID', async () => {
-            const id = '1';
-            const message = { message: 'Department invalidated' }
-            mockDepartmentService.invalidateDepartment.mockResolvedValue(message)
-
-            const result = await controller.removeById(id)
-            expect(result).toEqual(message)
-            expect(mockDepartmentService.invalidateDepartment).toHaveBeenCalledWith(id)
+        it('propagates service failures', async () => {
+            const error = new Error('Service unavailable')
+            service[serviceMethod].mockRejectedValue(error)
+            await expect(controller[method](...([...args, { user }] as [any, any]))).rejects.toBe(error)
         })
     })
-
-    describe('getAll', () => {
-        it('should return all departments', async () => {
-            const departments = [{ id: '1',  deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }]
-            mockDepartmentService.findAll.mockResolvedValue(departments)
-
-            const result = await controller.getAll()
-            expect(result).toEqual(departments)
-            expect(mockDepartmentService.findAll).toHaveBeenCalled()
-        })
-    })
-
-    describe('listAndPage', () => {
-        it('should return paginated department data', async () => {
-            const req: any = { page: 1, size: 10 }
-            const response = { total: 0, totalPages: 0, list: [], ...req }
-            mockDepartmentService.listPageRole.mockResolvedValue(response)
-
-            const result = await controller.listAndPage(req)
-            expect(result).toEqual(response)
-            expect(mockDepartmentService.listPageRole).toHaveBeenCalledWith(req)
-        })
-    })
-
-    describe('importData', () => {
-        it('should batch create departments', async () => {
-            const createDatas: any[] = [{ deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }]
-            mockDepartmentService.create.mockResolvedValue(createDatas[0])
-
-          //  const result = await controller.importData(createDatas)
-        //    expect(result).toEqual(createDatas[0])
-        //    expect(mockDepartmentService.create).toHaveBeenCalledWith(createDatas[0])
-        })
-    })
-
-    describe('getOneById', () => {
-        it('should call service.getOneById and return the result', async () => {
-          const id = '123'
-          const result = { _id: '123', deptCode: 'HR', deptName: 'HR Team', remark: 'Tongs' }
-          mockDepartmentService.getOneById.mockResolvedValue(result)
-    
-          expect(await controller.getOneById(id)).toEqual(result)
-          expect(mockDepartmentService.getOneById).toHaveBeenCalledWith(id)
-        })
-    })
-
 })
+
