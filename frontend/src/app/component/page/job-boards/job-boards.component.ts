@@ -139,6 +139,154 @@ export class JobBoardsComponent  {
     }
   }
 
+  // Department data
+  deptTotal: number = 0
+  depts: any = []
+  deptOptions: ListOption[] = [];
+  deptSearchForm: any = {
+    deptCode: '',
+    deptName: '',
+    page: 1,
+    limit: 10
+  }
+  loadDeptLists = async (
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<ListOption[]> => {
+    const payload = {
+      ...this.deptSearchForm,
+      ...body,
+    }
+
+    try {
+      const res = await postApiWithAuth(url, payload);
+
+      this.depts = res.lists ?? [];
+      this.deptTotal = res.total ?? 0;
+
+      this.deptOptions = this.depts.map((a: any) => ({
+        value: a.deptCode,
+        label: `${a.deptCode} - ${a.deptName}`,
+      }));
+
+      return this.deptOptions;
+    } catch (error) {
+      console.error('API request failed', error);
+      throw error;
+    }
+  }
+
+  // Vendor data
+  vendorTotal: number = 0
+  vendors: any = []
+  vendorOptions: ListOption[] = [];
+  vendorSearchForm: any = {
+    vendorCode: '',
+    vendorName: '',
+    page: 1,
+    limit: 10
+  }
+  loadVendorLists = async (
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<ListOption[]> => {
+    const payload = {
+      ...this.vendorSearchForm,
+      ...body,
+    }
+
+    try {
+      const res = await postApiWithAuth(url, payload);
+
+      this.vendors = res.lists ?? [];
+      this.vendorTotal = res.total ?? 0;
+
+      this.vendorOptions = this.vendors.map((a: any) => ({
+        value: a.vendorCode,
+        label: `${a.vendorCode} - ${a.vendorName}`,
+      }));
+
+      return this.vendorOptions;
+    } catch (error) {
+      console.error('API request failed', error);
+      throw error;
+    }
+  }
+
+  // Stock take data
+  stockTakeTotal: number = 0
+  stockTakes: any = []
+  stockTakeOptions: ListOption[] = [];
+  stockTakeSearchForm: any = {
+    stockTakeCode: '',
+    stockTakeName: '',
+    page: 1,
+    limit: 10
+  }
+  loadStockTakeLists = async (
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<ListOption[]> => {
+    const payload = {
+      ...this.stockTakeSearchForm,
+      ...body,
+    }
+
+    try {
+      const res = await postApiWithAuth(url, payload);
+
+      this.stockTakes = res.lists ?? [];
+      this.stockTakeTotal = res.total ?? 0;
+
+      this.stockTakeOptions = this.stockTakes.map((a: any) => ({
+        value: a.actionName,
+        label: `${a.actionName}`,
+      }));
+
+      return this.stockTakeOptions;
+    } catch (error) {
+      console.error('API request failed', error);
+      throw error;
+    }
+  }
+
+  // Location data
+  placeTotal: number = 0
+  places: any = []
+  placeOptions: ListOption[] = [];
+  placeSearchForm: any = {
+    placeCode: '',
+    placeName: '',
+    page: 1,
+    limit: 10
+  }
+  loadPlaceLists = async (
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<ListOption[]> => {
+    const payload = {
+      ...this.placeSearchForm,
+      ...body,
+    }
+
+    try {
+      const res = await postApiWithAuth(url, payload);
+
+      this.places = res.lists ?? [];
+      this.placeTotal = res.total ?? 0;
+
+      this.placeOptions = this.places.map((a: any) => ({
+        value: a.placeCode,
+        label: `${a.placeCode} - ${a.placeName}`,
+      }));
+
+      return this.placeOptions;
+    } catch (error) {
+      console.error('API request failed', error);
+      throw error;
+    }
+  }
+
   lookupOptions(key: keyof Job['jobRelationData']): ListOption[] {
     const options = [...relationOptions[key]];
     const values = [

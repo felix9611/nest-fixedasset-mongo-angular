@@ -416,17 +416,58 @@
                   (singleValueChange)="job.jobRelationData.typeCode"
               />
             </div>
-            @for (field of relationFields; track field.key) {
-              <div class="lookup-field">
-                <span class="field-label">{{ field.label }}</span
-                ><!--<app-filter-list
-                  [label]="field.label"
-                  [options]="lookupOptions(field.key)"
-                  [value]="job.jobRelationData[field.key] ? [job.jobRelationData[field.key]] : []"
-                  (valueChange)="job.jobRelationData[field.key] = $event[0] || ''"
-                /> -->
-              </div>
-            }
+            <div class="lookup-field">
+              <span class="field-label">Department</span>
+              <app-filter-list-api
+                  label="Department"
+                  [apiUrl]="'/sys/department/list'"
+                  [requestBody]="deptSearchForm"
+                  [postApi]="loadDeptLists"
+                  [multiple]="false"
+                  [searchDataKey]="['deptCode', 'deptName']"
+                  [(singleValue)]="job.jobRelationData.deptCode"
+                  (singleValueChange)="job.jobRelationData.deptCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Location</span>
+              <app-filter-list-api
+                  label="Location"
+                  [apiUrl]="'/base/location/list'"
+                  [requestBody]="placeSearchForm"
+                  [postApi]="loadPlaceLists"
+                  [multiple]="false"
+                  [searchDataKey]="['placeCode', 'placeName']"
+                  [(singleValue)]="job.jobRelationData.placeCode"
+                  (singleValueChange)="job.jobRelationData.placeCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Vendor</span>
+              <app-filter-list-api
+                  label="Vendor"
+                  [apiUrl]="'/base/vendor/list'"
+                  [requestBody]="vendorSearchForm"
+                  [postApi]="loadVendorLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name', 'place', 'contact']"
+                  [(singleValue)]="job.jobRelationData.vendorCode"
+                  (singleValueChange)="job.jobRelationData.vendorCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Stock Take</span>
+              <app-filter-list-api
+                  label="Stock Take"
+                  [apiUrl]="'/asset/stock-take/list'"
+                  [requestBody]="stockTakeSearchForm"
+                  [postApi]="loadStockTakeLists"
+                  [multiple]="false"
+                  [searchDataKey]="['name']"
+                  [(singleValue)]="job.jobRelationData.stockTakeName"
+                  (singleValueChange)="job.jobRelationData.stockTakeName"
+              />
+            </div>
           </div>
         }
         @if (error) {
