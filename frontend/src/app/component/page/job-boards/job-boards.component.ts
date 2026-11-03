@@ -463,9 +463,28 @@ export class JobBoardsComponent  {
  savingMove = false;
 
   async drop(event: CdkDragDrop<Job[]>, status: number) {
-    if (this.savingMove) return;
+    if (this.savingMove) return
 
-    const moved = event.item.data as Job;
+    const moved = event.item.data as Job
+
+    const target = event.container.data.filter(job => job._id !== moved._id);
+    target.splice(event.currentIndex, 0, moved);
+
+    const previous = target[event.currentIndex - 1];
+    const next = target[event.currentIndex + 1];
+
+    let sortOrder: number;
+
+    if (previous && next) {
+      sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
+    } else if (previous) {
+      sortOrder = previous.sortOrder + 10
+    } else if (next) {
+      sortOrder = next.sortOrder - 10
+    } else {
+      sortOrder = 10
+    }
+
     const previousJobs = structuredClone(this.jobs);
     const list = [...event.container.data];
 
@@ -475,11 +494,6 @@ export class JobBoardsComponent  {
       list.splice(event.currentIndex, 0, { ...moved, status });
     }
 
-    const ids = new Set(list.map((job) => job._id));
-    const other = this.jobs.filter(
-      (job) => !ids.has(job._id) && job._id !== moved._id,
-    )
-
     if (moved.status === status) return
 
     this.savingMove = true
@@ -488,6 +502,7 @@ export class JobBoardsComponent  {
       await postApiWithAuth('/tasks/change-status', {
         _id: moved._id,
         status,
+        sortOrder
       })
       this.loadJobLists()
       this.notify('Updated successfully')

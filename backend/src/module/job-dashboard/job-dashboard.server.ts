@@ -63,13 +63,14 @@ export class JobDashboardService {
     }
 
     async updateTaskStatus(req: UpdateJobDashboardStatusDto) {
-        const { _id, status } = req
+        const { _id, status, sortOrder } = req
 
         const check = await this.jobDashboardModel.findOne({ _id })
 
         if (check) {
             const finalData = {
                 status,
+                sortOrder,
                 updatedAt: new Date()
             }
 
@@ -114,7 +115,6 @@ export class JobDashboardService {
     async create(jobDashboard: JobDashboard) {
         const { _id, number, title, ..._description } = jobDashboard
         
-
         const check = await this.jobDashboardModel.findOne({ title })
 
         if (check) {
@@ -132,6 +132,14 @@ export class JobDashboardService {
             }
         } else {
 
+            const result = await this.jobDashboardModel
+                .findOne({ status: _description.status })
+                .sort({ sortOrder: -1 })
+                .select('sortOrder')
+                .lean()
+
+            const maxSortOrder = result?.sortOrder ?? 0
+
             const newNumber = await this.createNewNumber()
 
             const newData: any = {
@@ -140,7 +148,8 @@ export class JobDashboardService {
                 number: newNumber,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                jobValid: true
+                jobValid: true,
+                sortOrder: maxSortOrder + 10
             }
 
             const createdJobDashboard = new this.jobDashboardModel(newData)

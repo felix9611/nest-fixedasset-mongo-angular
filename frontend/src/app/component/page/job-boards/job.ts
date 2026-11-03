@@ -42,6 +42,7 @@ export interface Job {
     username: string
     avatarBase64: string
   }[]
+  sortOrder: number
 }
 export const newJob = (status = 1): Job => ({
   _id: '',
@@ -68,7 +69,8 @@ export const newJob = (status = 1): Job => ({
   },
   jobValid: '有效',
   status,
-  users: []
+  users: [],
+  sortOrder: 0
 });
 export function demoJobs(): Job[] {
   const rows: [string, string, number, string, string, string][] = [
