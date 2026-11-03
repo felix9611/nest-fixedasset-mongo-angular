@@ -45,22 +45,22 @@
       </button>
     </div>
     <div class="toolbar-actions">
-      <label class="search"
-        ><span>⌕</span
-        ><input
+      <label class="search">
+      <span>⌕</span>
+        <input
           aria-label="Find tasks"
           placeholder="Find tasks..."
           [ngModel]="search()"
           (ngModelChange)="search.set($event)"
-        /><kbd>⌕</kbd></label
-      >
+        /><kbd>⌕</kbd>
+      </label>
       <!--<select aria-label="Filter tasks" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
         <option value="all">All Members</option>
         <option value="mine">Assigned to Me</option>
       </select>-->
       <button class="export" (click)="export()">↥ <span>Export</span></button>
       <div class="avatar-stack">
-        @for (m of members; track m.id) {
+        @for (m of userLists; track m.id) {
           @if (m.avatarBase64) {
             <img class="avatar small rounded-full" [src]="m.avatarBase64" />
           } @else {

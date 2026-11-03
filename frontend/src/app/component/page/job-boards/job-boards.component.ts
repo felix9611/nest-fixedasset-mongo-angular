@@ -68,6 +68,7 @@ export class JobBoardsComponent  {
   toast = signal('');
   ngOnInit() {
     void this.loadJobLists()
+    this.loadSomeUser()
   }
 
   dataSearchForm: any = {
@@ -85,6 +86,15 @@ export class JobBoardsComponent  {
     // const res = await postApiWithAuth('/job/list', this.searchForm);
     // this.jobs = res.lists;
     // this.jobs = demoJobs();
+  }
+
+  userLists: any[] = []
+  async loadSomeUser() {
+    const allUser = await postApiWithAuth('/sys/user/list', {page: 1, limit: 10})
+    this.userLists = allUser.lists
+  }
+  postApiWithAuth(arg0: string, arg1: { page: number; limit: number }) {
+    throw new Error('Method not implemented.')
   }
 
   // members data
