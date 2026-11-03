@@ -3,6 +3,7 @@ import { JobDashboard } from './job-dashboard.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { Model } from 'mongoose'
+import { ListJobDashboardRequestDto, UpdateJobDashboardStatusDto } from './job-dashboard.dto'
 
 @Injectable()
 export class JobDashboardService {
@@ -10,6 +11,77 @@ export class JobDashboardService {
         @InjectModel(JobDashboard.name) private jobDashboardModel: Model<JobDashboard>,
         private actionRecordService: ActionRecordService
     ) {}
+
+    async listJobDashboard(req: ListJobDashboardRequestDto) {
+        const { name, memberId } = req
+
+        const allQuery: any = { 
+            status: 1,
+            jobValid: true,
+            ...(name ? { title: { $regex: name, $options: 'i' } } : {}),
+        }
+
+        const toDoList = await this.jobDashboardModel.find({ ...allQuery, status: 1 }).sort({ sortOrder: 1 }).exec()
+        const inProgressList = await this.jobDashboardModel.find({ ...allQuery, status: 2 }).sort({ sortOrder: 1 }).exec()
+        const reviewList = await this.jobDashboardModel.find({ ...allQuery, status: 3 }).sort({ sortOrder: 1 }).exec()
+        const completedList = await this.jobDashboardModel.find({ ...allQuery, status: 4 }).sort({ sortOrder: 1 }).exec()
+
+        return {
+            toDoList: toDoList || [],
+            inProgressList: inProgressList || [],
+            reviewList: reviewList || [],
+            completedList: completedList || []
+        }
+    }
+
+    async updateTaskStatus(req: UpdateJobDashboardStatusDto) {
+        const { _id, status } = req
+
+        const check = await this.jobDashboardModel.findOne({ _id })
+
+        if (check) {
+            const finalData = {
+                status,
+                updatedAt: new Date()
+            }
+
+            const res = await this.jobDashboardModel.updateOne({ _id }, finalData)
+
+            if (res.modifiedCount > 0) {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Update Task Status',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'Success',
+                    createdAt: new Date()
+                })
+                return {
+                    message: 'Task status updated successfully!',
+                    move: true
+                }
+            } else {
+                await this.actionRecordService.saveRecord({
+                    actionName: 'Update Task Status',
+                    actionMethod: 'POST',
+                    actionFrom: 'Job Dashboard',
+                    actionData: finalData,
+                    actionSuccess: 'FAILURE',
+                    createdAt: new Date()
+                })
+
+                return {
+                    error: 'Task status updated failed!',
+                    move: false
+                }
+            }
+        } else {
+            return {
+                error: 'Task not found!',
+                move: false
+            }
+        }
+    }
 
     async createJobDashboard(jobDashboard: JobDashboard) {
         const { _id, number, title, ..._description } = jobDashboard

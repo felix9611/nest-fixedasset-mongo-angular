@@ -45,11 +45,14 @@ export class JobDashboard extends BaseSchema {
     @Prop({ type: SchemaTypes.Array, required: false, default: [] })
     memberIds?: string[]
 
-    @Prop({ type: SchemaTypes.Subdocument, required: false, default: {} })
+    @Prop({ type: SchemaTypes.Mixed, required: false, default: {} })
     jobRelationData?: JobRelationData
 
     @Prop({ type: SchemaTypes.Boolean, required: false, default: false })
     jobValid!: boolean
+
+    @Prop({ type: SchemaTypes.Number, required: false, default: 1 })
+    sortOrder!: number
 }
 
 export const JobDashboardSchema = SchemaFactory.createForClass(JobDashboard)
