@@ -2,7 +2,7 @@
 
 <h1>Fixed Asset Management System</h1>
 <p><strong>Nest.js & Angular SSR | Cloud-based Web Application for Asset Management</strong></p>
-<p>Current version: V1.7 Main </p>
+<p>Current version: V1.8 Main </p>
 <p>Next version function: Unit test</p>
 <p>If you find this project helpful, please click ⭐ Star! This helps more people discover it.</p>
 
@@ -41,13 +41,14 @@
   <li><strong>Secure Authentication & Authorization:</strong> Utilizes <strong>JWT tokens</strong> for enhanced security and data protection.</li>
   <li><strong>Cloud-Based Architecture:</strong> Easy deployment and access without installation, lowering operational costs.</li>
   <li><strong>Real-Time Data Visualization:</strong> Integrated <strong>Chart.js</strong> for graphical representation of asset data.</li>
+  <li><strong>Real-Time Work Tasks Tracking: Planning, Tracking, Assignment any Job</strong> for organize different tasks.</li>
 </ul>
 
 <h2>⚙️ Tech Stack</h2>
 <h3>Frontend:</h3>
 <ul>
   <li>Angular 21</li>
-  <li>Node.js 22</li>
+  <li>Node.js 24</li>
   <li>Typescript</li>
   <li>Tailwind CSS</li>
   <li>Canvas.js 3.12.5</li>
@@ -57,7 +58,7 @@
 <ul>
   <li>Nest.js 12.0</li>
   <li>Mongoose 9.10 for database interaction</li>
-  <li>MongoDB v8.0</li>
+  <li>MongoDB v9.0</li>
   <li>Nest.js OpenAPI UI 11.0 for API documentation</li>
 </ul>
 
@@ -136,6 +137,7 @@ http://localhost:4200
 
 <h2>Version Update Note</h2>
 <ul>
-  <li><strong>Node updated to version 22 at 24 Sep 2026</strong></li>
+  <li><strong>Node updated to version 24 at 27 October 2026</strong></li>
   <li><strong>Please remove package lock files and folder node_modules both Backend & Frontend folder, and reinstall node_modules</li>
+  <li><strong>Added Task Module for tracking regular tasks.</li>
 </ul>
