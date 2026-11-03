@@ -16,18 +16,68 @@ import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
     styleUrls: ['./job-boards.component.css']
 })
 export class JobBoardsComponent  {
-  jobs = signal<Job[]>(this.read())
-  search = signal('')
-  filter = signal('all')
-  view = signal('board')
+    jobs: Job[] = [];
+  search = signal('');
+  filter = signal('all');
+  view = signal('board');
   columns = [
-    { id: 1, name: '待處理', en: 'To do', color: '#8b91a1' },
-    { id: 2, name: '進行中', en: 'In progress', color: '#6c5ce7' },
-    { id: 3, name: '待審核', en: 'In review', color: '#e5a345' },
-    { id: 4, name: '已完成', en: 'Done', color: '#39a982' },
-  ]
-  
-  async ngOnInit() {}
+    { id: 1, name: '待處理', en: 'To do', color: '#8b91a1', key: 'toDoList' },
+    { id: 2, name: '進行中', en: 'In progress', color: '#6c5ce7', key: 'inProgressList' },
+    { id: 3, name: '待審核', en: 'In review', color: '#e5a345', key: 'inReviewList' },
+    { id: 4, name: '已完成', en: 'Done', color: '#39a982', key: 'completedList' },
+  ];
+  lookupOptions(key: keyof Job['jobRelationData']): ListOption[] {
+    const options = [...relationOptions[key]];
+    const values = [
+      ...this.jobs.map((j) => j.jobRelationData[key]),
+      this.selected?.jobRelationData[key],
+    ];
+    for (const value of values)
+      if (value && !options.some((o) => o.value === value)) options.push({ value, label: value });
+    return options;
+  }
+  assigneeOptions(): ListOption[] {
+    const options = [...this.memberOptions];
+    for (const id of this.selected?.userIds || [])
+      if (!options.some((o) => o.value === id)) options.push({ value: id, label: id });
+    return options;
+  }
+  relationFields: { key: keyof Job['jobRelationData']; label: string }[] = [
+    { key: 'assetCode', label: '資產編號' },
+    { key: 'typeCode', label: '類型編號' },
+    { key: 'deptCode', label: '部門編號' },
+    { key: 'placeCode', label: '地點編號' },
+    { key: 'vendorCode', label: '供應商編號' },
+    { key: 'stockTakeName', label: '盤點名稱' },
+  ];
+  selected: Job | null = null;
+  tab = 'details';
+  tagText = '';
+  labelText = '';
+  comment = '';
+  checklist = '';
+  error = '';
+  toast = signal('');
+  ngOnInit() {
+    void this.loadJobLists();
+  }
+
+  dataSearchForm: any = {
+  }
+
+  async loadJobLists(): Promise<void> {
+    const data = await postApiWithAuth('/tasks/list', this.dataSearchForm)
+    this.jobs = [
+      ...(data.toDoList ?? []),
+      ...(data.inProgressList ?? []),
+      ...(data.inReviewList ?? []),
+      ...(data.completedList ?? []),
+    ]
+    // Replace these demo lines with your real API call:
+    // const res = await postApiWithAuth('/job/list', this.searchForm);
+    // this.jobs = res.lists;
+    // this.jobs = demoJobs();
+  }
 
   // members data
   memberTotal: number = 0
@@ -287,85 +337,36 @@ export class JobBoardsComponent  {
     }
   }
 
-  lookupOptions(key: keyof Job['jobRelationData']): ListOption[] {
-    const options = [...relationOptions[key]];
-    const values = [
-      ...this.jobs().map((j) => j.jobRelationData[key]),
-      this.selected?.jobRelationData[key],
-    ];
-    for (const value of values)
-      if (value && !options.some((o) => o.value === value)) options.push({ value, label: value });
-    return options;
-  }
-  assigneeOptions(): ListOption[] {
-    const options = [...this.memberOptions];
-    for (const id of this.selected?.userIds || [])
-      if (!options.some((o) => o.value === id)) options.push({ value: id, label: id });
-    return options;
-  }
-  relationFields: { key: keyof Job['jobRelationData']; label: string }[] = [
-    { key: 'assetCode', label: '資產編號' },
-    { key: 'typeCode', label: '類型編號' },
-    { key: 'deptCode', label: '部門編號' },
-    { key: 'placeCode', label: '地點編號' },
-    { key: 'vendorCode', label: '供應商編號' },
-    { key: 'stockTakeName', label: '盤點名稱' },
-  ];
-  selected: Job | null = null;
-  tab = 'details';
-  tagText = '';
-  labelText = '';
-  comment = '';
-  checklist = '';
-  error = '';
-  toast = signal('');
-  visible = computed(() =>
-    this.jobs().filter(
-      (j) =>
-        (this.filter() === 'all' || j.userIds.includes('01')) &&
-        `${j.title} ${j.number} ${j.category} ${j.tags.join(' ')} ${j.labels.join(' ')}`
+  visible(): Job[] {
+    return this.jobs.filter(
+      (j: any) =>
+        (this.filter() === 'all') &&
+        (
+          j.title +
+          ' ' +
+          j.number +
+          ' ' +
+          j.category +
+          ' ' +
+          j.tags.join(' ') +
+          ' ' +
+          j.labels.join(' ')
+        )
           .toLowerCase()
           .includes(this.search().toLowerCase()),
-    ),
-  );
-  done = computed(() => this.jobs().filter((j) => j.status === 4).length);
-  active = computed(() => this.jobs().filter((j) => j.status === 2).length);
-  read(): Job[] {
-    try {
-      const raw = localStorage.getItem('flowboard-v1');
-      if (raw) {
-        const data = JSON.parse(raw);
-        if (
-          Array.isArray(data) &&
-          data.every(
-            (j) =>
-              j &&
-              typeof j._id === 'string' &&
-              Array.isArray(j.tags) &&
-              Array.isArray(j.userIds) &&
-              Array.isArray(j.checkLists) &&
-              j.jobRelationData,
-          )
-        )
-          return data;
-      }
-    } catch {}
-    return demoJobs();
+    );
   }
-  persist(next: Job[]) {
-    try {
-      localStorage.setItem('flowboard-v1', JSON.stringify(next));
-      this.jobs.set(next);
-      return true;
-    } catch {
-      this.error = '無法儲存，瀏覽器儲存空間可能已滿。請移除部分附件。';
-      this.notify(this.error);
-      return false;
-    }
+  done(): number {
+    return this.jobs.filter((j) => j.status === 4).length;
   }
+  active(): number {
+    return this.jobs.filter((j) => j.status === 2).length;
+  }
+
   cards(status: number) {
     return this.visible().filter((j) => j.status === status);
   }
+
   countDone(job: Job) {
     return job.checkLists.filter((c) => c.checked).length;
   }
@@ -385,11 +386,11 @@ export class JobBoardsComponent  {
 
   create(status = 1) {
     const job = newJob(status);
-    job.number = `JOB-${String(this.jobs().length + 1).padStart(3, '0')}`;
+   //  job.nuumber = `JOB-${String(this.jobs.length + 1).padStart(3, '0')}`;
     this.open(job);
   }
 
-  save() {
+  async save() {
     if (!this.selected) return;
     const j = this.selected;
     if (!j.title.trim()) {
@@ -410,37 +411,75 @@ export class JobBoardsComponent  {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const exists = this.jobs().some((x) => x._id === j._id);
-    if (
-      this.persist(
-        exists
-          ? this.jobs().map((x) => (x._id === j._id ? structuredClone(j) : x))
-          : [...this.jobs(), structuredClone(j)],
-      )
-    ) {
-      this.selected = null;
-      this.notify('工作已儲存');
+    const finalData = j
+
+    if (finalData._id !== '') {
+      const res = await postApiWithAuth('/tasks/update', finalData)
+      if (res.error) {
+        this.notify('Update task failed')
+      } else {
+        this.selected = null;
+        this.notify('Task updated successfully')
+        this.loadJobLists()
+      }
+    } else {
+      const res = await postApiWithAuth('/tasks/create', finalData)
+      if (res.error) {
+        this.notify('Create task failed')
+      } else {
+        this.selected = null;
+        this.notify('Task saved successfully')
+        this.loadJobLists()
+      }
     }
   }
 
   remove() {
     if (this.selected && confirm('確定刪除呢張工作卡？')) {
-      if (this.persist(this.jobs().filter((j) => j._id !== this.selected!._id))) {
-        this.selected = null;
-        this.notify('工作已刪除');
-      }
+      this.jobs = this.jobs.filter((j) => j._id !== this.selected!._id);
+      this.selected = null;
+      this.notify('工作已刪除（本次工作階段）');
     }
   }
 
-  drop(event: CdkDragDrop<Job[]>, status: number) {
+ savingMove = false;
+
+  async drop(event: CdkDragDrop<Job[]>, status: number) {
+    if (this.savingMove) return;
+
     const moved = event.item.data as Job;
+    const previousJobs = structuredClone(this.jobs);
     const list = [...event.container.data];
-    if (event.previousContainer === event.container)
+
+    if (event.previousContainer === event.container) {
       moveItemInArray(list, event.previousIndex, event.currentIndex);
-    else list.splice(event.currentIndex, 0, { ...moved, status });
-    const ids = new Set(list.map((j) => j._id));
-    const other = this.jobs().filter((j) => !ids.has(j._id) && j._id !== moved._id);
-    this.persist([...other, ...list]);
+    } else {
+      list.splice(event.currentIndex, 0, { ...moved, status });
+    }
+
+    const ids = new Set(list.map((job) => job._id));
+    const other = this.jobs.filter(
+      (job) => !ids.has(job._id) && job._id !== moved._id,
+    )
+
+    if (moved.status === status) return
+
+    this.savingMove = true
+
+    try {
+      await postApiWithAuth('/tasks/change-status', {
+        _id: moved._id,
+        status,
+      })
+      this.loadJobLists()
+      this.notify('Updated successfully')
+    } catch (error) {
+      this.jobs = previousJobs
+      this.notify('Update failed, the tasks have been fallback')
+      console.error(error)
+    } finally {
+      this.savingMove = false
+    }
   }
   toggleMember(id: string) {
     if (!this.selected) return;
@@ -502,7 +541,7 @@ export class JobBoardsComponent  {
   }
   export() {
     const url = URL.createObjectURL(
-      new Blob([JSON.stringify(this.jobs(), null, 2)], { type: 'application/json' }),
+      new Blob([JSON.stringify(this.jobs, null, 2)], { type: 'application/json' }),
     );
     const a = document.createElement('a');
     a.href = url;

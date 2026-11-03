@@ -9,7 +9,7 @@
     <div class="summary-item">
       <span class="stat-icon violet">▤</span>
       <div>
-        <small>All Tasks</small><b>{{ jobs().length }} <em>Tasks</em></b>
+        <small>All Tasks</small><b>{{ jobs.length }} <em>Tasks</em></b>
       </div>
     </div>
     <div class="summary-item">
@@ -28,11 +28,11 @@
       <div class="progress-label">
         <small>Overall Completion</small
         ><b
-          >{{ jobs().length ? ((done() / jobs().length) * 100 | number: '1.0-0') : 0 }}<em>%</em></b
+          >{{ jobs.length ? ((done() / jobs.length) * 100 | number: '1.0-0') : 0 }}<em>%</em></b
         >
       </div>
       <div class="progress-track">
-        <i [style.width.%]="jobs().length ? (done() / jobs().length) * 100 : 0"></i>
+        <i [style.width.%]="jobs.length ? (done() / jobs.length) * 100 : 0"></i>
       </div>
     </div>
   </section>
@@ -92,15 +92,15 @@
             [cdkDropListData]="cards(col.id)"
             (cdkDropListDropped)="drop($event, col.id)"
           >
-            @for (job of cards(col.id); track job._id) {
+            @for (job of cards(col.id); track $index) {
               <article class="task-card" cdkDrag [cdkDragData]="job">
                 <button class="card-content" (click)="open(job)">
                   <div class="card-top">
-                    <span class="job-number">{{ job.number }}</span
+                    <span class="job-number">{{ $any(job).number }}</span
                     ><span class="card-dots">···</span>
                   </div>
                   <div class="labels">
-                    @for (label of job.labels; track $index) {
+                    @for (label of $any(job).labels; track $index) {
                       <span
                         class="label"
                         [class.orange]="label === 'High Priority'"
@@ -110,43 +110,45 @@
                       >
                     }
                   </div>
-                  <h3>{{ job.title }}</h3>
-                  <p class="description">{{ job.description }}</p>
-                  @if (job.checkLists.length) {
+                  <h3>{{ $any(job).title }}</h3>
+                  <p class="description">{{ $any(job).description }}</p>
+                  @if ($any(job).checkLists.length) {
                     <div class="check-progress">
                       <div>
                         <span>☑ Check List</span
-                        ><span>{{ countDone(job) }}/{{ job.checkLists.length }}</span>
+                        ><span>{{ countDone(job) }}/{{ $any(job).checkLists.length }}</span>
                       </div>
                       <div class="mini-track">
                         <i
-                          [style.width.%]="(countDone(job) / job.checkLists.length) * 100"
-                          [class.complete]="countDone(job) === job.checkLists.length"
+                          [style.width.%]="(countDone(job) / $any(job).checkLists.length) * 100"
+                          [class.complete]="countDone(job) === $any(job).checkLists.length"
                         ></i>
                       </div>
                     </div>
                   }
                   <div class="card-tags">
-                    <span>{{ job.category }}</span>
-                    @for (tag of job.tags; track $index) {
+                    <span>{{ $any(job).category }}</span>
+                    @for (tag of $any(job).tags; track $index) {
                       <span># {{ tag }}</span>
                     }
                   </div>
                   <div class="card-footer">
-                    <span class="date" [class.finished]="job.status === 4"
-                      >{{ job.status === 4 ? '✓' : '◷' }}
-                      {{ job.jobEndDate ? (job.jobEndDate | date: 'MM/DD/yyyy') : 'Date not set' }}</span
+                    <span class="date" [class.finished]="$any(job).status === 4"
+                      >{{ $any(job).status === 4 ? '✓' : '◷' }}
+                      {{ $any(job).jobEndDate ? ($any(job).jobEndDate | date: 'MM/DD/yyyy') : 'Date not set' }}</span
                     >
                     <div class="card-indicators">
-                      @if (job.comments.length) {
-                        <span>☏ {{ job.comments.length }}</span>
+                      @if ($any(job).comments.length) {
+                        <span>☏ {{ $any(job).comments.length }}</span>
                       }
-                      @if (job.attachments.length) {
-                        <span>♧ {{ job.attachments.length }}</span>
+                      @if ($any(job).attachments.length) {
+                        <span>♧ {{ $any(job).attachments.length }}</span>
                       }
                       <div class="avatar-stack">
-                        @for (id of job.userIds; track id) {
-                          <span [class]="'avatar tiny member-' + id">{{ initials(id) }}</span>
+                        @for (id of $any(job).users; track id) {
+                          <span [class]="'avatar tiny member-' + id">
+                            <img class="rounded-full" [src]="id.avatarBase64" />
+                          </span>
                         }
                       </div>
                     </div>
