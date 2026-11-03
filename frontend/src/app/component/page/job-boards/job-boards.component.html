@@ -147,7 +147,11 @@
                       <div class="avatar-stack">
                         @for (id of $any(job).users; track id) {
                           <span [class]="'avatar tiny member-' + id">
-                            <img class="rounded-full" [src]="id.avatarBase64" />
+                            @if (!id && !id.avatarBase64) {
+                              <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                            } @else {
+                              <img class="rounded-full" [src]="id.avatarBase64" />
+                            }
                           </span>
                         }
                       </div>
@@ -361,22 +365,30 @@
           <h3>Work Discussion</h3>
           @for (c of job.comments; track $index) {
             <div class="comment">
-              <span [class]="'avatar small member-' + c.userId">{{ initials(c.userId) }}</span>
+              <span [class]="'avatar tiny member-' + c">
+                @if (!c.avatar) {
+                  {{ initials(c.username) }}
+                } @else {
+                  <img class="rounded-full" [src]="c.avatar" />
+                }
+              </span>
               <div>
-                <b>{{ c.userId === '01' ? 'Felix' : c.userId === '02' ? 'Sophie' : 'Alex' }}</b>
+                <b>{{ c.username }}</b>
                 <p>{{ c.comment }}</p>
                 <select [(ngModel)]="c.status" aria-label="Comment Status">
                   <option [ngValue]="0">Public</option>
                   <option [ngValue]="1">Archived</option>
                 </select>
               </div>
-              <button
-                class="icon-button"
-                aria-label="Delete Comment"
-                (click)="job.comments.splice($index, 1)"
-              >
-                ×
-              </button>
+              @if (yourUserData.superAdmin === true) {
+                <button
+                  class="icon-button"
+                  aria-label="Delete Comment"
+                  (click)="job.comments.splice($index, 1)"
+                >
+                  ×
+                </button>
+              }
             </div>
           } @empty {
             <p class="empty-copy">Still no comments, share some work progress.</p>

@@ -6,6 +6,8 @@ import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-dr
 import {Job, newJob, demoJobs} from './job'
 import {FilterListApi, ListOption} from '../../components/filter-list/filter-list.component'
 import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { Subscription } from 'rxjs'
+import { UserStoreService } from '../../../../state/user.service'
 
 
 @Component({
@@ -15,7 +17,32 @@ import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
     styleUrls: ['./job-boards.component.css']
 })
 export class JobBoardsComponent  {
-    jobs: Job[] = [];
+  private userSubscription: Subscription
+  constructor(
+    private userStoreService: UserStoreService
+  ) {
+    this.userSubscription = this.userStoreService.user$.subscribe((data: any) => {
+      this.yourUserData._id = data._id
+      this.yourUserData.avatar = data.avatarBase64
+      this.yourUserData.username = data.username
+      this.yourUserData.superAdmin = data.superAdmin
+    })
+  }
+
+  ngOnDestroy() {
+    if (this.userStoreService.user$) {
+      this.userSubscription.unsubscribe()
+    }
+  }
+
+  yourUserData: any = {
+    _id: '',
+    avatar: '',
+    username: '',
+    superAdmin: false
+  }
+ 
+  jobs: Job[] = [];
   search = signal('');
   filter = signal('all');
   view = signal('board');
@@ -31,14 +58,6 @@ export class JobBoardsComponent  {
       if (!options.some((o) => o.value === id)) options.push({ value: id, label: id });
     return options;
   }
-  relationFields: { key: keyof Job['jobRelationData']; label: string }[] = [
-    { key: 'assetCode', label: '資產編號' },
-    { key: 'typeCode', label: '類型編號' },
-    { key: 'deptCode', label: '部門編號' },
-    { key: 'placeCode', label: '地點編號' },
-    { key: 'vendorCode', label: '供應商編號' },
-    { key: 'stockTakeName', label: '盤點名稱' },
-  ];
   selected: Job | null = null;
   tab = 'details';
   tagText = '';
@@ -48,7 +67,7 @@ export class JobBoardsComponent  {
   error = '';
   toast = signal('');
   ngOnInit() {
-    void this.loadJobLists();
+    void this.loadJobLists()
   }
 
   dataSearchForm: any = {
@@ -483,8 +502,14 @@ export class JobBoardsComponent  {
   }
   addComment() {
     if (this.comment.trim() && this.selected) {
-      this.selected.comments.push({ userId: '01', comment: this.comment.trim(), status: 0 });
-      this.comment = '';
+      this.selected.comments.push({ 
+        userId: this.yourUserData._id, 
+        comment: this.comment.trim(), 
+        status: 1, 
+        username: this.yourUserData.username, 
+        avatar: this.yourUserData.avatar 
+      })
+      this.comment = ''
     }
   }
   async attach(event: Event) {

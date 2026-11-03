@@ -16,9 +16,11 @@ export interface Job {
     updatedAt: string;
   }[];
   comments: {
-    userId: string;
-    comment: string;
-    status: number;
+    userId: string
+    comment: string
+    status: number
+    username: string
+    avatar: string
   }[];
   checkLists: {
     name: string;
@@ -85,7 +87,7 @@ export function demoJobs(): Job[] {
   ];
   return rows.map((r, i) => ({
     ...newJob(r[2]),
-    nuumber: `JOB-${String(i + 1).padStart(3, '0')}`,
+    number: `JOB-${String(i + 1).padStart(3, '0')}`,
     title: r[0],
     category: r[1],
     description: r[3],
@@ -102,6 +104,16 @@ export function demoJobs(): Job[] {
           ]
         : [],
     comments:
-      i % 2 === 0 ? [{ userId: '02', comment: '已確認工作安排，會按計劃跟進。', status: 0 }] : [],
+      i % 2 === 0
+        ? [
+            {
+              userId: '02',
+              comment: '已確認工作安排，會按計劃跟進。',
+              status: 0,
+              username: '使用者 02',
+              avatar: '',
+            },
+          ]
+        : [],
   }));
 }

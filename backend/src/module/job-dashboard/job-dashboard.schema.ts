@@ -66,6 +66,8 @@ export interface CheckList {
 
 export interface CommentList {
     userId: string
+    username: string
+    avatar: string
     comment: string
     status: number
 }
