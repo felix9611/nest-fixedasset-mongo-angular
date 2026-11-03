@@ -16,6 +16,12 @@ export class JobDashboardController {
         return await this.jobDashboardService.create(createData)
     }
 
+    @Post('update')
+    @UseGuards(AuthGuard)
+    async update(@Body() createData: JobDashboard, @Req() { user }: { user: JwtPayload }) {
+        return await this.jobDashboardService.update(createData)
+    }
+
     @Post('list')
     @UseGuards(AuthGuard)
     async list(@Body() req: ListJobDashboardRequestDto, @Req() { user }: { user: JwtPayload }) {

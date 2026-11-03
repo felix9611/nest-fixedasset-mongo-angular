@@ -203,7 +203,7 @@ export class JobDashboardService {
         }
     }
 
-    async updateJobDashboard(jobDashboard: JobDashboard) {
+    async update(jobDashboard: JobDashboard) {
         const { _id, ..._description } = jobDashboard
 
         const check = await this.jobDashboardModel.findOne({ _id })
