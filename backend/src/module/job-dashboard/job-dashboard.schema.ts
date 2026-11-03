@@ -1,4 +1,4 @@
-import { HydratedDocument, SchemaTypes } from "mongoose"
+import { HydratedDocument, SchemaTypes, Types } from "mongoose"
 import { BaseSchema } from "../base/baseSchema"
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose"
 
@@ -42,8 +42,8 @@ export class JobDashboard extends BaseSchema {
     @Prop({ type: SchemaTypes.Array, required: false, default: [] })
     checkLists?: CheckList[]
 
-    @Prop({ type: SchemaTypes.Array, required: false, default: [] })
-    memberIds?: string[]
+    @Prop({ type: Types.ObjectId, required: false, default: [] })
+    userIds?: Types.ObjectId[]
 
     @Prop({ type: SchemaTypes.Mixed, required: false, default: {} })
     jobRelationData?: JobRelationData

@@ -21,7 +21,7 @@ export class JobDashboardService {
         return {
             toDoList: toDoList || [],
             inProgressList: inProgressList || [],
-            reviewList: reviewList || [],
+            inReviewList: reviewList || [],
             completedList: completedList || []
         }
     }
@@ -43,8 +43,8 @@ export class JobDashboardService {
             },
             {
                 $lookup: {
-                    from: 'sysUsers', // Make sure this matches your DB collection name
-                    let: { deptIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
+                    from: 'sysusers', // Make sure this matches your DB collection name
+                    let: { userIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
                     pipeline: [
                         { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
                         {
@@ -111,8 +111,9 @@ export class JobDashboardService {
         }
     }
 
-    async createJobDashboard(jobDashboard: JobDashboard) {
+    async create(jobDashboard: JobDashboard) {
         const { _id, number, title, ..._description } = jobDashboard
+        
 
         const check = await this.jobDashboardModel.findOne({ title })
 
@@ -133,12 +134,12 @@ export class JobDashboardService {
 
             const newNumber = await this.createNewNumber()
 
-            const newData: JobDashboard = {
-                ...jobDashboard,
+            const newData: any = {
+                ..._description,
+                title,
                 number: newNumber,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                status: 1,
                 jobValid: true
             }
 
