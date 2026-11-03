@@ -1,0 +1,456 @@
+<div>
+<header class="topbar">
+    <div class="breadcrumb">工作空間 <span>/</span> <strong>團隊工作看板</strong></div>
+    <div class="top-right">
+      <span class="local-dot"></span> 本機儲存 <span class="top-divider"></span
+      ><span class="avatar purple small">F</span>
+    </div>
+  </header>
+  <section class="page-heading">
+    <div>
+      <div class="eyebrow">WORKSPACE / PROJECTS</div>
+      <h1>團隊工作看板 <span class="board-emoji">✧</span></h1>
+      <p>集中管理工作，讓每一步進度都清晰可見。</p>
+    </div>
+    <button class="primary" (click)="create()">＋ <span>New Tasks</span></button>
+  </section>
+  <section class="summary">
+    <div class="summary-item">
+      <span class="stat-icon violet">▤</span>
+      <div>
+        <small>All Tasks</small><b>{{ jobs().length }} <em>Tasks</em></b>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="stat-icon blue">◷</span>
+      <div>
+        <small>In Progress</small><b>{{ active() }} <em>Currently in progress</em></b>
+      </div>
+    </div>
+    <div class="summary-item">
+      <span class="stat-icon green">✓</span>
+      <div>
+        <small>已完成</small><b>{{ done() }} <em>做得好！</em></b>
+      </div>
+    </div>
+    <div class="summary-item progress-stat">
+      <div class="progress-label">
+        <small>整體完成度</small
+        ><b
+          >{{ jobs().length ? ((done() / jobs().length) * 100 | number: '1.0-0') : 0 }}<em>%</em></b
+        >
+      </div>
+      <div class="progress-track">
+        <i [style.width.%]="jobs().length ? (done() / jobs().length) * 100 : 0"></i>
+      </div>
+    </div>
+  </section>
+  <section class="board-toolbar">
+    <div class="view-tabs">
+      <button [class.selected]="view() === 'board'" (click)="view.set('board')">
+        ▦ <span>看板</span></button
+      ><button [class.selected]="view() === 'list'" (click)="view.set('list')">
+        ☷ <span>列表</span>
+      </button>
+    </div>
+    <div class="toolbar-actions">
+      <label class="search"
+        ><span>⌕</span
+        ><input
+          aria-label="搜尋工作"
+          placeholder="搜尋工作..."
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+        /><kbd>⌕</kbd></label
+      ><select aria-label="篩選工作" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
+        <option value="all">所有成員</option>
+        <option value="mine">指派給我</option></select
+      ><button class="export" (click)="export()">↥ <span>匯出</span></button>
+      <div class="avatar-stack">
+        @for (m of members; track m.id) {
+          <span class="avatar small" [class]="'avatar small member-' + m._id" [title]="m.name">{{
+            m.initial
+          }}</span>
+        }
+      </div>
+    </div>
+  </section>
+  <div class="board-meta">
+    <span
+      ><span class="live-dot"></span>{{ filter() === 'mine' ? '我的工作' : '團隊工作' }}
+      <span class="muted">· {{ visible().length }} 項工作</span></span
+    ><span class="muted">拖放工作卡以更新進度</span>
+  </div>
+  @if (view() === 'board') {
+    <section class="board" cdkDropListGroup>
+      @for (col of columns; track col.id) {
+        <div class="column">
+          <div class="column-heading">
+            <div>
+              <i [style.background]="col.color"></i>
+              <h2>{{ col.name }}</h2>
+              <span class="column-count">{{ cards(col.id).length }}</span>
+            </div>
+            <button (click)="create(col.id)" [attr.aria-label]="'新增' + col.name + '工作'">
+              ＋
+            </button>
+          </div>
+          <div
+            class="drop-area"
+            cdkDropList
+            [cdkDropListData]="cards(col.id)"
+            (cdkDropListDropped)="drop($event, col.id)"
+          >
+            @for (job of cards(col.id); track job._id) {
+              <article class="task-card" cdkDrag [cdkDragData]="job">
+                <button class="card-content" (click)="open(job)">
+                  <div class="card-top">
+                    <span class="job-number">{{ job.number }}</span
+                    ><span class="card-dots">···</span>
+                  </div>
+                  <div class="labels">
+                    @for (label of job.labels; track $index) {
+                      <span
+                        class="label"
+                        [class.orange]="label === '高優先'"
+                        [class.teal]="label === '盤點' || label === '保養'"
+                        [class.blue]="label === '開發' || label === '驗收'"
+                        >{{ label === '高優先' ? '⚑ ' : '' }}{{ label }}</span
+                      >
+                    }
+                  </div>
+                  <h3>{{ job.title }}</h3>
+                  <p class="description">{{ job.description }}</p>
+                  @if (job.checkLists.length) {
+                    <div class="check-progress">
+                      <div>
+                        <span>☑ 檢查清單</span
+                        ><span>{{ countDone(job) }}/{{ job.checkLists.length }}</span>
+                      </div>
+                      <div class="mini-track">
+                        <i
+                          [style.width.%]="(countDone(job) / job.checkLists.length) * 100"
+                          [class.complete]="countDone(job) === job.checkLists.length"
+                        ></i>
+                      </div>
+                    </div>
+                  }
+                  <div class="card-tags">
+                    <span>{{ job.category }}</span>
+                    @for (tag of job.tags; track $index) {
+                      <span># {{ tag }}</span>
+                    }
+                  </div>
+                  <div class="card-footer">
+                    <span class="date" [class.finished]="job.status === 4"
+                      >{{ job.status === 4 ? '✓' : '◷' }}
+                      {{ job.jobEndDate ? (job.jobEndDate | date: 'M月d日') : '未設定日期' }}</span
+                    >
+                    <div class="card-indicators">
+                      @if (job.comments.length) {
+                        <span>☏ {{ job.comments.length }}</span>
+                      }
+                      @if (job.attachments.length) {
+                        <span>♧ {{ job.attachments.length }}</span>
+                      }
+                      <div class="avatar-stack">
+                        @for (id of job.userIds; track id) {
+                          <span [class]="'avatar tiny member-' + id">{{ initials(id) }}</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </article>
+            } @empty {
+              <div class="empty-column">將工作拖到呢度<br /><small>或新增一項工作</small></div>
+            }
+          </div>
+          <button class="add-card" (click)="create(col.id)">＋ 新增工作</button>
+        </div>
+      }
+    </section>
+  } @else {
+    <div class="list-view">
+      <table>
+        <thead>
+          <tr>
+            <th>工作</th>
+            <th>分類</th>
+            <th>狀態</th>
+            <th>截止日期</th>
+            <th>負責人</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (job of visible(); track job._id) {
+            <tr>
+              <td>
+                <button (click)="open(job)">
+                  <small>{{ job.number }}</small
+                  >{{ job.title }}
+                </button>
+              </td>
+              <td>{{ job.category }}</td>
+              <td>
+                <select
+                  aria-label="工作狀態"
+                  [ngModel]="job.status"
+                  (ngModelChange)="open(job); selected!.status = $event; save()"
+                >
+                  @for (col of columns; track col.id) {
+                    <option [ngValue]="col.id">{{ col.name }}</option>
+                  }
+                </select>
+              </td>
+              <td>{{ job.jobEndDate || '—' }}</td>
+              <td>
+                @for (id of job.userIds; track id) {
+                  <span [class]="'avatar tiny member-' + id">{{ initials(id) }}</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5">搵唔到符合條件嘅工作。</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  <footer class="page-footer">
+    <span>✧ 留一點空間，畀下一個好點子。</span><span>Flowboard · 讓協作更簡單</span>
+  </footer>
+</div>
+@if (selected; as job) {
+  <div class="modal-backdrop" (click)="selected = null">
+    <section
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dialog-title"
+      (click)="$event.stopPropagation()"
+      (keydown.escape)="selected = null"
+      tabindex="-1"
+    >
+      <header class="modal-header">
+        <div>
+          <small>{{ job.number }} / 工作詳情</small>
+          <h2 id="dialog-title">{{ job.title || '新增工作' }}</h2>
+        </div>
+        <button class="close" aria-label="關閉" (click)="selected = null">×</button>
+      </header>
+      <nav class="modal-tabs">
+        @for (
+          t of [
+            { id: 'details', name: '工作資料' },
+            { id: 'checks', name: '檢查清單' },
+            { id: 'attachments', name: '附件' },
+            { id: 'comments', name: '留言' },
+            { id: 'relations', name: '關聯資料' },
+          ];
+          track t.id
+        ) {
+          <button [class.selected]="tab === t.id" (click)="tab = t.id">{{ t.name }}</button>
+        }
+      </nav>
+      <div class="modal-body">
+        @if (tab === 'details') {
+          <label
+            >工作標題 <span class="required">*</span
+            ><input [(ngModel)]="job.title" placeholder="輸入工作標題" maxlength="200" /></label
+          ><label
+            >描述<textarea
+              [(ngModel)]="job.description"
+              rows="3"
+              placeholder="補充工作內容及目標..."
+            ></textarea>
+          </label>
+          <div class="form-grid">
+            <label>工作編號<input [(ngModel)]="job.number" /></label
+            ><label
+              >分類<input [(ngModel)]="job.category" list="categories" /><datalist id="categories">
+                <option>一般工作</option>
+                <option>設計</option>
+                <option>開發</option>
+                <option>營運</option>
+                <option>維修</option>
+                <option>資產</option>
+              </datalist></label
+            ><label
+              >狀態<select [(ngModel)]="job.status">
+                @for (col of columns; track col.id) {
+                  <option [ngValue]="col.id">{{ col.name }}</option>
+                }
+              </select></label
+            ><label
+              >有效狀態<select [(ngModel)]="job.jobValid">
+                <option>有效</option>
+                <option>無效</option>
+              </select></label
+            ><label>開始日期<input type="date" [(ngModel)]="job.jobStartDate" /></label
+            ><label>結束日期<input type="date" [(ngModel)]="job.jobEndDate" /></label
+            ><label
+              >剩餘工時<input [(ngModel)]="job.jobTimeRemain" placeholder="例如：4 小時" /></label
+            ><label
+              >標籤（以逗號分隔）<input [(ngModel)]="labelText" placeholder="高優先, 開發"
+            /></label>
+          </div>
+          <label>Tags（以逗號分隔）<input [(ngModel)]="tagText" placeholder="Q4, 內部" /></label>
+          <div class="lookup-field">
+            <span class="field-label">負責人</span>
+            <app-filter-list-api
+                label="Members"
+                [apiUrl]="'/sys/user/list'"
+                [requestBody]="systemUserSearchForm"
+                [postApi]="loadUserLists"
+                [multiple]="true"
+                [searchDataKey]="['username', 'email']"
+                [(value)]="job.userIds"
+            />
+          </div>
+        }
+        @if (tab === 'checks') {
+          <h3>
+            檢查清單 <small>{{ countDone(job) }} / {{ job.checkLists.length }}</small>
+          </h3>
+          @for (item of job.checkLists; track $index) {
+            <div class="check-row">
+              <input
+                type="checkbox"
+                [(ngModel)]="item.checked"
+                [attr.aria-label]="item.name"
+              /><input
+                class="check-name"
+                [(ngModel)]="item.name"
+                aria-label="檢查項目名稱"
+                [class.struck]="item.checked"
+              /><select [(ngModel)]="item.status" aria-label="項目狀態">
+                <option [ngValue]="0">有效</option>
+                <option [ngValue]="1">封存</option></select
+              ><button
+                class="icon-button"
+                aria-label="刪除檢查項目"
+                (click)="job.checkLists.splice($index, 1)"
+              >
+                ×
+              </button>
+            </div>
+          }
+          <div class="inline-form">
+            <input
+              [(ngModel)]="checklist"
+              placeholder="新增檢查項目..."
+              (keydown.enter)="addCheck()"
+            /><button class="primary" (click)="addCheck()">新增</button>
+          </div>
+        }
+        @if (tab === 'attachments') {
+          <label class="upload-area"
+            >↥<b>加入工作附件</b><span>選擇檔案，每個檔案上限 2 MB</span
+            ><input type="file" multiple (change)="attach($event)"
+          /></label>
+          @for (a of job.attachments; track $index) {
+            <div class="attachment-row">
+              <span>▤</span>
+              <div>
+                <b>{{ a.fileName }}</b
+                ><small
+                  >{{ a.fileType || '檔案' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
+                >
+              </div>
+              <button (click)="download(a)">下載</button
+              ><button aria-label="移除附件" (click)="job.attachments.splice($index, 1)">×</button>
+            </div>
+          }
+        }
+        @if (tab === 'comments') {
+          <h3>工作討論</h3>
+          @for (c of job.comments; track $index) {
+            <div class="comment">
+              <span [class]="'avatar small member-' + c.userId">{{ initials(c.userId) }}</span>
+              <div>
+                <b>{{ c.userId === '01' ? 'Felix' : c.userId === '02' ? 'Sophie' : 'Alex' }}</b>
+                <p>{{ c.comment }}</p>
+                <select [(ngModel)]="c.status" aria-label="留言狀態">
+                  <option [ngValue]="0">公開</option>
+                  <option [ngValue]="1">封存</option>
+                </select>
+              </div>
+              <button
+                class="icon-button"
+                aria-label="刪除留言"
+                (click)="job.comments.splice($index, 1)"
+              >
+                ×
+              </button>
+            </div>
+          } @empty {
+            <p class="empty-copy">仲未有留言，分享一下工作進度。</p>
+          }
+          <textarea [(ngModel)]="comment" rows="3" placeholder="寫低你嘅留言..."></textarea
+          ><button class="primary" (click)="addComment()" [disabled]="!comment.trim()">
+            加入留言
+          </button>
+        }
+        @if (tab === 'relations') {
+          <h3>工作關聯資料</h3>
+          <p class="empty-copy">將工作連結到相關資產、部門及供應商。</p>
+          <div class="form-grid">
+            <div class="lookup-field">
+              <span class="field-label">Asset</span>
+              <app-filter-list-api
+                  label="Asset"
+                  [apiUrl]="'/asset/asset-list/list'"
+                  [requestBody]="assetSearchForm"
+                  [postApi]="loadAssetLists"
+                  [multiple]="false"
+                  [searchDataKey]="['assetCode', 'assetName']"
+                  [(singleValue)]="job.jobRelationData.assetCode"
+                  (singleValueChange)="job.jobRelationData.assetCode"
+              />
+            </div>
+            <div class="lookup-field">
+              <span class="field-label">Asset Type</span>
+              <app-filter-list-api
+                  label="Asset Type"
+                  [apiUrl]="'/asset/type/list'"
+                  [requestBody]="assetTypeSearchForm"
+                  [postApi]="loadAssetTypeLists"
+                  [multiple]="false"
+                  [searchDataKey]="['typeCode', 'typeName']"
+                  [(singleValue)]="job.jobRelationData.typeCode"
+                  (singleValueChange)="job.jobRelationData.typeCode"
+              />
+            </div>
+            @for (field of relationFields; track field.key) {
+              <div class="lookup-field">
+                <span class="field-label">{{ field.label }}</span
+                ><!--<app-filter-list
+                  [label]="field.label"
+                  [options]="lookupOptions(field.key)"
+                  [value]="job.jobRelationData[field.key] ? [job.jobRelationData[field.key]] : []"
+                  (valueChange)="job.jobRelationData[field.key] = $event[0] || ''"
+                /> -->
+              </div>
+            }
+          </div>
+        }
+        @if (error) {
+          <p class="error" role="alert">{{ error }}</p>
+        }
+      </div>
+      <footer class="modal-footer">
+        <button class="danger" (click)="remove()">刪除工作</button>
+        <div>
+          <button class="secondary" (click)="selected = null">取消</button
+          ><button class="primary" (click)="save()">儲存工作</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+}
+@if (toast()) {
+  <div class="toast" role="status">✓ {{ toast() }}</div>
+}
