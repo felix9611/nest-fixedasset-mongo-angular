@@ -13,18 +13,10 @@ export class JobDashboardService {
     ) {}
 
     async listJobDashboard(req: ListJobDashboardRequestDto) {
-        const { name, memberId } = req
-
-        const allQuery: any = { 
-            status: 1,
-            jobValid: true,
-            ...(name ? { title: { $regex: name, $options: 'i' } } : {}),
-        }
-
-        const toDoList = await this.jobDashboardModel.find({ ...allQuery, status: 1 }).sort({ sortOrder: 1 }).exec()
-        const inProgressList = await this.jobDashboardModel.find({ ...allQuery, status: 2 }).sort({ sortOrder: 1 }).exec()
-        const reviewList = await this.jobDashboardModel.find({ ...allQuery, status: 3 }).sort({ sortOrder: 1 }).exec()
-        const completedList = await this.jobDashboardModel.find({ ...allQuery, status: 4 }).sort({ sortOrder: 1 }).exec()
+        const toDoList = await this.getJobDashboardListQuery(req, 1)
+        const inProgressList = await this.getJobDashboardListQuery(req, 2)
+        const reviewList = await this.getJobDashboardListQuery(req, 3)
+        const completedList = await this.getJobDashboardListQuery(req, 4)
 
         return {
             toDoList: toDoList || [],
@@ -32,6 +24,42 @@ export class JobDashboardService {
             reviewList: reviewList || [],
             completedList: completedList || []
         }
+    }
+
+    async getJobDashboardListQuery(req: ListJobDashboardRequestDto, status: number) {
+         const { name, memberId } = req
+
+        const allQuery: any = { 
+            jobValid: true,
+            ...(name ? { title: { $regex: name, $options: 'i' } } : {}),
+        }
+
+        return await this.jobDashboardModel.aggregate([
+            { 
+                $match: { 
+                    ...allQuery, 
+                    status,
+                } 
+            },
+            {
+                $lookup: {
+                    from: 'sysUsers', // Make sure this matches your DB collection name
+                    let: { deptIds: { $map: { input: '$userIds', as: 'userIds', in: { $toObjectId: '$$userIds' } } } }, // Convert strings to ObjectIds
+                    pipeline: [
+                        { $match: { $expr: { $in: ['$_id', '$$userIds'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                username: 1,
+                                avatarBase64: 1
+                            }
+                        }
+                    ],
+                    as: 'users'
+                }
+            },
+            { $sort: { sortOrder: 1 } }
+        ]).exec()
     }
 
     async updateTaskStatus(req: UpdateJobDashboardStatusDto) {
