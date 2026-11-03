@@ -59,9 +59,13 @@
       ><button class="export" (click)="export()">↥ <span>Export</span></button>
       <div class="avatar-stack">
         @for (m of members; track m.id) {
-          <span class="avatar small" [class]="'avatar small member-' + m._id" [title]="m.name">{{
-            m.initial
-          }}</span>
+          @if (m.avatarBase64) {
+            <img class="avatar small rounded-full" [src]="m.avatarBase64" />
+          } @else {
+            <span class="avatar small" [class]="'avatar small member-' + m._id" [title]="m.name">{{
+              m.username
+            }}</span>
+          }
         }
       </div>
     </div>
