@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms'
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop'
 import {Job, newJob, demoJobs} from './job'
 import {FilterListApi, ListOption} from '../../components/filter-list/filter-list.component'
-import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { deleteApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { Subscription } from 'rxjs'
 import { UserStoreService } from '../../../../state/user.service'
 
@@ -452,11 +452,17 @@ export class JobBoardsComponent  {
     }
   }
 
-  remove() {
-    if (this.selected && confirm('確定刪除呢張工作卡？')) {
-      this.jobs = this.jobs.filter((j) => j._id !== this.selected!._id);
-      this.selected = null;
-      this.notify('工作已刪除（本次工作階段）');
+  async remove() {
+    if (this.selected && confirm('Confirm delete this task？')) {
+      const url = `/tasks/void/${this.selected._id}`
+      const res = await deleteApiWithAuth(url)
+      if (res.error) {
+        this.notify(res.error)
+      } else {
+        this.selected = null;
+        this.notify(res.message)
+        this.loadJobLists()
+      }
     }
   }
 
