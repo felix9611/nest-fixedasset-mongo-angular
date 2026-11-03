@@ -47,8 +47,8 @@ export interface ListOption {
             [value]="query"
             (input)="onInput($event)"
             (keydown.enter)="submitSearch($event)"
-            [attr.aria-label]="'搜尋' + label"
-            placeholder="輸入編號或名稱搜尋..."
+            [attr.aria-label]="'Search' + label"
+            placeholder="Enter ID or name to search..."
             (keydown.escape)="$event.stopPropagation(); expanded = false"
           />
           <div class="api-state" aria-live="polite">
@@ -57,10 +57,10 @@ export interface ListOption {
             }
             @if (error()) {
               <p role="alert">{{ error() }}</p>
-              <button type="button" (click)="loadPage(failedPage)">重新載入</button>
+              <button type="button" (click)="loadPage(failedPage)">Reload</button>
             }
           </div>
-          <div class="filter-options" [attr.aria-label]="label + '選項'">
+          <div class="filter-options" [attr.aria-label]="label + 'options'">
             @for (option of filtered(); track option.value) {
               <button
                 type="button"
@@ -75,7 +75,7 @@ export interface ListOption {
               </button>
             } @empty {
               @if (!loading() && !error()) {
-                <p class="filter-empty">搵唔到符合條件嘅選項</p>
+                <p class="filter-empty">No data found</p>
               }
             }
           </div>
@@ -86,13 +86,13 @@ export interface ListOption {
               [disabled]="loading()"
               (click)="loadPage(page + 1)"
             >
-              載入更多
+              Load more
             </button>
           }
           <div class="filter-menu-footer">
-            <small>{{ filtered().length }} 個選項</small
+            <small>{{ filtered().length }} options</small
             ><button type="button" (click)="valueChange.emit([]); expanded = false">
-              清除選擇
+              Clear
             </button>
           </div>
         </div>
@@ -204,12 +204,12 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
       const result = await Promise.race([
         request,
         new Promise<never>((_, reject) => {
-          timer = setTimeout(() => reject(new Error('API 請求逾時，請重試。')), 15000);
+          timer = setTimeout(() => reject(new Error('API request timed out')), 15000);
           this.timers.add(timer);
         }),
       ]);
       if (version !== this.version || this.destroyed) return;
-      if (result === undefined) throw new Error('父元件函數必須 return 選項陣列或 API 回應。');
+      if (result === undefined) throw new Error('Failed to load options');
       let rows: ListOption[];
       try {
         rows = this.mapResponse(result);
@@ -220,7 +220,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
           throw new Error('Invalid options');
         }
       } catch {
-        throw new Error('選項格式錯誤：請回傳 { value, label }[]，或設定 mapResponse。');
+        throw new Error('Options mapping failed：Please return an array of { value, label }[] or set a mapResponse function。');
       }
       rows.forEach((row) => this.names.set(row.value, row.label));
       this.options.set(
@@ -234,7 +234,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
       this.hasMore.set(rows.length >= limit);
     } catch (error) {
       if (version === this.version && !this.destroyed) {
-        this.error.set(error instanceof Error ? error.message : '選項載入失敗，請重試。');
+        this.error.set(error instanceof Error ? error.message : 'Load options failed。');
       }
     } finally {
       if (timer) {
