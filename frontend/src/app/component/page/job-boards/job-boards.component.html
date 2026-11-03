@@ -380,7 +380,8 @@
         @if (tab === 'comments') {
           <h3>Work Discussion</h3>
           @for (c of job.comments; track $index) {
-            <div class="comment">
+            @if (c.status === 1) {
+              <div class="comment">
               <span [class]="'avatar tiny member-' + c">
                 @if (!c.avatar) {
                   {{ initials(c.username) }}
@@ -391,21 +392,18 @@
               <div>
                 <b>{{ c.username }}</b>
                 <p>{{ c.comment }}</p>
-                <select [(ngModel)]="c.status" aria-label="Comment Status">
-                  <option [ngValue]="0">Public</option>
-                  <option [ngValue]="1">Archived</option>
-                </select>
               </div>
               @if (yourUserData.superAdmin === true) {
                 <button
                   class="icon-button"
                   aria-label="Delete Comment"
-                  (click)="job.comments.splice($index, 1)"
+                  (click)="c.status = 0;"
                 >
                   ×
                 </button>
               }
             </div>
+            }
           } @empty {
             <p class="empty-copy">Still no comments, share some work progress.</p>
           }
