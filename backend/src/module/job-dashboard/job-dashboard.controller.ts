@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Param, Post, Req, UseGuards } from "@nestjs/common"
 import { JobDashboardService } from "./job-dashboard.server"
 import { ApiBody, ApiOperation } from "@nestjs/swagger"
 import { AuthGuard } from "../auth/AuthGuard"
@@ -32,5 +32,11 @@ export class JobDashboardController {
     @UseGuards(AuthGuard)
     async changeStatus(@Body() req: UpdateJobDashboardStatusDto, @Req() { user }: { user: JwtPayload }) {
         return await this.jobDashboardService.updateTaskStatus(req)
+    }
+
+    @Delete('void/:id')
+    @UseGuards(AuthGuard)
+    async delete(@Param('id') _id: string, @Req() { user }: { user: JwtPayload }) {
+        return await this.jobDashboardService.voidById(_id)
     }
 }
