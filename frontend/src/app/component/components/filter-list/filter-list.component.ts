@@ -31,9 +31,9 @@ export interface ListOption {
         <span>{{ summary() }}</span
         ><span>⌄</span>
       </button>
-      @if (multiple && value.length) {
-        <div class="selected-options">
-          @for (id of value; track id) {
+      @if (selectedIds.length) {
+        <div class="selected-options" aria-live="polite" aria-label="已選項目">
+          @for (id of selectedIds; track id) {
             <button type="button" (click)="remove(id)" [attr.aria-label]="'移除 ' + name(id)">
               {{ name(id) }} ×
             </button>
@@ -44,11 +44,12 @@ export interface ListOption {
         <div class="filter-menu">
           <input
             type="search"
+            [name]="searchKeys.join(',')"
             [value]="query"
             (input)="onInput($event)"
             (keydown.enter)="submitSearch($event)"
-            [attr.aria-label]="'Search' + label"
-            placeholder="Enter ID or name to search..."
+            [attr.aria-label]="'搜尋' + label"
+            [placeholder]="'搜尋' + label + '...'"
             (keydown.escape)="$event.stopPropagation(); expanded = false"
           />
           <div class="api-state" aria-live="polite">
@@ -57,25 +58,25 @@ export interface ListOption {
             }
             @if (error()) {
               <p role="alert">{{ error() }}</p>
-              <button type="button" (click)="loadPage(failedPage)">Reload</button>
+              <button type="button" (click)="loadPage(failedPage)">重新載入</button>
             }
           </div>
-          <div class="filter-options" [attr.aria-label]="label + 'options'">
+          <div class="filter-options" [attr.aria-label]="label + '選項'">
             @for (option of filtered(); track option.value) {
               <button
                 type="button"
-                [class.is-selected]="value.includes(option.value)"
-                [attr.aria-pressed]="value.includes(option.value)"
+                [class.is-selected]="selectedIds.includes(option.value)"
+                [attr.aria-pressed]="selectedIds.includes(option.value)"
                 (click)="choose(option.value)"
               >
                 <span
                   ><b>{{ option.label }}</b
                   ><small>{{ option.value }}</small></span
-                ><span>{{ value.includes(option.value) ? '✓' : '＋' }}</span>
+                ><span>{{ selectedIds.includes(option.value) ? '✓' : '＋' }}</span>
               </button>
             } @empty {
               @if (!loading() && !error()) {
-                <p class="filter-empty">No data found</p>
+                <p class="filter-empty">搵唔到符合條件嘅選項</p>
               }
             }
           </div>
@@ -86,14 +87,12 @@ export interface ListOption {
               [disabled]="loading()"
               (click)="loadPage(page + 1)"
             >
-              Load more
+              載入更多
             </button>
           }
           <div class="filter-menu-footer">
-            <small>{{ filtered().length }} options</small
-            ><button type="button" (click)="valueChange.emit([]); expanded = false">
-              Clear
-            </button>
+            <small>{{ filtered().length }} 個選項</small
+            ><button type="button" (click)="clear()">清除選擇</button>
           </div>
         </div>
       }
@@ -102,13 +101,16 @@ export interface ListOption {
 })
 export class FilterListApi implements OnChanges, OnInit, OnDestroy {
   @Input() apiUrl = '/sys/user/list';
-  @Input() requestBody: Record<string, unknown> = { name: '', page: 1, limit: 10 };
+  @Input({ required: true }) searchDataKey: string | string[] = '';
+  @Input() requestBody: Record<string, unknown> = { page: 1, limit: 10 };
   @Input() postApi?: (url: string, body: Record<string, unknown>) => Promise<unknown>;
   @Input() mapResponse: (response: unknown) => ListOption[] = mapListResponse;
   @Input() value: string[] = [];
+  @Input() singleValue: string | null = null;
   @Input() label = '';
   @Input() multiple = false;
   @Output() valueChange = new EventEmitter<string[]>();
+  @Output() singleValueChange = new EventEmitter<string>();
 
   loading = signal(false);
   error = signal('');
@@ -135,7 +137,9 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     if (
       this.initialized &&
-      ['apiUrl', 'requestBody', 'postApi', 'mapResponse'].some((key) => changes[key])
+      ['apiUrl', 'requestBody', 'postApi', 'mapResponse', 'searchDataKey'].some(
+        (key) => changes[key],
+      )
     ) {
       this.readQuery();
       this.names.clear();
@@ -143,8 +147,15 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  get searchKeys(): string[] {
+    const keys = Array.isArray(this.searchDataKey) ? this.searchDataKey : [this.searchDataKey];
+    return [...new Set(keys.map((key) => key.trim()).filter(Boolean))];
+  }
+
   private readQuery() {
-    this.query = typeof this.requestBody['name'] === 'string' ? this.requestBody['name'] : '';
+    const values = this.searchKeys.map((key) => this.requestBody[key]);
+    this.query =
+      values.find((value): value is string => typeof value === 'string' && value.length > 0) ?? '';
   }
 
   toggle() {
@@ -195,7 +206,13 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
     }
     const requestedLimit = Number(this.requestBody['limit']);
     const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? requestedLimit : 10;
-    const body = { ...this.requestBody, name: this.query.trim(), page, limit };
+    if (!this.searchKeys.length) {
+      this.loading.set(false);
+      this.error.set('請設定搜尋欄位 searchDataKey。');
+      return;
+    }
+    const filters = Object.fromEntries(this.searchKeys.map((key) => [key, this.query.trim()]));
+    const body = { ...this.requestBody, ...filters, page, limit };
     this.loading.set(true);
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
@@ -204,12 +221,12 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
       const result = await Promise.race([
         request,
         new Promise<never>((_, reject) => {
-          timer = setTimeout(() => reject(new Error('API request timed out')), 15000);
+          timer = setTimeout(() => reject(new Error('API 請求逾時，請重試。')), 15000);
           this.timers.add(timer);
         }),
       ]);
       if (version !== this.version || this.destroyed) return;
-      if (result === undefined) throw new Error('Failed to load options');
+      if (result === undefined) throw new Error('父元件函數必須 return 選項陣列或 API 回應。');
       let rows: ListOption[];
       try {
         rows = this.mapResponse(result);
@@ -220,7 +237,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
           throw new Error('Invalid options');
         }
       } catch {
-        throw new Error('Options mapping failed：Please return an array of { value, label }[] or set a mapResponse function。');
+        throw new Error('選項格式錯誤：請回傳 { value, label }[]，或設定 mapResponse。');
       }
       rows.forEach((row) => this.names.set(row.value, row.label));
       this.options.set(
@@ -234,7 +251,7 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
       this.hasMore.set(rows.length >= limit);
     } catch (error) {
       if (version === this.version && !this.destroyed) {
-        this.error.set(error instanceof Error ? error.message : 'Load options failed。');
+        this.error.set(error instanceof Error ? error.message : '選項載入失敗，請重試。');
       }
     } finally {
       if (timer) {
@@ -252,22 +269,40 @@ export class FilterListApi implements OnChanges, OnInit, OnDestroy {
     this.options();
     return this.names.get(id) || id;
   }
+  get selectedIds(): string[] {
+    if (this.multiple) return this.value;
+    return this.singleValue !== null
+      ? this.singleValue
+        ? [this.singleValue]
+        : []
+      : this.value.slice(0, 1);
+  }
   summary() {
-    return this.value.length
-      ? this.value.map((id) => this.name(id)).join('、')
+    return this.selectedIds.length
+      ? this.selectedIds.map((id) => this.name(id)).join('、')
       : '請選擇' + this.label;
   }
   choose(id: string) {
-    this.valueChange.emit(
-      this.multiple
-        ? this.value.includes(id)
-          ? this.value.filter((value) => value !== id)
-          : [...this.value, id]
-        : [id],
-    );
-    if (!this.multiple) this.expanded = false;
+    if (this.multiple) {
+      this.valueChange.emit(
+        this.value.includes(id) ? this.value.filter((value) => value !== id) : [...this.value, id],
+      );
+    } else {
+      this.singleValueChange.emit(id);
+      this.valueChange.emit([id]);
+      this.expanded = false;
+    }
+  }
+  clear() {
+    if (!this.multiple) this.singleValueChange.emit('');
+    this.valueChange.emit([]);
+    this.expanded = false;
   }
   remove(id: string) {
+    if (!this.multiple) {
+      this.clear();
+      return;
+    }
     this.valueChange.emit(this.value.filter((value) => value !== id));
   }
 
