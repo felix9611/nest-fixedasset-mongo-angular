@@ -202,8 +202,12 @@
               </td>
               <td>{{ job.jobEndDate || '—' }}</td>
               <td>
-                @for (id of job.userIds; track id) {
-                  <span [class]="'avatar tiny member-' + id">{{ initials(id) }}</span>
+                @for (id of job.users; track id) {
+                  @if (id.avatarBase64 === '') {
+                    <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                  } @else {
+                    <img class="avatar tiny rounded-full" [src]="id.avatarBase64" />
+                  }
                 }
               </td>
             </tr>

@@ -27,17 +27,21 @@ export interface Job {
     checked: boolean;
     status: number;
   }[];
-  userIds: string[];
+  userIds: string[]
   jobRelationData: {
-    assetCode: string;
-    typeCode: string;
-    deptCode: string;
-    placeCode: string;
-    vendorCode: string;
-    stockTakeName: string;
+    assetCode: string
+    typeCode: string
+    deptCode: string
+    placeCode: string
+    vendorCode: string
+    stockTakeName: string
   };
-  jobValid: string;
-  status: number;
+  jobValid: string
+  status: number
+  users: {
+    username: string
+    avatarBase64: string
+  }[]
 }
 export const newJob = (status = 1): Job => ({
   _id: '',
@@ -64,6 +68,7 @@ export const newJob = (status = 1): Job => ({
   },
   jobValid: '有效',
   status,
+  users: []
 });
 export function demoJobs(): Job[] {
   const rows: [string, string, number, string, string, string][] = [
