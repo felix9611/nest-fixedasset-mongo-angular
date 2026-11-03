@@ -21,10 +21,10 @@ export class JobBoardsComponent  {
   filter = signal('all');
   view = signal('board');
   columns = [
-    { id: 1, name: '待處理', en: 'To do', color: '#8b91a1', key: 'toDoList' },
-    { id: 2, name: '進行中', en: 'In progress', color: '#6c5ce7', key: 'inProgressList' },
-    { id: 3, name: '待審核', en: 'In review', color: '#e5a345', key: 'inReviewList' },
-    { id: 4, name: '已完成', en: 'Done', color: '#39a982', key: 'completedList' },
+    { id: 1, name: 'To Do List', en: 'To do', color: '#8b91a1', key: 'toDoList' },
+    { id: 2, name: 'In Progress', en: 'In progress', color: '#6c5ce7', key: 'inProgressList' },
+    { id: 3, name: 'In Review', en: 'In review', color: '#e5a345', key: 'inReviewList' },
+    { id: 4, name: 'Completed', en: 'Done', color: '#39a982', key: 'completedList' },
   ];
   lookupOptions(key: keyof Job['jobRelationData']): ListOption[] {
     const options = [...relationOptions[key]];
