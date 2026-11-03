@@ -53,10 +53,12 @@
           [ngModel]="search()"
           (ngModelChange)="search.set($event)"
         /><kbd>⌕</kbd></label
-      ><select aria-label="Filter tasks" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
+      >
+      <!--<select aria-label="Filter tasks" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
         <option value="all">All Members</option>
-        <option value="mine">Assigned to Me</option></select
-      ><button class="export" (click)="export()">↥ <span>Export</span></button>
+        <option value="mine">Assigned to Me</option>
+      </select>-->
+      <button class="export" (click)="export()">↥ <span>Export</span></button>
       <div class="avatar-stack">
         @for (m of members; track m.id) {
           @if (m.avatarBase64) {
