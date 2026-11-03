@@ -5,7 +5,6 @@ import {FormsModule} from '@angular/forms'
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop'
 import {Job, newJob, demoJobs} from './job'
 import {FilterListApi, ListOption} from '../../components/filter-list/filter-list.component'
-import {relationOptions} from './lookup-data'
 import { postApiWithAuth } from '../../../../tool/httpRequest-auth'
 
 
@@ -27,7 +26,6 @@ export class JobBoardsComponent  {
     { id: 4, name: 'Completed', en: 'Done', color: '#39a982', key: 'completedList' },
   ];
   lookupOptions(key: keyof Job['jobRelationData']): ListOption[] {
-    const options = [...relationOptions[key]];
     const values = [
       ...this.jobs.map((j) => j.jobRelationData[key]),
       this.selected?.jobRelationData[key],
