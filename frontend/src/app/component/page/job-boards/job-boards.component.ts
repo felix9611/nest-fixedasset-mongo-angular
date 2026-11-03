@@ -24,16 +24,7 @@ export class JobBoardsComponent  {
     { id: 2, name: 'In Progress', en: 'In progress', color: '#6c5ce7', key: 'inProgressList' },
     { id: 3, name: 'In Review', en: 'In review', color: '#e5a345', key: 'inReviewList' },
     { id: 4, name: 'Completed', en: 'Done', color: '#39a982', key: 'completedList' },
-  ];
-  lookupOptions(key: keyof Job['jobRelationData']): ListOption[] {
-    const values = [
-      ...this.jobs.map((j) => j.jobRelationData[key]),
-      this.selected?.jobRelationData[key],
-    ];
-    for (const value of values)
-      if (value && !options.some((o) => o.value === value)) options.push({ value, label: value });
-    return options;
-  }
+  ]
   assigneeOptions(): ListOption[] {
     const options = [...this.memberOptions];
     for (const id of this.selected?.userIds || [])
