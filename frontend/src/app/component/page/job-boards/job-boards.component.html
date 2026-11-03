@@ -73,10 +73,12 @@
     </div>
   </section>
   <div class="board-meta">
-    <span
-      ><span class="live-dot"></span>{{ filter() === 'mine' ? 'My Tasks' : 'Team Tasks' }}
-      <span class="muted">· {{ visible().length }} Tasks</span></span
-    ><span class="muted">Drag and drop task cards to update progress</span>
+    <span>
+      <span class="text-[0.9rem]">{{ filter() === 'mine' ? 'My Tasks' : 'Team Tasks' }}</span>
+      <span class="text-[0.9rem] px-3">·</span>
+      <span class="text-[0.9rem]"><span class="font-bold">{{ visible().length }}</span> Tasks</span>
+    </span>
+    <span class="text-[0.9rem]">Drag and drop task cards to update progress</span>
   </div>
   @if (view() === 'board') {
     <section class="board" cdkDropListGroup>
@@ -85,11 +87,13 @@
           <div class="column-heading">
             <div>
               <i [style.background]="col.color"></i>
-              <h2>{{ col.name }}</h2>
-              <span class="column-count">{{ cards(col.id).length }}</span>
+              <span class="font-bold text-[1rem] text-[#5c5959]">{{ col.name }}</span>
+              <span class="w-[2rem] h-[2rem] bg-[#e8e9f0] text-center flex items-center justify-center rounded-lg">
+                <span class="font-[0.5rem] text-[#a2a1b0]">{{ cards(col.id).length }}</span>
+              </span>
             </div>
             <button (click)="create(col.id)" [attr.aria-label]="'Add New ' + col.name + ' Task'">
-              ＋
+              <span class="font-bold text-[1.5rem] text-[#5c5959]">＋</span>
             </button>
           </div>
           <div
@@ -102,8 +106,8 @@
               <article class="task-card" cdkDrag [cdkDragData]="job">
                 <button class="card-content" (click)="open(job)">
                   <div class="card-top">
-                    <span class="job-number">{{ $any(job).number }}</span
-                    ><span class="card-dots">···</span>
+                    <span class="font-[1rem] text-[#b4afbf]">Task #{{ $any(job).number }}</span>
+                    <span class="card-dots">···</span>
                   </div>
                   <div class="labels">
                     @for (label of $any(job).labels; track $index) {
@@ -116,17 +120,17 @@
                       >
                     }
                   </div>
-                  <h3>{{ $any(job).title }}</h3>
-                  <p class="description">{{ $any(job).description }}</p>
+                  <span class="font-[1.6rem] font-bold"> {{ $any(job).title }} </span>
+                  <p class="font-[0.9rem] text-[#a29eae]"> {{ $any(job).description }} </p>
                   @if ($any(job).checkLists.length) {
                     <div class="check-progress">
                       <div>
                         <span>☑ Check List</span
-                        ><span>{{ countDone(job) }}/{{ $any(job).checkLists.length }}</span>
+                        ><span>{{ countDone(job) }}/{{ countAllDone(job) }}</span>
                       </div>
                       <div class="mini-track">
                         <i
-                          [style.width.%]="(countDone(job) / $any(job).checkLists.length) * 100"
+                          [style.width.%]="(countDone(job) / countAllDone(job)) * 100"
                           [class.complete]="countDone(job) === $any(job).checkLists.length"
                         ></i>
                       </div>
@@ -169,7 +173,9 @@
               <div class="empty-column">Drag tasks here<br /><small>or add a new task</small></div>
             }
           </div>
-          <button class="add-card" (click)="create(col.id)">＋ Add Task</button>
+          <button (click)="create(col.id)">
+            <span class="font-bold text-[0.9rem] text-gray-400">＋ Add Task</span>
+          </button>
         </div>
       }
     </section>
@@ -322,27 +328,27 @@
             Check List <small>{{ countDone(job) }} / {{ job.checkLists.length }}</small>
           </h3>
           @for (item of job.checkLists; track $index) {
-            <div class="check-row">
-              <input
-                type="checkbox"
-                [(ngModel)]="item.checked"
-                [attr.aria-label]="item.name"
-              /><input
-                class="check-name"
-                [(ngModel)]="item.name"
-                aria-label="Check Item Name"
-                [class.struck]="item.checked"
-              /><select [(ngModel)]="item.status" aria-label="Item Status">
-                <option [ngValue]="0">Valid</option>
-                <option [ngValue]="1">Archived</option></select
-              ><button
-                class="icon-button"
-                aria-label="Delete Check Item"
-                (click)="job.checkLists.splice($index, 1)"
-              >
-                ×
-              </button>
-            </div>
+            @if (item.status === 1) {
+              <div class="check-row">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="item.checked"
+                  [attr.aria-label]="item.name"
+                /><input
+                  class="check-name"
+                  [(ngModel)]="item.name"
+                  aria-label="Check Item Name"
+                  [class.struck]="item.checked"
+                />
+                <button
+                  class="icon-button"
+                  aria-label="Delete Check Item"
+                  (click)="item.status = 0;"
+                >
+                  ×
+                </button>
+              </div>
+            }
           }
           <div class="inline-form">
             <input

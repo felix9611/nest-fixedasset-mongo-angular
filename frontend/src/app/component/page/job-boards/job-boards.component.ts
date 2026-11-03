@@ -386,8 +386,12 @@ export class JobBoardsComponent  {
   }
 
   countDone(job: Job) {
-    return job.checkLists.filter((c) => c.checked).length;
+    return job.checkLists.filter((c) => c.status === 1 && c.checked).length;
   }
+  countAllDone(job: Job) {
+    return job.checkLists.filter((c) => c.status === 1).length;
+  }
+
   initials(id: string) {
     return this.members.find((m: any) => m._id === id)?.initial || id.slice(0, 1);
   }
@@ -527,7 +531,7 @@ export class JobBoardsComponent  {
   }
   addCheck() {
     if (this.checklist.trim() && this.selected) {
-      this.selected.checkLists.push({ name: this.checklist.trim(), checked: false, status: 0 });
+      this.selected.checkLists.push({ name: this.checklist.trim(), checked: false, status: 1 });
       this.checklist = '';
     }
   }
