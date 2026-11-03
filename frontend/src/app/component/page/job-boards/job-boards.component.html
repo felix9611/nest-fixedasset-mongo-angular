@@ -21,12 +21,12 @@
     <div class="summary-item">
       <span class="stat-icon green">✓</span>
       <div>
-        <small>已完成</small><b>{{ done() }} <em>做得好！</em></b>
+        <small>Completion</small><b>{{ done() }} <em>Good jobs！</em></b>
       </div>
     </div>
     <div class="summary-item progress-stat">
       <div class="progress-label">
-        <small>整體完成度</small
+        <small>Overall Completion</small
         ><b
           >{{ jobs().length ? ((done() / jobs().length) * 100 | number: '1.0-0') : 0 }}<em>%</em></b
         >
@@ -39,24 +39,24 @@
   <section class="board-toolbar">
     <div class="view-tabs">
       <button [class.selected]="view() === 'board'" (click)="view.set('board')">
-        ▦ <span>看板</span></button
+        ▦ <span>Board</span></button
       ><button [class.selected]="view() === 'list'" (click)="view.set('list')">
-        ☷ <span>列表</span>
+        ☷ <span>Listing</span>
       </button>
     </div>
     <div class="toolbar-actions">
       <label class="search"
         ><span>⌕</span
         ><input
-          aria-label="搜尋工作"
-          placeholder="搜尋工作..."
+          aria-label="Find tasks"
+          placeholder="Find tasks..."
           [ngModel]="search()"
           (ngModelChange)="search.set($event)"
         /><kbd>⌕</kbd></label
-      ><select aria-label="篩選工作" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
-        <option value="all">所有成員</option>
-        <option value="mine">指派給我</option></select
-      ><button class="export" (click)="export()">↥ <span>匯出</span></button>
+      ><select aria-label="Filter tasks" [ngModel]="filter()" (ngModelChange)="filter.set($event)">
+        <option value="all">All Members</option>
+        <option value="mine">Assigned to Me</option></select
+      ><button class="export" (click)="export()">↥ <span>Export</span></button>
       <div class="avatar-stack">
         @for (m of members; track m.id) {
           <span class="avatar small" [class]="'avatar small member-' + m._id" [title]="m.name">{{
@@ -68,9 +68,9 @@
   </section>
   <div class="board-meta">
     <span
-      ><span class="live-dot"></span>{{ filter() === 'mine' ? '我的工作' : '團隊工作' }}
-      <span class="muted">· {{ visible().length }} 項工作</span></span
-    ><span class="muted">拖放工作卡以更新進度</span>
+      ><span class="live-dot"></span>{{ filter() === 'mine' ? 'My Tasks' : 'Team Tasks' }}
+      <span class="muted">· {{ visible().length }} Tasks</span></span
+    ><span class="muted">Drag and drop task cards to update progress</span>
   </div>
   @if (view() === 'board') {
     <section class="board" cdkDropListGroup>
@@ -82,7 +82,7 @@
               <h2>{{ col.name }}</h2>
               <span class="column-count">{{ cards(col.id).length }}</span>
             </div>
-            <button (click)="create(col.id)" [attr.aria-label]="'新增' + col.name + '工作'">
+            <button (click)="create(col.id)" [attr.aria-label]="'Add New ' + col.name + ' Task'">
               ＋
             </button>
           </div>
@@ -103,10 +103,10 @@
                     @for (label of job.labels; track $index) {
                       <span
                         class="label"
-                        [class.orange]="label === '高優先'"
-                        [class.teal]="label === '盤點' || label === '保養'"
-                        [class.blue]="label === '開發' || label === '驗收'"
-                        >{{ label === '高優先' ? '⚑ ' : '' }}{{ label }}</span
+                        [class.orange]="label === 'High Priority'"
+                        [class.teal]="label === 'Stock Take' || label === 'Repair'"
+                        [class.blue]="label === 'Development' || label === 'Review'"
+                        >{{ label === 'High Priority' ? '⚑ ' : '' }}{{ label }}</span
                       >
                     }
                   </div>
@@ -115,7 +115,7 @@
                   @if (job.checkLists.length) {
                     <div class="check-progress">
                       <div>
-                        <span>☑ 檢查清單</span
+                        <span>☑ Check List</span
                         ><span>{{ countDone(job) }}/{{ job.checkLists.length }}</span>
                       </div>
                       <div class="mini-track">
@@ -135,7 +135,7 @@
                   <div class="card-footer">
                     <span class="date" [class.finished]="job.status === 4"
                       >{{ job.status === 4 ? '✓' : '◷' }}
-                      {{ job.jobEndDate ? (job.jobEndDate | date: 'M月d日') : '未設定日期' }}</span
+                      {{ job.jobEndDate ? (job.jobEndDate | date: 'MM/DD/yyyy') : 'Date not set' }}</span
                     >
                     <div class="card-indicators">
                       @if (job.comments.length) {
@@ -154,10 +154,10 @@
                 </button>
               </article>
             } @empty {
-              <div class="empty-column">將工作拖到呢度<br /><small>或新增一項工作</small></div>
+              <div class="empty-column">Drag tasks here<br /><small>or add a new task</small></div>
             }
           </div>
-          <button class="add-card" (click)="create(col.id)">＋ 新增工作</button>
+          <button class="add-card" (click)="create(col.id)">＋ Add Task</button>
         </div>
       }
     </section>
@@ -166,11 +166,11 @@
       <table>
         <thead>
           <tr>
-            <th>工作</th>
-            <th>分類</th>
-            <th>狀態</th>
-            <th>截止日期</th>
-            <th>負責人</th>
+            <th>Task</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Assignee</th>
           </tr>
         </thead>
         <tbody>
@@ -185,7 +185,7 @@
               <td>{{ job.category }}</td>
               <td>
                 <select
-                  aria-label="工作狀態"
+                  aria-label="Task Status"
                   [ngModel]="job.status"
                   (ngModelChange)="open(job); selected!.status = $event; save()"
                 >
@@ -203,7 +203,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="5">搵唔到符合條件嘅工作。</td>
+              <td colspan="5">No tasks found.</td>
             </tr>
           }
         </tbody>
@@ -226,19 +226,19 @@
     >
       <header class="modal-header">
         <div>
-          <small>{{ job.number }} / 工作詳情</small>
-          <h2 id="dialog-title">{{ job.title || '新增工作' }}</h2>
+          <small>{{ job.number }} / Task Details</small>
+          <h2 id="dialog-title">{{ job.title || 'Add Task' }}</h2>
         </div>
-        <button class="close" aria-label="關閉" (click)="selected = null">×</button>
+        <button class="close" aria-label="Close" (click)="selected = null">×</button>
       </header>
       <nav class="modal-tabs">
         @for (
           t of [
-            { id: 'details', name: '工作資料' },
-            { id: 'checks', name: '檢查清單' },
-            { id: 'attachments', name: '附件' },
-            { id: 'comments', name: '留言' },
-            { id: 'relations', name: '關聯資料' },
+            { id: 'details', name: 'Task Details' },
+            { id: 'checks', name: 'Checklist' },
+            { id: 'attachments', name: 'Attachments' },
+            { id: 'comments', name: 'Comments' },
+            { id: 'relations', name: 'Related Data' },
           ];
           track t.id
         ) {
@@ -247,49 +247,49 @@
       </nav>
       <div class="modal-body">
         @if (tab === 'details') {
-          <label
-            >工作標題 <span class="required">*</span
-            ><input [(ngModel)]="job.title" placeholder="輸入工作標題" maxlength="200" /></label
+          <label>
+            Task Title <span class="required">*</span
+            ><input [(ngModel)]="job.title" placeholder="Enter task title" maxlength="200" /></label
           ><label
-            >描述<textarea
+            >Description<textarea
               [(ngModel)]="job.description"
               rows="3"
-              placeholder="補充工作內容及目標..."
+              placeholder="Additional task details..."
             ></textarea>
           </label>
           <div class="form-grid">
-            <label>工作編號<input [(ngModel)]="job.number" /></label
+            <label>Task Number<input [(ngModel)]="job.number" /></label
             ><label
-              >分類<input [(ngModel)]="job.category" list="categories" /><datalist id="categories">
-                <option>一般工作</option>
-                <option>設計</option>
-                <option>開發</option>
-                <option>營運</option>
-                <option>維修</option>
-                <option>資產</option>
+              >Category<input [(ngModel)]="job.category" list="categories" /><datalist id="categories">
+                <option  [ngValue]="'General Task'">General Task</option>
+                <option [ngValue]="'Design'">Design</option>
+                <option [ngValue]="'Development'">Development</option>
+                <option [ngValue]="'Operations'">Operations</option>
+                <option [ngValue]="'Maintenance'">Maintenance</option>
+                <option [ngValue]="'Assets'">Assets</option>
               </datalist></label
             ><label
-              >狀態<select [(ngModel)]="job.status">
+              >Status<select [(ngModel)]="job.status">
                 @for (col of columns; track col.id) {
                   <option [ngValue]="col.id">{{ col.name }}</option>
                 }
               </select></label
             ><label
-              >有效狀態<select [(ngModel)]="job.jobValid">
-                <option>有效</option>
-                <option>無效</option>
+              >Valid Status<select [(ngModel)]="job.jobValid">
+                <option  [ngValue]="true">Valid</option>
+                <option  [ngValue]="false">Invalid</option>
               </select></label
-            ><label>開始日期<input type="date" [(ngModel)]="job.jobStartDate" /></label
-            ><label>結束日期<input type="date" [(ngModel)]="job.jobEndDate" /></label
+            ><label>Start Date<input type="date" [(ngModel)]="job.jobStartDate" /></label
+            ><label>End Date<input type="date" [(ngModel)]="job.jobEndDate" /></label
             ><label
-              >剩餘工時<input [(ngModel)]="job.jobTimeRemain" placeholder="例如：4 小時" /></label
+              >Remaining Hours<input [(ngModel)]="job.jobTimeRemain" placeholder="例如：4 小時" /></label
             ><label
-              >標籤（以逗號分隔）<input [(ngModel)]="labelText" placeholder="高優先, 開發"
+              >Labels (comma-separated)<input [(ngModel)]="labelText" placeholder="High Priority, Development"
             /></label>
           </div>
-          <label>Tags（以逗號分隔）<input [(ngModel)]="tagText" placeholder="Q4, 內部" /></label>
+          <label>Tags (comma-separated)<input [(ngModel)]="tagText" placeholder="Q4, 內部" /></label>
           <div class="lookup-field">
-            <span class="field-label">負責人</span>
+            <span class="field-label">Users</span>
             <app-filter-list-api
                 label="Members"
                 [apiUrl]="'/sys/user/list'"
@@ -303,7 +303,7 @@
         }
         @if (tab === 'checks') {
           <h3>
-            檢查清單 <small>{{ countDone(job) }} / {{ job.checkLists.length }}</small>
+            Check List <small>{{ countDone(job) }} / {{ job.checkLists.length }}</small>
           </h3>
           @for (item of job.checkLists; track $index) {
             <div class="check-row">
@@ -314,14 +314,14 @@
               /><input
                 class="check-name"
                 [(ngModel)]="item.name"
-                aria-label="檢查項目名稱"
+                aria-label="Check Item Name"
                 [class.struck]="item.checked"
-              /><select [(ngModel)]="item.status" aria-label="項目狀態">
-                <option [ngValue]="0">有效</option>
-                <option [ngValue]="1">封存</option></select
+              /><select [(ngModel)]="item.status" aria-label="Item Status">
+                <option [ngValue]="0">Valid</option>
+                <option [ngValue]="1">Archived</option></select
               ><button
                 class="icon-button"
-                aria-label="刪除檢查項目"
+                aria-label="Delete Check Item"
                 (click)="job.checkLists.splice($index, 1)"
               >
                 ×
@@ -331,14 +331,14 @@
           <div class="inline-form">
             <input
               [(ngModel)]="checklist"
-              placeholder="新增檢查項目..."
+              placeholder="Create new check item..."
               (keydown.enter)="addCheck()"
-            /><button class="primary" (click)="addCheck()">新增</button>
+            /><button class="primary" (click)="addCheck()">Add Check Item</button>
           </div>
         }
         @if (tab === 'attachments') {
           <label class="upload-area"
-            >↥<b>加入工作附件</b><span>選擇檔案，每個檔案上限 2 MB</span
+            >↥<b>Add Attachments</b><span>Choose files, each file up to 2 MB</span
             ><input type="file" multiple (change)="attach($event)"
           /></label>
           @for (a of job.attachments; track $index) {
@@ -347,46 +347,48 @@
               <div>
                 <b>{{ a.fileName }}</b
                 ><small
-                  >{{ a.fileType || '檔案' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
+                  >{{ a.fileType || 'file' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
                 >
               </div>
-              <button (click)="download(a)">下載</button
-              ><button aria-label="移除附件" (click)="job.attachments.splice($index, 1)">×</button>
+              <button (click)="download(a)">Download</button
+              ><button aria-label="Remove Attachment" (click)="job.attachments.splice($index, 1)">×</button>
             </div>
           }
         }
         @if (tab === 'comments') {
-          <h3>工作討論</h3>
+          <h3>Work Discussion</h3>
           @for (c of job.comments; track $index) {
             <div class="comment">
               <span [class]="'avatar small member-' + c.userId">{{ initials(c.userId) }}</span>
               <div>
                 <b>{{ c.userId === '01' ? 'Felix' : c.userId === '02' ? 'Sophie' : 'Alex' }}</b>
                 <p>{{ c.comment }}</p>
-                <select [(ngModel)]="c.status" aria-label="留言狀態">
-                  <option [ngValue]="0">公開</option>
-                  <option [ngValue]="1">封存</option>
+                <select [(ngModel)]="c.status" aria-label="Comment Status">
+                  <option [ngValue]="0">Public</option>
+                  <option [ngValue]="1">Archived</option>
                 </select>
               </div>
               <button
                 class="icon-button"
-                aria-label="刪除留言"
+                aria-label="Delete Comment"
                 (click)="job.comments.splice($index, 1)"
               >
                 ×
               </button>
             </div>
           } @empty {
-            <p class="empty-copy">仲未有留言，分享一下工作進度。</p>
+            <p class="empty-copy">Still no comments, share some work progress.</p>
           }
-          <textarea [(ngModel)]="comment" rows="3" placeholder="寫低你嘅留言..."></textarea
-          ><button class="primary" (click)="addComment()" [disabled]="!comment.trim()">
-            加入留言
-          </button>
+          <textarea [(ngModel)]="comment" rows="3" placeholder="Write your comment..."></textarea
+          >
+          <div class="pt-5">
+            <button class="primary" (click)="addComment()" [disabled]="!comment.trim()">
+              Add Comment
+            </button>
+          </div>
         }
         @if (tab === 'relations') {
-          <h3>工作關聯資料</h3>
-          <p class="empty-copy">將工作連結到相關資產、部門及供應商。</p>
+          <h3>Task Relations Data</h3>
           <div class="form-grid">
             <div class="lookup-field">
               <span class="field-label">Asset</span>
@@ -432,10 +434,10 @@
         }
       </div>
       <footer class="modal-footer">
-        <button class="danger" (click)="remove()">刪除工作</button>
+        <button class="danger" (click)="remove()">Remove Task</button>
         <div>
-          <button class="secondary" (click)="selected = null">取消</button
-          ><button class="primary" (click)="save()">儲存工作</button>
+          <button class="secondary" (click)="selected = null">Cancel</button
+          ><button class="primary" (click)="save()">Save Task</button>
         </div>
       </footer>
     </section>
