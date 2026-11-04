@@ -64,6 +64,7 @@
 
 <h2>🛠️ Core Functionalities</h2>
 <ul>
+  <li><strong>Tasks Tracking:</strong> Record and track any task progress from internal.</li>
   <li><strong>Asset Registration & Tracking:</strong> Record and track fixed assets with detailed status and information.</li>
   <li><strong>Expenditure & Maintenance Management:</strong> Log asset purchase, maintenance, and write-off records for better financial control.</li>
   <li><strong>Dynamic Reporting:</strong> Showing chart graphs for easy analysis and sharing.</li>
