@@ -568,9 +568,10 @@ export class JobBoardsComponent  {
           fileType: file.type,
           base64,
           updatedAt: new Date().toISOString(),
+          status: 1
         });
       } catch {
-        this.error = '附件讀取失敗，請重試。';
+        this.error = 'Attachment upload failed, please try again.';
       }
     }
     input.value = '';
@@ -597,7 +598,7 @@ export class JobBoardsComponent  {
     a.download = 'flowboard-jobs.json';
     a.click();
     URL.revokeObjectURL(url);
-    this.notify('已匯出 JSON');
+    this.notify('Output JSON');
   }
   notify(s: string) {
     this.toast.set(s);

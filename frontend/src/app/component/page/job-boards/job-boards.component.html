@@ -366,17 +366,19 @@
             ><input type="file" multiple (change)="attach($event)"
           /></label>
           @for (a of job.attachments; track $index) {
-            <div class="attachment-row">
-              <span>▤</span>
-              <div>
-                <b>{{ a.fileName }}</b
-                ><small
-                  >{{ a.fileType || 'file' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
-                >
+            @if (a.status === 1) {
+              <div class="attachment-row">
+                <span>▤</span>
+                <div>
+                  <b>{{ a.fileName }}</b
+                  ><small
+                    >{{ a.fileType || 'file' }} · {{ a.updatedAt | date: 'yyyy-MM-dd HH:mm' }}</small
+                  >
+                </div>
+                <button (click)="download(a)">Download</button
+                ><button aria-label="Remove Attachment" (click)="a.status = 0">×</button>
               </div>
-              <button (click)="download(a)">Download</button
-              ><button aria-label="Remove Attachment" (click)="job.attachments.splice($index, 1)">×</button>
-            </div>
+            }
           }
         }
         @if (tab === 'comments') {

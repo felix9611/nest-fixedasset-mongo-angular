@@ -77,6 +77,7 @@ export interface AttachmentLists {
     fileType?: string
     base64?: string
     updatedAt?: Date
+    status?: number
 }
 
 export interface JobRelationData {
