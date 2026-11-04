@@ -14,6 +14,7 @@ export interface Job {
     fileType: string;
     base64: string;
     updatedAt: string;
+    status: number
   }[];
   comments: {
     userId: string
