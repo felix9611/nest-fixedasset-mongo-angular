@@ -254,11 +254,13 @@
                       @if (job.attachments.length) {
                         <span>♧ {{ job.attachments.length }}</span>
                       }
-                      <div class="avatar-stack">
+                      <div
+                        class="avatar-stack flex items-center [padding-left:5px] [&_.avatar]:[margin-left:-5px]"
+                      >
                         @for (id of $any(job).users; track id) {
                           <span [class]="'avatar tiny member-' + id">
                             @if (!id && !id.avatarBase64) {
-                            <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                            <span [class]="'avatar tiny member-' + id">{{ id.username }}</span>
                           } @else {
                             <img class="rounded-full w-[1.2rem]" [src]="id.avatarBase64" />
                           }
