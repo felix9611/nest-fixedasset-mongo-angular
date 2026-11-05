@@ -68,4 +68,5 @@ export interface JwtPayload {
   placeIds: string[]
   roles: string[]
   superAdmin: boolean
+  manager: boolean
 }
