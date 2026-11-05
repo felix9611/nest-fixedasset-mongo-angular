@@ -8,10 +8,11 @@ import {FilterListApi, ListOption} from '../../components/filter-list/filter-lis
 import { deleteApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { Subscription } from 'rxjs'
 import { UserStoreService } from '../../../../state/user.service'
+import { A11yModule } from '@angular/cdk/a11y';
 
 
 @Component({
-    imports: [CommonModule, FormsModule, DragDropModule, FilterListApi],
+    imports: [CommonModule, FormsModule, DragDropModule, A11yModule, FilterListApi],
     standalone: true,
     templateUrl: './job-boards.component.html',
     styleUrls: ['./job-boards.component.css']
