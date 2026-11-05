@@ -13,6 +13,7 @@ export interface CreateUserDto {
     roles?: string[],
     placeIds?: string[]
     superAdmin?: boolean
+    manager?: boolean
 }
 
 export interface CreateUserRequestDto {

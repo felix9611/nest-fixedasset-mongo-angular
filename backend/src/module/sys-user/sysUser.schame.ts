@@ -18,7 +18,10 @@ export class SysUser extends BaseSchema {
     avatarBase64?: string
 
     @Prop({ type: SchemaTypes.Boolean, required: true })
-    superAdmin!: boolean
+    superAdmin?: boolean
+
+    @Prop({ type: SchemaTypes.Boolean, required: true })
+    manager?: boolean
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
     deptIds!: Types.ObjectId[]

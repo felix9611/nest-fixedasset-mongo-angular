@@ -48,7 +48,8 @@ export class SysUserService {
           status: 1,
           createdAt: new Date(),
           updateAt: new Date(),
-          superAdmin: userData.superAdmin
+          superAdmin: userData.superAdmin,
+          manager: userData.manager
         }
 
         return await this.sysUserModel.create(finalData)
@@ -234,6 +235,7 @@ export class SysUserService {
       placeIds: answer?.placeIds,
       locations:locations,
       superAdmin: answer?.superAdmin,
+      manager: answer?.manager,
       password: answer?.password
     }
   }
