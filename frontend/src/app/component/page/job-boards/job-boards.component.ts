@@ -445,11 +445,11 @@ export class JobBoardsComponent  {
     if (!this.selected) return;
     const j = this.selected;
     if (!j.title.trim()) {
-      this.error = '請輸入工作標題。';
+      this.error = 'Please enter a title.'
       return;
     }
     if (j.jobStartDate && j.jobEndDate && j.jobEndDate < j.jobStartDate) {
-      this.error = '結束日期不可早於開始日期。';
+      this.error = 'End date must be after the start date.'
       return;
     }
 
