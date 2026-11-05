@@ -502,9 +502,7 @@ export class JobBoardsComponent  {
  savingMove = false;
 
   async drop(event: CdkDragDrop<Job[]>, status: number) {
-    if ((!this.yourUserData.superAdmin || !this.yourUserData.manager) && status > 3) {
-      this.failNotify('You are not allowed to move this task')
-    } else {
+    
       if (this.savingMove) return
 
       const moved = event.item.data as Job
@@ -515,43 +513,46 @@ export class JobBoardsComponent  {
       const previous = target[event.currentIndex - 1];
       const next = target[event.currentIndex + 1];
 
-      let sortOrder: number;
-
-      if (previous && next) {
-        sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
-      } else if (previous) {
-        sortOrder = previous.sortOrder + 10
-      } else if (next) {
-        sortOrder = next.sortOrder - 10
+      if ((!this.yourUserData.superAdmin || !this.yourUserData.manager) && (status > 3 || previous.status === 4 || next.status === 5)) {
+        this.failNotify('You are not allowed to move this task')
       } else {
-        sortOrder = 10
-      }
+        let sortOrder: number;
 
-      const previousJobs = structuredClone(this.jobs);
-      const list = [...event.container.data];
+        if (previous && next) {
+          sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
+        } else if (previous) {
+          sortOrder = previous.sortOrder + 10
+        } else if (next) {
+          sortOrder = next.sortOrder - 10
+        } else {
+          sortOrder = 10
+        }
 
-      if (event.previousContainer === event.container) {
-        moveItemInArray(list, event.previousIndex, event.currentIndex);
-      } else {
-        list.splice(event.currentIndex, 0, { ...moved, status });
-      }
+        const previousJobs = structuredClone(this.jobs);
+        const list = [...event.container.data];
 
-      if (moved.status === status) return
+        if (event.previousContainer === event.container) {
+          moveItemInArray(list, event.previousIndex, event.currentIndex);
+        } else {
+          list.splice(event.currentIndex, 0, { ...moved, status });
+        }
 
-      this.savingMove = true
+        if (moved.status === status) return
+
+        this.savingMove = true
 
       try {
-        await postApiWithAuth('/tasks/change-status', {
-          _id: moved._id,
-          status,
-          sortOrder
-        })
-        this.loadJobLists()
-        this.notify('Updated successfully')
+          await postApiWithAuth('/tasks/change-status', {
+            _id: moved._id,
+            status,
+            sortOrder
+          })
+          this.loadJobLists()
+          this.notify('Updated successfully')
       } catch (error) {
-        this.jobs = previousJobs
-        this.failNotify('Update failed, the tasks have been fallback')
-        console.error(error)
+          this.jobs = previousJobs
+          this.failNotify('Update failed, the tasks have been fallback')
+          console.error(error)
       } finally {
         this.savingMove = false
       }
