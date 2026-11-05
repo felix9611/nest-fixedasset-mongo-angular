@@ -27,6 +27,7 @@ export class JobBoardsComponent  {
       this.yourUserData.avatar = data.avatarBase64
       this.yourUserData.username = data.username
       this.yourUserData.superAdmin = data.superAdmin
+      this.yourUserData.manager = data.manager
     })
   }
 
@@ -42,7 +43,8 @@ export class JobBoardsComponent  {
     _id: '',
     avatar: '',
     username: '',
-    superAdmin: false
+    superAdmin: false,
+    manager: false
   }
  
   jobs: Job[] = [];
@@ -56,6 +58,7 @@ export class JobBoardsComponent  {
     { id: 4, name: 'In Review', en: 'In review', color: '#ff5e00', key: 'inReviewList' },
     { id: 5, name: 'Completed', en: 'Done', color: '#39a982', key: 'completedList' },
   ]
+  
   assigneeOptions(): ListOption[] {
     const options = [...this.memberOptions];
     for (const id of this.selected?.userIds || [])
@@ -70,6 +73,7 @@ export class JobBoardsComponent  {
   checklist = '';
   error = '';
   toast = signal('');
+  failed = signal('');
   
   private reloadTimer?: ReturnType<typeof setInterval>
   private loadingJobs = false
@@ -227,7 +231,7 @@ export class JobBoardsComponent  {
 
       return this.assetTypeOptions;
     } catch (error) {
-      console.error('API request failed', error);
+      this.notify('API request failed');
       throw error;
     }
   }
@@ -264,7 +268,7 @@ export class JobBoardsComponent  {
 
       return this.deptOptions;
     } catch (error) {
-      console.error('API request failed', error);
+      this.failNotify('API request failed');
       throw error;
     }
   }
@@ -498,55 +502,59 @@ export class JobBoardsComponent  {
  savingMove = false;
 
   async drop(event: CdkDragDrop<Job[]>, status: number) {
-    if (this.savingMove) return
-
-    const moved = event.item.data as Job
-
-    const target = event.container.data.filter(job => job._id !== moved._id);
-    target.splice(event.currentIndex, 0, moved);
-
-    const previous = target[event.currentIndex - 1];
-    const next = target[event.currentIndex + 1];
-
-    let sortOrder: number;
-
-    if (previous && next) {
-      sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
-    } else if (previous) {
-      sortOrder = previous.sortOrder + 10
-    } else if (next) {
-      sortOrder = next.sortOrder - 10
+    if ((!this.yourUserData.superAdmin || !this.yourUserData.manager) && status > 3) {
+      this.failNotify('You are not allowed to move this task')
     } else {
-      sortOrder = 10
-    }
+      if (this.savingMove) return
 
-    const previousJobs = structuredClone(this.jobs);
-    const list = [...event.container.data];
+      const moved = event.item.data as Job
 
-    if (event.previousContainer === event.container) {
-      moveItemInArray(list, event.previousIndex, event.currentIndex);
-    } else {
-      list.splice(event.currentIndex, 0, { ...moved, status });
-    }
+      const target = event.container.data.filter(job => job._id !== moved._id);
+      target.splice(event.currentIndex, 0, moved);
 
-    if (moved.status === status) return
+      const previous = target[event.currentIndex - 1];
+      const next = target[event.currentIndex + 1];
 
-    this.savingMove = true
+      let sortOrder: number;
 
-    try {
-      await postApiWithAuth('/tasks/change-status', {
-        _id: moved._id,
-        status,
-        sortOrder
-      })
-      this.loadJobLists()
-      this.notify('Updated successfully')
-    } catch (error) {
-      this.jobs = previousJobs
-      this.notify('Update failed, the tasks have been fallback')
-      console.error(error)
-    } finally {
-      this.savingMove = false
+      if (previous && next) {
+        sortOrder = previous.sortOrder + (next.sortOrder - previous.sortOrder) / 2
+      } else if (previous) {
+        sortOrder = previous.sortOrder + 10
+      } else if (next) {
+        sortOrder = next.sortOrder - 10
+      } else {
+        sortOrder = 10
+      }
+
+      const previousJobs = structuredClone(this.jobs);
+      const list = [...event.container.data];
+
+      if (event.previousContainer === event.container) {
+        moveItemInArray(list, event.previousIndex, event.currentIndex);
+      } else {
+        list.splice(event.currentIndex, 0, { ...moved, status });
+      }
+
+      if (moved.status === status) return
+
+      this.savingMove = true
+
+      try {
+        await postApiWithAuth('/tasks/change-status', {
+          _id: moved._id,
+          status,
+          sortOrder
+        })
+        this.loadJobLists()
+        this.notify('Updated successfully')
+      } catch (error) {
+        this.jobs = previousJobs
+        this.failNotify('Update failed, the tasks have been fallback')
+        console.error(error)
+      } finally {
+        this.savingMove = false
+      }
     }
   }
   toggleMember(id: string) {
@@ -578,7 +586,7 @@ export class JobBoardsComponent  {
     if (!target) return;
     for (const file of Array.from(input.files || [])) {
       if (file.size > 2 * 1024 * 1024) {
-        this.error = '每個附件上限為 2 MB。';
+        this.error = 'please upload files less than 2 MB。';
         continue;
       }
       try {
@@ -627,6 +635,11 @@ export class JobBoardsComponent  {
   }
   notify(s: string) {
     this.toast.set(s);
-    setTimeout(() => this.toast.set(''), 3500);
+    setTimeout(() => this.toast.set(''), 4000);
+  }
+
+  failNotify(s: string) {
+    this.failed.set(s);
+    setTimeout(() => this.failed.set(''), 4000);
   }
 }
