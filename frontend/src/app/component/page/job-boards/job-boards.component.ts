@@ -513,7 +513,7 @@ export class JobBoardsComponent  {
       const previous = target[event.currentIndex - 1];
       const next = target[event.currentIndex + 1];
 
-      if ((!this.yourUserData.superAdmin || !this.yourUserData.manager) && (status > 3 || previous.status === 4 || next.status === 5)) {
+      if (!(this.yourUserData.superAdmin || this.yourUserData.manager) && (status > 3 || previous.status === 4 || previous.status === 5)) {
         this.failNotify('You are not allowed to move this task')
       } else {
         let sortOrder: number;
