@@ -254,15 +254,15 @@
                       @if (job.attachments.length) {
                         <span>♧ {{ job.attachments.length }}</span>
                       }
-                      <div
-                        class="avatar-stack flex items-center [padding-left:5px] [&_.avatar]:[margin-left:-5px]"
-                      >
-                        @for (id of job.userIds; track id) {
-                          <span
-                            class="avatar inline-flex [flex-shrink:0] items-center justify-center rounded-[50%] h-[34px] w-[34px] [background:#e9ddf7] text-[#9975b7] text-[13px] font-[600] [border:2px_solid_white] [&.small]:h-[29px] [&.small]:w-[29px] [&.small]:text-[10px] [&.tiny]:h-[25px] [&.tiny]:w-[25px] [&.tiny]:text-[9px] [&.member-01]:[background:#e9dff5] [&.member-01]:text-[#9874b5] [&.member-02]:[background:#e4eee8] [&.member-02]:text-[#7b9b84] [&.member-03]:[background:#f9e8d6] [&.member-03]:text-[#c39770] [&.member-picker]:flex [&.member-picker]:gap-[8px] [&.member-picker]:flex-wrap [&.member-picker_button]:[border:1px_solid_#eee8f5] [&.member-picker_button]:rounded-[6px] [&.member-picker_button]:p-[5px_10px] [&.member-picker_button]:[background:white] [&.member-picker_button]:flex [&.member-picker_button]:items-center [&.member-picker_button]:gap-[6px] [&.member-picker_button]:text-[11px] [&.member-picker_button]:text-[#a395af] [&.member-picker_.chosen]:[background:#f6f1fc] [&.member-picker_.chosen]:[border-color:#cbbbdf] max-[760px]:[&.tiny]:w-[30px] max-[760px]:[&.tiny]:h-[30px] max-[760px]:[&.tiny]:text-[12px]"
-                            [class]="'avatar tiny member-' + id"
-                            >{{ initials(id) }}</span
-                          >
+                      <div class="avatar-stack">
+                        @for (id of $any(job).users; track id) {
+                          <span [class]="'avatar tiny member-' + id">
+                            @if (!id && !id.avatarBase64) {
+                            <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                          } @else {
+                            <img class="rounded-full w-[1.2rem]" [src]="id.avatarBase64" />
+                          }
+                          </span>
                         }
                       </div>
                     </div>
@@ -273,7 +273,7 @@
               <div
                 class="empty-column text-center p-[35px_0] text-[#a29bb2] text-[3rem] leading-[2] [&_small]:text-[#b7b0c4] [&_small]:text-[2.4rem]"
               >
-                將工作拖到呢度<br /><small>或新增一項工作</small>
+                Drag tasks here<br /><small>or add a new task</small>
               </div>
             }
           </div>
@@ -294,19 +294,19 @@
         <thead>
           <tr>
             <th class="font-[500] text-[11px] [background:#f4f2f9] text-[#8e829e] p-[16px]">
-              工作
+              Title
             </th>
             <th class="font-[500] text-[11px] [background:#f4f2f9] text-[#8e829e] p-[16px]">
-              分類
+              Category
             </th>
             <th class="font-[500] text-[11px] [background:#f4f2f9] text-[#8e829e] p-[16px]">
-              狀態
+              Status
             </th>
             <th class="font-[500] text-[11px] [background:#f4f2f9] text-[#8e829e] p-[16px]">
-              截止日期
+              End Date
             </th>
             <th class="font-[500] text-[11px] [background:#f4f2f9] text-[#8e829e] p-[16px]">
-              負責人
+              User
             </th>
           </tr>
         </thead>
@@ -351,12 +351,12 @@
               <td
                 class="p-[15px] [border-top:1px_solid_#eeeaf4] text-[11px] [&_button]:[border:0] [&_button]:[background:none] [&_button]:text-left [&_small]:block [&_small]:text-[#aaa1b7] [&_small]:[margin-bottom:5px] [&_small]:text-[9px] [&_select]:[border:1px_solid_#e7e1ee] [&_select]:rounded-[5px] [&_select]:p-[5px] [&_select]:[background:white]"
               >
-                @for (id of job.userIds; track id) {
-                  <span
-                    class="avatar inline-flex [flex-shrink:0] items-center justify-center rounded-[50%] h-[34px] w-[34px] [background:#e9ddf7] text-[#9975b7] text-[13px] font-[600] [border:2px_solid_white] [&.small]:h-[29px] [&.small]:w-[29px] [&.small]:text-[10px] [&.tiny]:h-[25px] [&.tiny]:w-[25px] [&.tiny]:text-[9px] [&.member-01]:[background:#e9dff5] [&.member-01]:text-[#9874b5] [&.member-02]:[background:#e4eee8] [&.member-02]:text-[#7b9b84] [&.member-03]:[background:#f9e8d6] [&.member-03]:text-[#c39770] [&.member-picker]:flex [&.member-picker]:gap-[8px] [&.member-picker]:flex-wrap [&.member-picker_button]:[border:1px_solid_#eee8f5] [&.member-picker_button]:rounded-[6px] [&.member-picker_button]:p-[5px_10px] [&.member-picker_button]:[background:white] [&.member-picker_button]:flex [&.member-picker_button]:items-center [&.member-picker_button]:gap-[6px] [&.member-picker_button]:text-[11px] [&.member-picker_button]:text-[#a395af] [&.member-picker_.chosen]:[background:#f6f1fc] [&.member-picker_.chosen]:[border-color:#cbbbdf] max-[760px]:[&.tiny]:w-[30px] max-[760px]:[&.tiny]:h-[30px] max-[760px]:[&.tiny]:text-[12px]"
-                    [class]="'avatar tiny member-' + id"
-                    >{{ initials(id) }}</span
-                  >
+                @for (id of job.users; track id) {
+                   @if (id.avatarBase64 === '') {
+                    <span [class]="'avatar tiny member-' + id">{{ initials(id.username) }}</span>
+                  } @else {
+                    <img class="avatar tiny rounded-full" [src]="id.avatarBase64" />
+                  }
                 }
               </td>
             </tr>
@@ -402,7 +402,7 @@
             <h2 id="dialog-title">{{ job.title || 'New Task' }}</h2>
           </div>
           <button
-            class="close [font:inherit] cursor-pointer [transition:background_0.15s,_transform_0.15s] text-[inherit] [&:disabled]:opacity-[0.5] [&:disabled]:cursor-default [&:focus-visible]:[outline:3px_solid_#b7acf7] [&:focus-visible]:[outline-offset:3px] [&:hover]:[filter:brightness(0.97)] [border:0] [background:#f6f3fa] rounded-[50%] h-[30px] w-[30px] text-[22px] text-[#a092ae] max-[760px]:w-[44px] max-[760px]:h-[44px] max-[760px]:[flex-shrink:0] max-[760px]:text-[28px]"
+            class="visible]:[092ae] max-[760px]:w-[44px] max-[760px]:h-[44px] max-[760px]:[flex-shrink:0] max-[760px]:text-[28px]"
             aria-label="Close"
             (click)="selected = null"
           >
@@ -547,7 +547,7 @@
                 <input
                   class="check-name [font:inherit]"
                   [(ngModel)]="item.name"
-                  aria-label="檢查項目名稱"
+                  aria-label="Check name"
                   [class.struck]="item.checked"
                 />
                 <button
