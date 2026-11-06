@@ -12,5 +12,5 @@ export class BaseSchema {
     updatedAt!: Date | undefined
 
     @Prop({ type: SchemaTypes.Number, default: 1})
-    status!: number | undefined
+    status!: number
 }
