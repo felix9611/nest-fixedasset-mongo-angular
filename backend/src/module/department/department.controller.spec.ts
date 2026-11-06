@@ -9,7 +9,7 @@ describe('DepartmentController', () => {
     const query = { page: 2, limit: 10, name: 'HR' }
     const user: JwtPayload = {
         sub: 'admin', username: 'admin', departmentIds: [], placeIds: [],
-        roles: [], superAdmin: true,
+        roles: [], superAdmin: true, manager: false
     }
     const cases = [
         { method: 'create', args: [dto], serviceMethod: 'create' },

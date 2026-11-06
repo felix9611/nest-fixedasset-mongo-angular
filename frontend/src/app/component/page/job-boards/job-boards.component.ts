@@ -513,7 +513,7 @@ export class JobBoardsComponent  {
       const previous = target[event.currentIndex - 1];
       const next = target[event.currentIndex + 1];
 
-      if (!(this.yourUserData.superAdmin || this.yourUserData.manager) && (status > 3 || previous.status === 4 || previous.status === 5)) {
+      if (!(this.yourUserData.superAdmin || this.yourUserData.manager) && (status > 3 || target[0].status === 4 || target[0].status === 5)) {
         this.failNotify('You are not allowed to move this task')
       } else {
         let sortOrder: number;
@@ -636,11 +636,11 @@ export class JobBoardsComponent  {
   }
   notify(s: string) {
     this.toast.set(s);
-    setTimeout(() => this.toast.set(''), 4000);
+    setTimeout(() => this.toast.set(''), 3500);
   }
 
   failNotify(s: string) {
     this.failed.set(s);
-    setTimeout(() => this.failed.set(''), 4000);
+    setTimeout(() => this.failed.set(''), 3500);
   }
 }

@@ -112,7 +112,7 @@ describe('BudgetController', () => {
               const id = '123'
               const result = { msg: 'Removed successfully' }
               mockBudgetService.invalidate.mockResolvedValue(result)
-              expect(await controller.removeById(id)).toEqual(result)
+              expect(await controller.removeById(id, undefined)).toEqual(result)
               expect(mockBudgetService.invalidate).toHaveBeenCalledWith(id)
             })
         })
