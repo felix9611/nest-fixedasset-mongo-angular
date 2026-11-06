@@ -13,7 +13,7 @@ export class JobDashboardController {
     @Post('create')
     @UseGuards(AuthGuard)
     async create(@Body() createData: JobDashboard, @Req() { user }: { user: JwtPayload }) {
-        if (!(user.superAdmin === true || user.manager === true) && createData.status < 3 ) {
+        if (!(user.superAdmin === true || user.manager === true) && createData.status >= 3 ) {
             throw new HttpException({ error: 'You do not allow to create this task on this status' }, HttpStatus.FORBIDDEN)
         } else {
             return await this.jobDashboardService.create(createData)
@@ -23,7 +23,7 @@ export class JobDashboardController {
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() updateData: JobDashboard, @Req() { user }: { user: JwtPayload }) {
-        if (!(user.superAdmin === true || user.manager === true) && updateData.status < 3 ) {
+        if (!(user.superAdmin === true || user.manager === true) && updateData.status >= 3 ) {
             throw new HttpException({ error: 'You do not allow to update this task on this status' }, HttpStatus.FORBIDDEN)
         } else {
             return await this.jobDashboardService.update(updateData)
