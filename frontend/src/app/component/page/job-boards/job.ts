@@ -37,7 +37,7 @@ export interface Job {
     vendorCode: string
     stockTakeName: string
   };
-  jobValid: string
+  jobValid: boolean
   status: number
   users: {
     username: string
@@ -68,7 +68,7 @@ export const newJob = (status = 1): Job => ({
     vendorCode: '',
     stockTakeName: '',
   },
-  jobValid: '有效',
+  jobValid: false,
   status,
   users: [],
   sortOrder: 0

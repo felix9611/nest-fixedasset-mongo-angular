@@ -461,12 +461,14 @@
               <label>
                 Category
                 <select [(ngModel)]="job.category">
-                  <option [value]="'General'">General</option>
-                  <option [value]="'User'">User</option>
-                  <option [value]="'User'">User</option>
-                  <option [value]="'Operations'"]>Operations</option>
-                  <option [value]="'Repair'"]>Repair</option>
-                  <option [value]="'Assets'"]="">Assets</option>
+                  <option [ngValue]="'General'">General</option>
+                  <option [ngValue]="'User'">User</option>
+                  <option [ngValue]="'Operations'"]>Operations</option>
+                  <option [ngValue]="'Repair'"]>Repair</option>
+                  <option [ngValue]="'Assets'"]="">Assets</option>
+                  <option [ngValue]="'Vendor'"]="">Vendor</option>
+                  <option [ngValue]="'Support'"]>Support</option>
+                  <option [ngValue]="'Other'"]>Other</option>
                 </select>
               </label>
               @if (yourUserData.manager === true || yourUserData.superAdmin === true) {
@@ -481,8 +483,8 @@
               <label>
                 Job Valid
                 <select class="[font:inherit]" [(ngModel)]="job.jobValid">
-                  <option>Valid</option>
-                  <option>Invalid</option>
+                  <option [ngValue]="true">Valid</option>
+                  <option [ngValue]="false">Invalid</option>
                 </select>
               </label>
               <label>Start Date
