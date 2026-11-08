@@ -1,3 +1,4 @@
+backend/.env
 backend/yarn.lock
 backend/package-lock.json
 frontend/yarn.lock
