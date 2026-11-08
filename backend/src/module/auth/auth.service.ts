@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from '../../tool/password-tools'
 import { jwtConstants } from './constants'
 import { JwtPayload } from './auth.dto'
+import { env } from 'process'
 
 @Injectable()
 export class AuthService {
@@ -47,7 +48,10 @@ export class AuthService {
       }
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
-        accessToken: await this.jwtService.signAsync(payload),
+        accessToken: await this.jwtService.signAsync(payload,{
+          secret: jwtConstants.secret,
+          issuer: env.JWT_ISSUER,
+        }),
       }
     }
     
@@ -59,6 +63,7 @@ export class AuthService {
       try {
         const decoded = await this.jwtService.verifyAsync<JwtPayload>(tokenString)
         return {
+          decoded,
           status: true,
           user: {
             userId: decoded.sub,

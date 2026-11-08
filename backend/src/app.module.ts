@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -27,9 +28,13 @@ import { StockTakeMoudule } from './module/stock-take/stcok-take.module'
 import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.module'
 import { SysUserSchema } from './module/sys-user/sysUser.schame'
 import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
+import { env } from 'process'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, 
+    }),
     ActionRecordMoudule,
     AssetListMoudule,
     WriteOffModule,
@@ -49,7 +54,14 @@ import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
     SysMenuMoudule,
     ExcelFieldMatchModule,
     JobDashboardModule,
-    MongooseModule.forRoot('mongodb://localhost/fixedasset'),
+    // MongooseModule.forRoot(`${env.MONGODB_CONFIG?.toString()}`),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+    }),
     MongooseModule.forFeature([
       { name: 'SysRoles', schema: SysRoleSchema },
       { name: 'Department', schema: DepartmentSchema },

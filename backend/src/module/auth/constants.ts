@@ -1,3 +1,5 @@
+import { env } from 'process'
+
 export const jwtConstants = {
-    secret: 'CANADIAN UMA MUSUME MARUZENSKY',
+    secret: env.JWT_SECRET,
 }
