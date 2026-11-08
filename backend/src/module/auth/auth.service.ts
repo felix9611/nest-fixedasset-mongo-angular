@@ -48,10 +48,7 @@ export class AuthService {
       }
       await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
       return {
-        accessToken: await this.jwtService.signAsync(payload,{
-          secret: jwtConstants.secret,
-          issuer: env.JWT_ISSUER,
-        }),
+        accessToken: await this.jwtService.signAsync(payload),
       }
     }
     
@@ -63,7 +60,6 @@ export class AuthService {
       try {
         const decoded = await this.jwtService.verifyAsync<JwtPayload>(tokenString)
         return {
-          decoded,
           status: true,
           user: {
             userId: decoded.sub,

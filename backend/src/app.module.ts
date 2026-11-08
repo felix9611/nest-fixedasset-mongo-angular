@@ -29,6 +29,7 @@ import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.
 import { SysUserSchema } from './module/sys-user/sysUser.schame'
 import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
 import { env } from 'process'
+import { JwtModule } from '@nestjs/jwt'
 
 @Module({
   imports: [
@@ -66,7 +67,7 @@ import { env } from 'process'
       { name: 'SysRoles', schema: SysRoleSchema },
       { name: 'Department', schema: DepartmentSchema },
       { name: 'SysUser', schema: SysUserSchema }
-    ])
+    ]),
   ],
   controllers: [AppController],
   providers: [
