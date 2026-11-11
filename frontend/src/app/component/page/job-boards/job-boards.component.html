@@ -340,7 +340,7 @@
                   class="[font:inherit]"
                   aria-label="Work Status"
                   [ngModel]="job.status"
-                  (ngModelChange)="open(job); selected!.status = $event; save()"
+                  (ngModelChange)="changeStatus(job, $event)"
                 >
                   @for (col of columns; track col.id) {
                     <option [ngValue]="col.id">{{ col.name }}</option>

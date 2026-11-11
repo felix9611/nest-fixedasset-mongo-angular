@@ -436,11 +436,17 @@ export class JobBoardsComponent  {
   }
 
   create(status = 1) {
-    const job = newJob(status);
-   //  job.nuumber = `JOB-${String(this.jobs.length + 1).padStart(3, '0')}`;
-    this.open(job);
+    const job = newJob(status)
+    this.open(job)
   }
 
+  changeStatus(job: Job | null | undefined, status: number) {
+    if (!job?._id) return
+
+    this.jobs = this.jobs.map(item =>
+      item._id === job._id ? { ...item, status } : item,
+    )
+  }
   async save() {
     if (!this.selected) return;
     const j = this.selected;
