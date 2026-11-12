@@ -135,7 +135,7 @@ export class TasksNoticeComponent {
             1: 'bg-[#e3e3e3] text-[#8b91a1]', 
             2: 'bg-[#d0c9ff] text-[#6c5ce7]', 
             3: 'bg-[#ffe4bd] text-[#e5a345]', 
-            4: 'bg-[#ffcdb0] text-[#6c5ce7]' 
+            4: 'bg-[#ffcdb0] text-[#f57124]' 
         } as Record<number, string>)[status] || '';
     }
 }
