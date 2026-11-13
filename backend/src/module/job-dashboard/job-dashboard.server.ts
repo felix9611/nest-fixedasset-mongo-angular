@@ -306,7 +306,7 @@ export class JobDashboardService {
 
         const check = await this.jobDashboardModel.findOne({ _id })
 
-        if (check?.jobValid === false) {
+        if (check?.status === 0) {
             await this.actionRecordService.saveRecord({
                 actionName: 'Update Job Card',
                 actionMethod: 'PUT',
