@@ -369,6 +369,14 @@ export class JobDashboardService {
             { 
                 $match: filter
             },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    number: 1,
+                    status: 1
+                }
+            },
             { $sort: { sortOrder: 1 } },
             { $limit: 10}
         ]).exec()
