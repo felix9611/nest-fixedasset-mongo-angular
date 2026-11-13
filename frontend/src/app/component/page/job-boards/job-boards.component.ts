@@ -5,7 +5,7 @@ import {FormsModule} from '@angular/forms'
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop'
 import {Job, newJob, demoJobs} from './job'
 import {FilterListApi, ListOption} from '../../components/filter-list/filter-list.component'
-import { deleteApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
+import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { Subscription } from 'rxjs'
 import { UserStoreService } from '../../../../state/user.service'
 import { A11yModule } from '@angular/cdk/a11y';
@@ -415,7 +415,7 @@ export class JobBoardsComponent  {
   }
 
   countDone(job: Job) {
-    return job.checkLists.filter((c) => c.status === 1 && c.checked).length;
+    return job.checkLists &&job.checkLists.filter((c) => c.status === 1 && c.checked).length
   }
   countAllDone(job: Job) {
     return job.checkLists.filter((c) => c.status === 1).length;
@@ -425,10 +425,14 @@ export class JobBoardsComponent  {
     return this.members.find((m: any) => m._id === id)?.initial || id.slice(0, 1);
   }
 
-  open(job: Job) {
-    this.selected = structuredClone(job);
-    this.tagText = job.tags.join(', ');
-    this.labelText = job.labels.join(', ');
+  async open(jobId?: string, job?: Job) {
+    if (jobId) {
+      this.selected = await getApiWithAuth(`/tasks/get-one/${jobId}`);
+     // this.tagText =  job.tags.join(', ');
+    //  this.labelText = job.labels.join(', ');
+    } else if (job) {
+       this.selected = structuredClone(job);
+    }
     this.tab = 'details';
     this.error = '';
     this.comment = '';
@@ -437,7 +441,7 @@ export class JobBoardsComponent  {
 
   create(status = 1) {
     const job = newJob(status)
-    this.open(job)
+    this.open('', job)
   }
 
   changeStatus(job: Job | null | undefined, status: number) {
