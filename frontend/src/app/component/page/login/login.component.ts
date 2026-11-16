@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit{
             this.userStoreService.setAccessToken(res.accessToken)
             const checkpoint = await this.userStoreService.isAuthenticated()
             if (checkpoint) {
-                this.router.navigate(['/'])
+                this.router.navigate(['/tasks'])
             }
         } else {
             this.message.error(res.msg)
