@@ -120,12 +120,14 @@
                         <input nz-input type="text" id="username" name="username" [(ngModel)]="editForm.username"/>
                       </nz-form-control>
                     </nz-form-item>
-                    <nz-form-item *ngIf="!editForm._id">
-                        <nz-form-label [nzSpan]="6" nzFor="email">Password</nz-form-label>
-                        <nz-form-control [nzSpan]="14">
-                          Will preset <span class="font-bold">888888</span>
-                        </nz-form-control>
-                    </nz-form-item>
+                    @if (!editForm._id) {
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="6" nzFor="email">Password</nz-form-label>
+                            <nz-form-control [nzSpan]="14">
+                            Will preset <span class="font-bold">888888</span>
+                            </nz-form-control>
+                        </nz-form-item>
+                    }
                     @if (superAdmin === true) {
                         <nz-form-item>
                             <nz-form-label [nzSpan]="6" nzFor="email">Super Admin</nz-form-label>
