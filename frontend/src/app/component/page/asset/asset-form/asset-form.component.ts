@@ -165,11 +165,6 @@ export class AssetFormComponent implements OnInit {
             this.theId = this.route.snapshot.paramMap.get('id')
             this.getOne()
         } */
-
-        this.loadTypeList()
-        this.loadDeptList()
-        this.loadLocationList()
-        this.loadVendorList()
         this.loadTaxInfoList()
     }
 
@@ -374,30 +369,6 @@ export class AssetFormComponent implements OnInit {
         } else {
             this.editForm = result
         }
-    }
-
-    typeLists: any[] = []
-    async loadTypeList() {
-        this.typeLists = await getApiWithAuth('/asset/type/getAll')
-    }
-
-    deptLists: any[] = []
-    async loadDeptList() {
-        if (this.superAdmin === true) {
-            this.deptLists = await getApiWithAuth('/sys/department/getAll')
-        }
-    }
-
-    placeLists: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            this.placeLists = await getApiWithAuth('/base/location/getAll')
-        }
-    }
-
-    vendorLists: any[] = []
-    async loadVendorList() {
-        this.vendorLists = await getApiWithAuth('/base/vendor/getAll')
     }
 
     taxLists: any[] = []
