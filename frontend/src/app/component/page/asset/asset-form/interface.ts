@@ -19,7 +19,7 @@ export interface CreateAsset {
     invoiceNo?: string
     invoiceDate?: string
     invoiceRemark?: string
-    vendorId?: string
+    vendorId: string
     remark?: string
     taxInfofId?: string
     taxCountryCode?: string
