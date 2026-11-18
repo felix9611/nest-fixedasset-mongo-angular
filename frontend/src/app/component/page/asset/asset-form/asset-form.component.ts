@@ -82,10 +82,6 @@ export class AssetFormComponent implements OnInit {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.placeLists = data.locations
-                this.deptLists = data.departments
-            }
         })
     }
 
