@@ -42,6 +42,7 @@ export class AuthService {
         username: user.username, 
         departmentIds: user.deptIds, 
         placeIds: user.placeIds, 
+        deptIds: user.deptIds,
         roles: user.roles, 
         superAdmin: user.superAdmin, 
         manager: user.manager 
