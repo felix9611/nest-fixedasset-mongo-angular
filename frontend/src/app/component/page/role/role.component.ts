@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router'
 import { FormsModule } from '@angular/forms'
 import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../tool/httpRequest-auth'
 import { NzTableModule } from 'ng-zorro-antd/table'
@@ -16,8 +15,6 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox'
 import { buildTreeForUI } from './function'
 import { NzFormatEmitEvent, NzTreeComponent, NzTreeModule, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { UserStoreService } from '../../../../state/user.service'
-import { read, write } from 'fs'
-import { update } from 'plotly.js-dist-min'
 import { findMenuItem } from '../../tool-function'
 import { Subscription } from 'rxjs'
 
