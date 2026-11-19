@@ -69,4 +69,5 @@ export interface JwtPayload {
   roles: string[]
   superAdmin: boolean
   manager: boolean
+  deptIds: string[]
 }

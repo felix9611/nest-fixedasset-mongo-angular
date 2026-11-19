@@ -63,11 +63,7 @@ export class AssetTypeController {
   @Post('filter/list')
   @UseGuards(AuthGuard)
   async listWithFilter(@Body() req: AssetTypeListSearchDto, @Req() { user }: { user: JwtPayload }) {
-    if (user.superAdmin === true) {
-      return this.assetTypeService.listAssetTypesh(req)
-    } else {
-      throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
-    }
+    return this.assetTypeService.listAssetTypesh(req)
   }
 
   @ApiOperation({ summary: 'Page and list'})

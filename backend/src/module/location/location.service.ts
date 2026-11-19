@@ -155,7 +155,7 @@ export class LocationService {
         }
     }
 
-    async listWithoutPage(request: ListLocationRequestDto) {
+    async listWithoutPage(request: ListLocationRequestDto, ids?: string[]) {
             const { name } = request
     
             const filters = {
@@ -168,6 +168,12 @@ export class LocationService {
                             placeName: { $regex: name, $options: 'i' }
                         }
                     ],
+                } : {},
+
+                ... ids && ids?.length > 0 ? {
+                    _id: {
+                        $in: ids
+                    }
                 } : {},
                 status: 1
             }

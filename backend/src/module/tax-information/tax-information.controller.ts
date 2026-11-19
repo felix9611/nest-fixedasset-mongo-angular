@@ -62,7 +62,7 @@ export class TaxInformationController {
     return this.taxInformationService.listTaxInfoBySearch(req)
   }
 
-  @ApiOperation({ summary: 'Page and list'})
+  @ApiOperation({ summary: 'List with paging'})
   @ApiBody({ type: TaxInformationListQuery })
   @ApiResponse({ description: 'If successful', status: 201, type: [TaxInformation] })
   @Post('filter/list')

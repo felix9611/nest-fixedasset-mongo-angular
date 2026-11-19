@@ -160,7 +160,7 @@ export class DepartmentService {
         }
     }
 
-    async listWithFilters(request: ListDeptRequestDto) {
+    async listWithFilters(request: ListDeptRequestDto, ids?: string[]) {
             const { name } = request
     
     
@@ -175,6 +175,7 @@ export class DepartmentService {
                         }
                     ],
                 } : {},
+                ...ids && ids.length > 0 ? { _id: { $in: ids } } : {},
                 status: 1
             }
     
