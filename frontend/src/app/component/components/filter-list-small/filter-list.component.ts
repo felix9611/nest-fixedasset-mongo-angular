@@ -36,7 +36,7 @@ export interface ListOption {
         <span>{{ summary() }}</span
         ><span>⌄</span>
       </button>
-      @if (selectedIds.length > 1) {
+      @if (selectedIds && selectedIds.length > 1 && multipleDisplay === true) {
         <div
           class="selected-options mt-[8px] flex flex-wrap gap-[6px] [&_button]:[border:1px_solid_#e8dff2] [&_button]:bg-[#f6f1fb] [&_button]:px-[9px] [&_button]:py-[6px] [&_button]:rounded-[5px] [&_button]:text-[12px] [&_button]:text-[#9575b1] max-[760px]:[&_button]:min-h-[44px] max-[760px]:[&_button]:text-[13px]"
           aria-live="polite"
@@ -132,6 +132,7 @@ export class FilterListApiSmall implements OnChanges, OnInit, OnDestroy {
   @Input() singleValue: string | null = null;
   @Input() label = '';
   @Input() multiple = false;
+  @Input() multipleDisplay = false;
   @Output() valueChange = new EventEmitter<string[]>();
   @Output() singleValueChange = new EventEmitter<string>();
 
