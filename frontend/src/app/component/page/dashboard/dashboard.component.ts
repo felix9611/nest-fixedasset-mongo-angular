@@ -18,6 +18,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker'
 import { UserStoreService } from '../../../../state/user.service'
 import { findMenuItem } from '../../tool-function'
 import { Subscription } from 'rxjs'
+import { FilterListApiSmall, ListOption } from '../../components/filter-list-small/filter-list.component'
 
 @Component({
     standalone: true,
@@ -33,24 +34,41 @@ import { Subscription } from 'rxjs'
         CanvasChartComponent,
         NzSelectModule,
         NzDatePickerModule,
+        FilterListApiSmall
     ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
     private rightSubscription: Subscription
+    private userRightSubscription: Subscription
     constructor(
         private message: NzMessageService,
         private userStoreService: UserStoreService
     ) {
-            this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
-                const answer = findMenuItem(data, 'Dashboard', 'dashboard')
-                this.userRightInside = {
-                    read: answer?.read ?? false
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Dashboard', 'dashboard')
+            this.userRightInside = {
+                read: answer?.read ?? false
                      // keep default value
-                }
-            })
-                    
+            }
+        })
+
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            if (!(data.superAdmin || data.admin)) {
+                this.globalFilter.deptIds = data.deptIds
+                this.globalFilter.placeIds = data.placeIds
+                this.getByDeptAndDateOfCosts()
+                this.getByDeptAndDateOfCount()
+                this.getByTypeAndDateOfCosts()
+                this.getByTypeAndDateOfCount()
+                this.getByPlaceAndDateOfCount()
+                this.getByPlaceAndDateOfCosts()
+                this.getByPlaceCosts()
+                this.getByTypeCosts()
+                this.getByDeptCosts()
+            }
+        })
     }
 
     ngOnDestroy() {
@@ -74,27 +92,7 @@ export class DashboardComponent implements OnInit {
         this.getByPlaceCosts()
         this.getByTypeCosts()
         this.getByDeptCosts()
-   //     this.getByTotalCost()
-  //      this.getByTotalCount()
-        this.loadTypeList()
-        this.loadDeptList()
-        this.loadLocationList()
         
-    }
-
-    typeLists: any[] = []
-    async loadTypeList() {
-        this.typeLists = await getApiWithAuth('/asset/type/getAll')
-    }
-
-    deptLists: any[] = []
-    async loadDeptList() {
-        this.deptLists = await getApiWithAuth('/sys/department/getAll')
-    }
-
-    placeLists: any[] = []
-    async loadLocationList() {
-        this.placeLists = await getApiWithAuth('/base/location/getAll')
     }
 
     async runSearch() {
@@ -112,10 +110,11 @@ export class DashboardComponent implements OnInit {
   //      await this.getByTotalCount()
     }
 
-
-
-    globalFilter: DashboardReqFilterDto = {}
-
+    globalFilter: DashboardReqFilterDto = {
+        typeIds: [],
+        placeIds: [],
+        deptIds: []
+    }
     deptAndDateInCostLoading: boolean = false
     deptAndDateInCost: any = {}
     async getByDeptAndDateOfCosts() {
@@ -408,5 +407,116 @@ export class DashboardComponent implements OnInit {
         }
 
         return await postApiWithAuth('/asset/asset-list/chart-query-date', finalQuery)
+    }
+
+/* new filter field */
+    assetTypeTotal: number = 0
+    assetTypes: any = []
+    assetTypeOptions: ListOption[] = [];
+    assetTypeSearchForm: any = {
+        typeCode: '',
+        typeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadAssetTypeLists = async (
+        url: string,
+        body: Record<string, unknown>,
+     ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.assetTypeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.assetTypes = res ?? [];
+            this.assetTypeTotal = res.length ?? 0;
+        
+            this.assetTypeOptions = this.assetTypes.map((a: any) => ({
+                value: a._id,
+                label: `${a.typeCode}`,
+            }));
+    
+          return this.assetTypeOptions;
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Department data
+    deptTotal: number = 0
+    depts: any = []
+    deptOptions: ListOption[] = [];
+    deptSearchForm: any = {
+        deptCode: '',
+        deptName: '',
+        page: 1,
+        limit: 10
+    }
+    loadDeptLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.deptSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload)
+        
+            this.depts = res ?? []
+            this.deptTotal = res.length ?? 0
+        
+            this.deptOptions = this.depts.map((a: any) => ({
+                value: a._id,
+                label: `${a.deptCode}`,
+            }));
+        
+            return this.deptOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }

@@ -50,8 +50,8 @@
                     [postApi]="loadDeptLists"
                     [multiple]="true"
                     [searchDataKey]="['deptCode', 'deptName']"
-                    [(singleValue)]="searchForm.deptIds"
-                    (singleValueChange)="searchForm.deptIds"
+                    [(value)]="searchForm.deptIds"
+                    (valueChange)="searchForm.deptIds"
                 />
             </div>
             <div (click)="loadAssetListLists()" class="w-[100px]  border-1 border-[#54A4FF] hover:bg-[#2E7FDB] text-center px-1 py-2 rounded-lg">
