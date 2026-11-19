@@ -89,10 +89,10 @@ export class LocationController {
     @Post('filter/list')
     @UseGuards(AuthGuard)
     async listWithFilter(@Body() req: ListLocationRequestDto, @Req() { user }: { user: JwtPayload }) {
-        if (user.superAdmin === true) {
+        if (user.superAdmin === true || user.manager === true) {
             return await this.locationService.listWithoutPage(req)
         } else {
-            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            return await this.locationService.listWithoutPage(req, user.placeIds)
         }
     }
 
