@@ -225,14 +225,14 @@ export class FilterListApiSmall implements OnChanges, OnInit, OnDestroy {
     this.error.set('');
     if (typeof this.postApi !== 'function' || !this.apiUrl.trim()) {
       this.loading.set(false);
-      this.error.set('未設定 API：請綁定 [postApi]="loadUserLists" 及 apiUrl。');
+      this.error.set('Not configured API：Please bind [postApi]="loadUserLists" 及 apiUrl。');
       return;
     }
     const requestedLimit = Number(this.requestBody['limit']);
     const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? requestedLimit : 10;
     if (!this.searchKeys.length) {
       this.loading.set(false);
-      this.error.set('請設定搜尋欄位 searchDataKey。');
+      this.error.set('Please set searchDataKey in searchDataKey。');
       return;
     }
     const filters = Object.fromEntries(this.searchKeys.map((key) => [key, this.query.trim()]));
