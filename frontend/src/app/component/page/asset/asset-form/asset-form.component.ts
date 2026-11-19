@@ -253,8 +253,8 @@ export class AssetFormComponent implements OnInit {
         try {
             const res = await postApiWithAuth(url, payload);
         
-            this.places = res.lists ?? [];
-            this.placeTotal = res.total ?? 0;
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
         
             this.placeOptions = this.places.map((a: any) => ({
                 value: a._id,
