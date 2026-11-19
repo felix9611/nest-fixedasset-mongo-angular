@@ -21,6 +21,7 @@ import { UploadDialogComponent } from '../../../components/upload-dialog-compone
 import { DownloadExcelTemplateComponent } from '../../../components/download-template-component/download-template-component.component'
 import { DownloadExcelDataComponent } from '../../../components/download-excel-component/download-excel-data-component.component'
 import { NzMessageService } from 'ng-zorro-antd/message'
+import { FilterListApiSmall, ListOption } from '../../../components/filter-list-small/filter-list.component'
 
 @Component({
     // selector: 'app-footer',
@@ -40,7 +41,8 @@ import { NzMessageService } from 'ng-zorro-antd/message'
         NzDatePickerModule,
         DownloadExcelTemplateComponent,
         UploadDialogComponent,
-        DownloadExcelDataComponent
+        DownloadExcelDataComponent,
+        FilterListApiSmall
     ],
     templateUrl: './asset-list.component.html',
     styleUrl: './asset-list.component.css',
@@ -69,12 +71,6 @@ export class AssetListComponent {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (data.superAdmin !== true) {
-                this.placeLists = data.locations
-                this.deptLists = data.departments
-                this.searchForm.placeIds = data.placeIds
-                this.searchForm.deptIds = data.deptIds
-            }
         })
     }
 
@@ -91,7 +87,10 @@ export class AssetListComponent {
 
     searchForm: any = {
         page: 1,
-        limit: 10
+        limit: 10,
+        typeIds: [],
+        placeIds: [],
+        deptIds: []
     }
 
     userRightInside: any = {
@@ -135,21 +134,9 @@ export class AssetListComponent {
     }
 
     async loadAssetListLists() {
-        if (this.superAdmin === true) {
-            const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
-            this.dataLists = res.lists
-            this.totals = res.total
-        } else {
-            if (this.searchForm.placeIds.length === 0) {
-                this.message.error('Please select least one location')
-            } else if (this.searchForm.deptIds.length === 0) {
-                this.message.error('Please select least one department')
-            } else {
-                const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
-                this.dataLists = res.lists
-                this.totals = res.total
-            }
-        }
+        const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
+        this.dataLists = res.lists
+        this.totals = res.total
     }
 
     handleRomeve(id: string) {
@@ -225,5 +212,116 @@ export class AssetListComponent {
         const res = await getApiWithAuth(`/sys/excel-field-match/code/${this.excelFileSetting.code}`)
         this.dbFieldList = res.fieldLists.map((item: any) => item.dbFieldName)
         this.excelFieldList = res.fieldLists.map((item: any) => item.excelFieldName)
+    }
+
+ /* new filter field */
+    assetTypeTotal: number = 0
+    assetTypes: any = []
+    assetTypeOptions: ListOption[] = [];
+    assetTypeSearchForm: any = {
+        typeCode: '',
+        typeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadAssetTypeLists = async (
+        url: string,
+        body: Record<string, unknown>,
+     ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.assetTypeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.assetTypes = res ?? [];
+            this.assetTypeTotal = res.length ?? 0;
+        
+            this.assetTypeOptions = this.assetTypes.map((a: any) => ({
+                value: a._id,
+                label: `${a.typeCode}`,
+            }));
+    
+          return this.assetTypeOptions;
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Department data
+    deptTotal: number = 0
+    depts: any = []
+    deptOptions: ListOption[] = [];
+    deptSearchForm: any = {
+        deptCode: '',
+        deptName: '',
+        page: 1,
+        limit: 10
+    }
+    loadDeptLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.deptSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload)
+        
+            this.depts = res ?? []
+            this.deptTotal = res.length ?? 0
+        
+            this.deptOptions = this.depts.map((a: any) => ({
+                value: a._id,
+                label: `${a.deptCode}`,
+            }));
+        
+            return this.deptOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }
