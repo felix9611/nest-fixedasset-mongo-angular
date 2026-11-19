@@ -71,6 +71,11 @@ export class AssetListComponent {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
+            if (!(data.superAdmin || data.admin)) {
+                this.searchForm.deptIds = data.deptIds
+                this.searchForm.placeIds = data.placeIds
+                this.loadAssetListLists()
+            }
         })
     }
 
@@ -109,9 +114,6 @@ export class AssetListComponent {
 
     ngOnInit() {
         this.loadAssetListLists()
-        this.loadTypeList()
-        this.loadDeptList()
-        this.loadLocationList()
     }
 
     typeLists: any[] = []
