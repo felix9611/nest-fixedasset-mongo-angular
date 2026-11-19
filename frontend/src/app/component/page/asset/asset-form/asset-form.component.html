@@ -259,11 +259,16 @@
           <nz-form-item class="lg:col-span-2">
             <div class="px-1 w-[105px] flex items-center">Tax Name</div>
             <nz-form-control>
-                <nz-select name="typeId" [(ngModel)]="editForm.taxInfofId"  nzPlaceHolder="Please select" nzAllowClear  nzShowArrow (ngModelChange)="taxInfoOnChanges($event)">
-                  @for (option of taxLists; track option) {
-                    <nz-option [nzLabel]="option.label" [nzValue]="option._id"></nz-option>
-                  }
-                </nz-select>
+              <app-filter-list-small
+                label="Tax Information"
+                [apiUrl]="'/base/tax-information/filter/list'"
+                [requestBody]="taxListSearchForm"
+                [postApi]="loadTaxListLists"
+                [multiple]="false"
+                [searchDataKey]="['nameCode']"
+                [(singleValue)]="editForm.taxInfofId"
+                (singleValueChange)="editForm.taxInfofId; taxInfoOnChanges($any(editForm.taxInfofId))"
+              />
             </nz-form-control>
           </nz-form-item>
 

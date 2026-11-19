@@ -155,13 +155,6 @@ export class AssetFormComponent implements OnInit {
                 this.getOne()
             }
         })
-
-
-      /*  if (this.route.snapshot.paramMap.get('id')) {
-            this.theId = this.route.snapshot.paramMap.get('id')
-            this.getOne()
-        } */
-        this.loadTaxInfoList()
     }
 
     /* new filter field */
@@ -312,6 +305,43 @@ export class AssetFormComponent implements OnInit {
         }
     }
 
+    // Vendor data
+    taxListTotal: number = 0
+    taxLists: any = []
+    taxListOptions: ListOption[] = [];
+    taxListSearchForm: any = {
+        nameCode: '',
+        tax: '',
+        page: 1,
+        limit: 10
+    }
+    loadTaxListLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.vendorSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.taxLists = res ?? []
+            this.taxListTotal = res.length ?? 0
+        
+            this.taxListOptions = this.taxLists.map((x: any) => ({
+                value: x._id,
+                label: `${x.countryName} ${x.taxCode} (${Number(x.taxRate) * 100}%)`
+            }))
+    
+            return this.taxListOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
     /* new filter field */
 
     beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
@@ -344,9 +374,6 @@ export class AssetFormComponent implements OnInit {
                 this.finalFileList = this.finalFileList.filter(f => f.fileName !== event.file.originFileObj.name)
             break
         }
-        console.log(event.type)
-        console.log(this.finalFileList)
-        
     }
 
     async preAction(fileObj: any) {
@@ -366,22 +393,8 @@ export class AssetFormComponent implements OnInit {
             this.editForm = result
         }
     }
-
-    taxLists: any[] = []
-    async loadTaxInfoList() {
-        const results = await getApiWithAuth('/base/tax-information/getAll')
-        const updates = results.map((x: any)=> {
-            return {
-              ...x,
-              taxRate: Number(x.taxRate),
-              label: `${x.countryName} ${x.taxCode} (${Number(x.taxRate) * 100}%)`
-            }
-        })
-
-        this.taxLists = updates
-    }
     
-    taxInfoOnChanges(event: Event) {
+    taxInfoOnChanges(event: any) {
         const data = this.taxLists.find((item: any) => item._id === event)
         this.editForm.taxInfofId = data._id
         this.editForm.taxCountryCode = data.countryCode
@@ -395,10 +408,10 @@ export class AssetFormComponent implements OnInit {
 
         switch(event) {
             case true:
-                this.editForm.afterBeforeTax = cost * (1 - taxRate)
+                this.editForm.afterBeforeTax = Number((cost * (1 - taxRate)).toFixed(2))
             break
             case false:
-                this.editForm.afterBeforeTax = cost * (1 + taxRate)
+                this.editForm.afterBeforeTax = Number((cost * (1 + taxRate)).toFixed(2))
             break
         }
     }
