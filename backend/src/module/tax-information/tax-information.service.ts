@@ -259,26 +259,22 @@ export class TaxInformationService {
             ...nameCode? {
                 $or: [
                     {
-                        nationCode: { $regex: name, $options: 'i' }
+                        nationCode: { $regex: nameCode, $options: 'i' }
                     },
                     {
-                        nationName: { $regex: name, $options: 'i' }
+                        nationName: { $regex: nameCode, $options: 'i' }
                     },
                     {
-                        countryCode: { $regex: name, $options: 'i' }
+                        countryCode: { $regex: nameCode, $options: 'i' }
                     },
                     {
-                        countryName: { $regex: name, $options: 'i' }
-                    }
-                ]
-            } : {},
-            ...tax ? {
-                $or: [
-                    {
-                        taxCode: { $regex: name, $options: 'i' }
+                        countryName: { $regex: nameCode, $options: 'i' }
                     },
                     {
-                        taxName: { $regex: name, $options: 'i' }
+                        taxCode: { $regex: nameCode, $options: 'i' }
+                    },
+                    {
+                        taxName: { $regex: nameCode, $options: 'i' }
                     }
                 ]
             } : {},
