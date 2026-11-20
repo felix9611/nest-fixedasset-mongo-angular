@@ -122,13 +122,6 @@ export class StockTakeListComponent implements OnInit {
         this.totals = res.total
     }
 
-    placeLists: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            this.placeLists = await getApiWithAuth('/base/location/getAll')
-        }
-    }
-
     async submitForm() {
         const res = await postApiWithAuth('/asset/stock-take/create-form', this.editForm)
         if (res.error) {
@@ -212,26 +205,26 @@ export class StockTakeListComponent implements OnInit {
         url: string,
         body: Record<string, unknown>,
     ): Promise<ListOption[]> => {
-            const payload = {
-              ...this.placeSearchForm,
-              ...body,
-            }
+        const payload = {
+            ...this.placeSearchForm,
+            ...body,
+        }
         
-            try {
-                const res = await postApiWithAuth(url, payload);
+        try {
+            const res = await postApiWithAuth(url, payload);
             
-                this.places = res ?? [];
-                this.placeTotal = res.length ?? 0;
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
             
-                this.placeOptions = this.places.map((a: any) => ({
-                    value: a._id,
-                    label: `${a.placeCode}`,
-                }))
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode}`,
+            }))
         
-                return this.placeOptions
-            } catch (error) {
-                this.message.error('API request failed')
-                throw error
-            }
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }
