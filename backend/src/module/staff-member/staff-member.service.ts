@@ -179,4 +179,15 @@ export class StaffMemberService {
             }
         }
     } 
+
+    async getOne(_id: string) {
+        const data = await this.staffMemberModel.findOne({ _id, status: 1 })
+        if (data) {
+            return data
+        } else {
+            return {
+                error: 'Not found this record'
+            }
+        }
+    }
 }
