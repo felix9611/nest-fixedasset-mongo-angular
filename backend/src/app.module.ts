@@ -28,8 +28,8 @@ import { StockTakeMoudule } from './module/stock-take/stcok-take.module'
 import { ExcelFieldMatchModule } from './module/excelFieldMatch/excelFieldMatch.module'
 import { SysUserSchema } from './module/sys-user/sysUser.schame'
 import { JobDashboardModule } from './module/job-dashboard/job-dashboard.module'
-import { env } from 'process'
-import { JwtModule } from '@nestjs/jwt'
+import { AssignmentMoudule } from './module/assignment/assignment.module'
+import { StaffMemberMoudule } from './module/staff-member/staff-member.module'
 
 @Module({
   imports: [
@@ -55,6 +55,8 @@ import { JwtModule } from '@nestjs/jwt'
     SysMenuMoudule,
     ExcelFieldMatchModule,
     JobDashboardModule,
+    AssignmentMoudule,
+    StaffMemberMoudule,
     // MongooseModule.forRoot(`${env.MONGODB_CONFIG?.toString()}`),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
