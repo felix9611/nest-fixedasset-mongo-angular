@@ -20,7 +20,7 @@ export class StaffMember extends BaseSchema {
     @Prop({ type: SchemaTypes.String, required: true })
     staffName!: string
 
-    @Prop({ type: SchemaTypes.String, required: true })
+    @Prop({ type: SchemaTypes.String })
     avatar!: string
 
     @Prop({ type: SchemaTypes.String })
