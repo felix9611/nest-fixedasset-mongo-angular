@@ -17,6 +17,7 @@ import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import moment from 'moment'
+import { StaffMemberDetailComponent } from '../staff-member-detail/staff-member-detail.component'
 
 @Component({
     standalone: true,
@@ -31,16 +32,16 @@ import moment from 'moment'
         NzInputModule, 
         NzPaginationModule,
         NzDatePickerModule,
-        FilterListApiSmall
+        FilterListApiSmall,
     ],
     templateUrl: './staff-member-list.component.html',
 })
 export class StaffMemberListComponent implements OnInit {
-   private userRightSubscription: Subscription
-  private rightSubscription: Subscription
+    private userRightSubscription: Subscription
+    private rightSubscription: Subscription
 
     constructor(
-        // private routeTo: Router,
+        private routeTo: Router,
         private userStoreService: UserStoreService,
         private message: NzMessageService,
     ) {
@@ -115,7 +116,7 @@ export class StaffMemberListComponent implements OnInit {
         this.totals = res.total
     }
 
-    editFormDialog: boolean = true
+    editFormDialog: boolean = false
 
     goToCreate() {
         this.editForm = {}
@@ -151,6 +152,10 @@ export class StaffMemberListComponent implements OnInit {
 
     dateFormat(data: string) {
         return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
+    }
+
+    openDetail(id: string) {
+        this.routeTo.navigate([`/staff-member-detail`], { queryParams: { id } })
     }
 
     // Department data
