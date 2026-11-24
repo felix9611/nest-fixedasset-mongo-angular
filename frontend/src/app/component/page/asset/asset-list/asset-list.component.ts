@@ -116,25 +116,6 @@ export class AssetListComponent {
         this.loadAssetListLists()
     }
 
-    typeLists: any[] = []
-    async loadTypeList() {
-        this.typeLists = await getApiWithAuth('/asset/type/getAll')
-    }
-
-    deptLists: any[] = []
-    async loadDeptList() {
-        if (this.superAdmin === true) {
-            this.deptLists = await getApiWithAuth('/sys/department/getAll')
-        }
-    }
-
-    placeLists: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            this.placeLists = await getApiWithAuth('/base/location/getAll')
-        }
-    }
-
     async loadAssetListLists() {
         const res = await postApiWithAuth('/asset/asset-list/list', this.searchForm)
         this.dataLists = res.lists
