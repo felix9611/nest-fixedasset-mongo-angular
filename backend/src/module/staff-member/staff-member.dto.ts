@@ -8,3 +8,12 @@ export interface CreateStaffMember {
     avatar: string
     remark: string
 }
+
+export interface StaffMemberListReq {
+    page: number
+    limit: number
+    deptIds: string[]
+    placeIds: string[]
+    name: string
+    number: string
+}

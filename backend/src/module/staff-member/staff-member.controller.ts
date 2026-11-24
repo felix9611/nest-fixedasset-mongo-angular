@@ -4,7 +4,7 @@ import { ApiOperation } from "@nestjs/swagger"
 import { AuthGuard } from "../auth/AuthGuard"
 import { JwtPayload } from "../auth/auth.dto"
 import { StaffMember } from "./staff-member.schema"
-import { CreateStaffMember } from "./staff-member.dto"
+import { CreateStaffMember, StaffMemberListReq } from "./staff-member.dto"
 
 @Controller('base/staff-member')
 export class StaffMemberController {
@@ -17,18 +17,25 @@ export class StaffMemberController {
         return await this.staffMemberService.getOneById(id)
     }
 
-    @ApiOperation({ summary: 'Create Location' })
-    @Post('update')
+    @ApiOperation({ summary: 'List Staff Member' })
+    @Post('list')
+    @UseGuards(AuthGuard)
+    async listStaffMember(@Body() dto: StaffMemberListReq, @Req() { user }: { user: JwtPayload }) {
+        return await this.staffMemberService.staffMemberList(dto)
+    }
+
+    @ApiOperation({ summary: 'Create Staff Member' })
+    @Post('create')
     @UseGuards(AuthGuard)
     async create(@Body() create: CreateStaffMember, @Req() { user }: { user: JwtPayload }) {
         if (user.superAdmin || user.manager) {
-            return await this.staffMemberService.updateStaff(create)
+            return await this.staffMemberService.createStaff(create)
         } else {
                 throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 
-    @ApiOperation({ summary: 'Update Location' })
+    @ApiOperation({ summary: 'Update Staff Member' })
     @Post('update')
     @UseGuards(AuthGuard)
     async update(@Body() update: StaffMember, @Req() { user }: { user: JwtPayload }) {

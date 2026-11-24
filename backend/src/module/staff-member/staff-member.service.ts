@@ -6,7 +6,7 @@ import { ActionRecordService } from '../action-record/actionRecord.service'
 import { DepartmentService } from '../department/department.service'
 import { LocationService } from '../location/location.service'
 import { SysUserService } from '../sys-user/sysUser.service'
-import { CreateStaffMember } from './staff-member.dto'
+import { CreateStaffMember, StaffMemberListReq } from './staff-member.dto'
 
 @Injectable()
 export class StaffMemberService {
@@ -188,6 +188,61 @@ export class StaffMemberService {
             return {
                 error: 'Not found this record'
             }
+        }
+    }
+
+    async staffMemberList(dto: StaffMemberListReq) {
+        const { number, name, deptIds, placeIds, page, limit } = dto
+
+        const skip = (page - 1) * limit
+
+        const filters = {
+            ...deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
+            ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds } } : {},
+            ...number ? { staffNumber: number } : {},
+            ...name ? { staffName: { $regex: name, $options: 'i' } } : {}
+        }
+
+        const lists = await this.staffMemberModel.arguments([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                  from: 'locations', // Ensure correct collection name
+                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
+                  as: 'location'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'departments', // Ensure correct collection name
+                    let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    as: 'department'
+                }
+            },
+            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+            { 
+                $addFields: { 
+                    staffNumberInt: { $toInt: "$staffNumber" } 
+                } 
+            },
+            { $sort: { staffNumberInt: 1 } } ,
+            { $skip: skip },
+            { $limit: limit }, 
+        ])
+
+        const total = await this.staffMemberModel.find(filters).countDocuments().exec()
+        
+        return {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            lists,
         }
     }
 }
