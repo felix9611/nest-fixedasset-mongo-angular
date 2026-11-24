@@ -16,6 +16,7 @@ import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzSelectModule } from 'ng-zorro-antd/select'
 import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import moment from 'moment'
 
 @Component({
     standalone: true,
@@ -74,6 +75,7 @@ export class StaffMemberListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadStaffLists()
     }
 
     superAdmin: boolean = false
@@ -93,6 +95,62 @@ export class StaffMemberListComponent implements OnInit {
         write: false,
         update: false,
         delete: false
+    }
+
+    editForm: any = {
+        deptId: '',
+        placeId: '',
+        sysUserId: '',
+        avatar: '',
+        remark: ''
+    }
+
+    dataLists: any[] = []
+    totals: number = 0
+    okText: string = ''
+
+    async loadStaffLists() {
+        const res = await postApiWithAuth('/base/staff-member/list', this.searchForm)
+        this.dataLists = res.lists
+        this.totals = res.total
+    }
+
+    editFormDialog: boolean = true
+
+    goToCreate() {
+        this.editForm = {}
+        this.editFormDialog = true
+        this.okText = 'Create'
+    }
+
+    async submitForm() {
+        const res = await postApiWithAuth('/base/staff-member/create', this.editForm)
+
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.message.success('Save successful!')
+            this.closeDialog()
+            this.loadStaffLists()
+
+            this.editForm = {
+                deptId: '',
+                placeId: '',
+                sysUserId: '',
+                avatar: '',
+                remark: ''
+            }
+
+            this.okText = 'Create'
+        }
+    }
+    
+    closeDialog() {
+        this.editFormDialog = false
+    }
+
+    dateFormat(data: string) {
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
     }
 
     // Department data
@@ -163,6 +221,43 @@ export class StaffMemberListComponent implements OnInit {
             }))
     
             return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Location data
+    userTotal: number = 0
+    users: any = []
+    userOptions: ListOption[] = [];
+    userSearchForm: any = {
+        username: '',
+        email: '',
+        page: 1,
+        limit: 10
+    }
+    loadUserLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.users = res.lists ?? [];
+            this.userTotal = res.total ?? 0;
+        
+            this.userOptions = this.users.map((a: any) => ({
+                value: a._id,
+                label: `${a.username}`,
+            }))
+    
+            return this.userOptions
         } catch (error) {
             this.message.error('API request failed')
             throw error

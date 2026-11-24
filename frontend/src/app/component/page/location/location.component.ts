@@ -104,13 +104,7 @@ export class LocationComponent {
     }
 
     async submitForm() {
-        const url = this.editForm._id === '' ? '/base/location/create' : `/base/location/update`
-
-        const res = await postApiWithAuth(url, {
-            
-            ...this.editForm,
-            ...this.editForm._id ? { _id: this.editForm._id} : {},
-        })
+        const res = await postApiWithAuth('/base/staff-member/create', this.editForm)
 
         if (res.error) {
             this.message.error(res.error)

@@ -31,7 +31,7 @@ export class StaffMemberController {
         if (user.superAdmin || user.manager) {
             return await this.staffMemberService.createStaff(create)
         } else {
-                throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+            throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
         }
     }
 

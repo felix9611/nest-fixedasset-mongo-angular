@@ -46,8 +46,8 @@ export class StaffMemberService {
                 error: 'The department id or location id must be filled!'
             }
         } else {
-            const checkDept = await this.departmentService.getOneById(deptId.toHexString())
-            const checkLocation = await this.locationService.getOneById
+            const checkDept = await this.departmentService.getOneById(deptId.toString())
+            const checkLocation = await this.locationService.getOneById(placeId.toString())
 
             if (!(checkDept || checkLocation)) {
                 await this.actionRecordRecord('Create Staff Member', 'POST', data, 'FAILURE')
@@ -56,7 +56,7 @@ export class StaffMemberService {
                     error: 'The department id or location id must be filled!'
                 }
             } else {
-                const checkSysUser = await this.sysUserService.findOneUser(sysUserId.toHexString())
+                const checkSysUser = await this.sysUserService.getUserInfo(sysUserId.toString())
 
                 if (checkSysUser) {
                     const staffNumber = await this.createNewNumber()
@@ -131,7 +131,7 @@ export class StaffMemberService {
 
         if (checkStaff) {
             const checkDept = await this.departmentService.getOneById(deptId.toHexString())
-            const checkLocation = await this.locationService.getOneById
+            const checkLocation = await this.locationService.getOneById(placeId.toHexString())
 
             if (!(checkDept || checkLocation)) {
                 await this.actionRecordRecord('Update Staff Member', 'POST', data, 'FAILURE')
@@ -203,23 +203,41 @@ export class StaffMemberService {
             ...name ? { staffName: { $regex: name, $options: 'i' } } : {}
         }
 
-        const lists = await this.staffMemberModel.arguments([
+        const lists = await this.staffMemberModel.aggregate([
             {
                 $match: filters
             },
             {
                 $lookup: {
-                  from: 'locations', // Ensure correct collection name
-                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
-                  as: 'location'
+                    from: 'locations', // Ensure correct collection name
+                    let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                placeCode: 1,
+                                placeName: 1 
+                            }
+                        }
+                    ],
+                    as: 'location'
                 }
             },
             {
                 $lookup: {
                     from: 'departments', // Ensure correct collection name
                     let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                deptCode: 1,
+                                deptName: 1 
+                            }
+                        }
+                    ],
                     as: 'department'
                 }
             },
