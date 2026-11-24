@@ -19,6 +19,7 @@ import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest
 import moment from 'moment'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
+import { FilterListApi } from '../../../components/filter-list/filter-list.component'
 
 @Component({
     standalone: true,
@@ -33,7 +34,7 @@ import { MatIconModule } from '@angular/material/icon'
         NzInputModule, 
         NzPaginationModule,
         NzDatePickerModule,
-        FilterListApiSmall,
+        FilterListApi,
         MatButtonModule,
         MatIconModule,
     ],
@@ -55,7 +56,9 @@ export class StaffMemberDetailComponent implements OnInit {
     }
 
     theId: string = ''
-    editStaffForm: any = {}
+    editStaffForm: any = {
+        sysUserId: ''
+    }
     
     async getOne() {
         const result = await getApiWithAuth(`/base/staff-member/one/${ this.theId}`)
@@ -68,5 +71,116 @@ export class StaffMemberDetailComponent implements OnInit {
 
     backToList() {
         this.routeTo.navigate([`staff-member`])
+    }
+
+    // Department data
+    deptTotal: number = 0
+    depts: any = []
+    deptOptions: ListOption[] = [];
+    deptSearchForm: any = {
+        deptCode: '',
+        deptName: '',
+        page: 1,
+        limit: 10
+    }
+    loadDeptLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.deptSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload)
+        
+            this.depts = res ?? []
+            this.deptTotal = res.length ?? 0
+        
+            this.deptOptions = this.depts.map((a: any) => ({
+                value: a._id,
+                label: `${a.deptCode}`,
+            }));
+        
+            return this.deptOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Location data
+    placeTotal: number = 0
+    places: any = []
+    placeOptions: ListOption[] = [];
+    placeSearchForm: any = {
+        placeCode: '',
+        placeName: '',
+        page: 1,
+        limit: 10
+    }
+    loadPlaceLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.places = res ?? [];
+            this.placeTotal = res.length ?? 0;
+        
+            this.placeOptions = this.places.map((a: any) => ({
+                value: a._id,
+                label: `${a.placeCode}`,
+            }))
+    
+            return this.placeOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
+    }
+
+    // Location data
+    userTotal: number = 0
+    users: any = []
+    userOptions: ListOption[] = [];
+    userSearchForm: any = {
+        username: '',
+        email: '',
+        page: 1,
+        limit: 10
+    }
+    loadUserLists = async (
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<ListOption[]> => {
+        const payload = {
+          ...this.placeSearchForm,
+          ...body,
+        }
+    
+        try {
+            const res = await postApiWithAuth(url, payload);
+        
+            this.users = res.lists ?? [];
+            this.userTotal = res.total ?? 0;
+        
+            this.userOptions = this.users.map((a: any) => ({
+                value: a._id,
+                label: `${a.username}`,
+            }))
+    
+            return this.userOptions
+        } catch (error) {
+            this.message.error('API request failed')
+            throw error
+        }
     }
 }
