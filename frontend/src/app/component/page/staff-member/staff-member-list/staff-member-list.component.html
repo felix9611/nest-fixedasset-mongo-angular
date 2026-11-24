@@ -1,0 +1,38 @@
+<div class="bg-white px-[2rem]">
+    @if (userRightInside.read) {
+        <div class="p-1  lg:p-6">
+            <div class="flex gap-2 py-5">
+                <div class="w-[200px]">
+                    <input class="h-full" nz-input type="text" name="number" placeholder="Staff Number" [(ngModel)]="searchForm.number" />
+                </div>
+                <div class="w-[200px]">
+                    <input class="h-full" nz-input type="text" name="name" placeholder="Staff Name" [(ngModel)]="searchForm.name" />
+                </div>
+                <div class="lg:w-[185px] h-full">
+                    <app-filter-list-small
+                        label="Location"
+                        [apiUrl]="'/base/location/filter/list'"
+                        [requestBody]="placeSearchForm"
+                        [postApi]="loadPlaceLists"
+                        [multiple]="true"
+                        [searchDataKey]="['placeCode', 'placeName']"
+                        [(value)]="searchForm.placeIds"
+                        (valueChange)="searchForm.placeIds"
+                    />
+                </div>
+                <div class="lg:w-[185px] h-full">
+                    <app-filter-list-small
+                        label="Department"
+                        [apiUrl]="'/sys/department/filter/list'"
+                        [requestBody]="deptSearchForm"
+                        [postApi]="loadDeptLists"
+                        [multiple]="true"
+                        [searchDataKey]="['deptCode', 'deptName']"
+                        [(value)]="searchForm.deptIds"
+                        (valueChange)="searchForm.deptIds"
+                    />
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -71,7 +71,7 @@ export class AssetListComponent {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (!(data.superAdmin || data.admin)) {
+            if (!(data.superAdmin || data.manager)) {
                 this.searchForm.deptIds = data.deptIds
                 this.searchForm.placeIds = data.placeIds
                 this.loadAssetListLists()

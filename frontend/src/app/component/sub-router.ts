@@ -25,6 +25,7 @@ import { MenuListComponent } from './page/menu/menu.component'
 import { ExcelFieldMatchComponent } from './page/excel-field-match/excel-field-match.component'
 import { AccessGuard } from '../../state/AccessGuard'
 import { JobBoardsComponent } from './page/job-boards/job-boards.component'
+import { StaffMemberListComponent } from './page/staff-member/staff-member-list/staff-member-list.component'
 
 export const pagesRoutes: Routes = [
     {
@@ -150,6 +151,11 @@ export const pagesRoutes: Routes = [
     {
         path: 'tasks',
         component: JobBoardsComponent,
+        canActivate: [AccessGuard]
+    },
+    {
+        path: 'staff-member',
+        component: StaffMemberListComponent,
         canActivate: [AccessGuard]
     }
 ]
