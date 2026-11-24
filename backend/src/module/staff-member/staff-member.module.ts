@@ -7,6 +7,7 @@ import { StaffMemberService } from './staff-member.service'
 import { Department, DepartmentSchema } from '../department/department.schame'
 import { LocationSchema } from '../location/location.schame'
 import { SysUser, SysUserSchema } from '../sys-user/sysUser.schame'
+import { StaffMemberController } from './staff-member.controller'
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -16,7 +17,7 @@ import { SysUser, SysUserSchema } from '../sys-user/sysUser.schame'
         { name: Location.name, schema: LocationSchema },
         { name: SysUser.name, schema: SysUserSchema }
     ]), StaffMember],
-    controllers: [],
+    controllers: [StaffMemberController],
     providers: [StaffMemberService, ActionRecordService],
     exports: [StaffMemberService, StaffMember],
 })
