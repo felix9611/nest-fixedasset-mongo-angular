@@ -7,3 +7,8 @@ export interface CreateAssignment {
     expiryDate: string
     remark: string
 }
+
+export interface AssignedAssetReqDto {
+    page: number
+    limit: number
+}

@@ -70,6 +70,7 @@ export class StaffMemberDetailComponent implements OnInit {
         this.route.queryParams.subscribe((x: any) => {
             this.theId = x.id
             this.getOne()
+            this.listAssignedAsset()
         })
     }
 
@@ -96,7 +97,7 @@ export class StaffMemberDetailComponent implements OnInit {
         assetName: '',
         assetId: ''
     }
-    
+
     async getOne() {
         const result = await getApiWithAuth(`/base/staff-member/one/${ this.theId}`)
         if (result.error) {
@@ -154,6 +155,7 @@ export class StaffMemberDetailComponent implements OnInit {
             const data = await postApiWithAuth('/asset/assignment/create', finalData)
             if (data._id) {
                 this.message.info('Submit successful!')
+                this.listAssignedAsset()
             } else {
                 this.message.error(data.error)
             }
@@ -162,6 +164,31 @@ export class StaffMemberDetailComponent implements OnInit {
 
     cleanAssetForm() {
         this.sudmitAssetForm = {}
+    }
+
+    searchAssetListForm: any = {
+        page: 1,
+        limit: 10
+    }
+
+    dateFormat(data: string) {
+        return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
+    }
+
+    assignedAsset: any = []
+    assignedAssetTotal: number = 0
+    async listAssignedAsset() {
+        const data = await postApiWithAuth(
+            `/asset/assignment/list/${this.theId}`, 
+            this.searchAssetListForm
+        )
+
+        if (data.error) {
+            this.message.error(data.error)
+        } else {
+            this.assignedAsset = data.lists
+            this.assignedAssetTotal = data.total
+        }
     }
 
     // Department data

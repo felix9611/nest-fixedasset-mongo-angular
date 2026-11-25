@@ -6,7 +6,7 @@ import { DepartmentService } from '../department/department.service'
 import { ActionRecordService } from '../action-record/actionRecord.service'
 import { AssetListService } from '../asset-list/asset-list.service'
 import { StaffMemberService } from '../staff-member/staff-member.service'
-import { CreateAssignment } from './assignment.dto'
+import { AssignedAssetReqDto, CreateAssignment } from './assignment.dto'
 import { error } from 'node:console'
 import { JwtPayload } from '../auth/auth.dto'
 
@@ -80,6 +80,73 @@ export class AssignmentService {
             return {
                 error: 'Cannot without user!'
             }
+        }
+    }
+
+    async listAssignedAsset(req: AssignedAssetReqDto, staffId: string) {
+        const { page, limit } = req
+
+        const skip = (page - 1) * limit
+
+        const filters = {
+            staffId,
+            status: 1
+        }
+
+        const lists = await await this.assignmentModel.aggregate([
+            {
+                $match: filters
+            },
+            {
+                $lookup: {
+                    from: 'departments', // Ensure correct collection name
+                    let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                deptCode: 1,
+                                deptName: 1 
+                            }
+                        }
+                    ],
+                    as: 'department'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'assetlists', // Ensure correct collection name
+                    let: { assetIdStr: { $toObjectId: '$assetId' } }, // Convert deptId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$assetIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                assetCode: 1,
+                                assetName: 1,
+                                unit: 1,
+                                purchaseDate: 1
+                            }
+                        }
+                    ],
+                    as: 'assetlist'
+                }
+            },
+            { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: '$assetlist', preserveNullAndEmptyArrays: true } },
+            { $skip: skip },
+            { $limit: limit }, 
+        ]).exec()
+
+        const total = await this.assignmentModel.find(filters).countDocuments().exec()
+
+        return {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+            lists,
         }
     }
 }
