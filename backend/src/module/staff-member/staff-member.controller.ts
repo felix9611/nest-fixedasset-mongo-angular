@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req, UseGuards } from "@nestjs/common"
 import { StaffMemberService } from "./staff-member.service"
-import { ApiOperation } from "@nestjs/swagger"
+import { ApiOperation, ApiResponse } from "@nestjs/swagger"
 import { AuthGuard } from "../auth/AuthGuard"
 import { JwtPayload } from "../auth/auth.dto"
 import { StaffMember } from "./staff-member.schema"
 import { CreateStaffMember, StaffMemberListReq } from "./staff-member.dto"
+import { ReturnMsg } from "src/tool/open-api-body"
 
 @Controller('base/staff-member')
 export class StaffMemberController {
@@ -43,6 +44,18 @@ export class StaffMemberController {
             return await this.staffMemberService.updateStaff(update)
         } else {
                 throw new HttpException({message: 'Access denied'}, HttpStatus.FORBIDDEN)
+        }
+    }
+
+    @ApiOperation({ summary: 'Void data by Id'})
+    @ApiResponse({ description: 'Return message only', status: 200, type: ReturnMsg })
+    @Delete('remove/:id')
+    @UseGuards(AuthGuard)
+    async remove(@Param('id') id: string, @Req() { user }: { user: JwtPayload }) {
+        if (user.superAdmin || user.manager) {
+            return this.staffMemberService.voidOne(id)
+        } else {
+            throw new HttpException({ message: 'Access denied' }, HttpStatus.FORBIDDEN)
         }
     }
 }

@@ -261,4 +261,29 @@ export class StaffMemberService {
             lists,
         }
     }
+
+    async voidOne(_id: string) {
+        const check = await this.staffMemberModel.findOne({ _id })
+
+        if (check?.status === 0) {
+            return {
+                error: 'This record has been voided!'
+            }
+        } else {
+            const updateData = { status: 0, updatedAt: new Date() }
+            const res = await this.staffMemberModel.updateOne({ _id}, updateData)
+
+            if (res.acknowledged) {
+                return {
+                    void: true,
+                    message: 'This record void just now!'
+                }
+            } else {
+                return {
+                    void: false,
+                    message: 'Oooops! Something wrong, please try again!'
+                }
+            }
+        }
+    }
 }
