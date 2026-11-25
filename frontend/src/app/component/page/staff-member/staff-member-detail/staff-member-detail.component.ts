@@ -41,13 +41,31 @@ import { FilterListApi } from '../../../components/filter-list/filter-list.compo
     templateUrl: './staff-member-detail.component.html',
 })
 export class StaffMemberDetailComponent implements OnInit {
-    
+    private userRightSubscription: Subscription
+    private rightSubscription: Subscription
     constructor(
         private route: ActivatedRoute, 
         private routeTo: Router,
         private message: NzMessageService,
         private userStoreService: UserStoreService
-    ) {}
+    ) {
+        this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
+            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+            this.userRightInside = {
+                read: answer?.read ?? false,
+                write: answer.write ?? false,
+                update: answer.update ?? false,
+                delete: answer.delete ?? false,
+                upload: answer.upload ?? false
+                 // keep default value
+            }
+        })
+
+        this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
+            this.superAdmin = data.superAdmin
+            this.manager = data.manager
+        })
+    }
     ngOnInit(): void {
         this.route.queryParams.subscribe((x: any) => {
             this.theId = x.id
@@ -55,9 +73,28 @@ export class StaffMemberDetailComponent implements OnInit {
         })
     }
 
+    ngOnDestroy() {
+        if (this.userStoreService.menuRole$) {
+            this.rightSubscription.unsubscribe()
+        }
+        if (this.userStoreService.user$) {
+            this.userRightSubscription.unsubscribe()
+        }
+    }
+
+    userRightInside: any = {}
+
+    manager: boolean = false
+    superAdmin: boolean = false
     theId: string = ''
     editStaffForm: any = {
         sysUserId: ''
+    }
+
+    sudmitAssetForm: any = {
+        assetCode: '',
+        assetName: '',
+        assetId: ''
     }
     
     async getOne() {
@@ -80,6 +117,47 @@ export class StaffMemberDetailComponent implements OnInit {
         } else {
             this.message.info('Updated!')
         }
+    }
+
+    async assetCodeChanged(assetCode: string) {
+        if (assetCode !== '') {
+            const data = await getApiWithAuth(`/asset/asset-list/code/${assetCode}`)
+            if (data._id) {
+
+                if (!this.superAdmin) {
+                    if (this.manager && data.placeId !== this.editStaffForm.placeI) {
+                        this.message.error('Cannot assign for personnel at this location!')
+                    } else if (data.deptId !== this.editStaffForm.deptId) {
+                        this.message.error('Cannot assign for personnel at this department!')
+                    } else {
+                        this.sudmitAssetForm.assetId = data._id
+                        this.sudmitAssetForm.assetName = data.assetName
+                        this.sudmitAssetForm.placeId = data.placeId
+                        this.sudmitAssetForm.deptId = data.deptId
+                    }
+                } else {
+                    this.sudmitAssetForm.assetId = data._id
+                    this.sudmitAssetForm.assetName = data.assetName
+                    this.sudmitAssetForm.placeId = data.placeId
+                    this.sudmitAssetForm.deptId = data.deptId
+                }
+            }
+        }
+    }
+
+    async submitAssetAsign() {
+        const finalData: any = {
+            staffId: this.editStaffForm._id,
+            assetId: this.sudmitAssetForm.assetId,
+            placeId: this.sudmitAssetForm.assetId,
+            deptId: this.sudmitAssetForm.deptId,
+            expiryDate: this.sudmitAssetForm.expiryDate,
+            remark: this.sudmitAssetForm.remark,
+        }
+    }
+
+    cleanAssetForm() {
+        this.sudmitAssetForm = {}
     }
 
     // Department data
