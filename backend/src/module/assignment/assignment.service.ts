@@ -31,6 +31,80 @@ export class AssignmentService {
         })
     }
 
+    async voidOne(_id: string) {
+        const check = await this.assignmentModel.findOne({ _id })
+
+        if (check?.status === 0) {
+            return {
+                error: 'This record has been voided!'
+            }
+        } else {
+            const updateData = { status: 0, updatedAt: new Date() }
+            const res = await this.assignmentModel.updateOne({ _id}, updateData)
+
+            if (res.acknowledged) {
+                return {
+                    void: true,
+                    message: 'This record void just now!'
+                }
+            } else {
+                return {
+                    void: false,
+                    message: 'Oooops! Something wrong, please try again!'
+                }
+            }
+        }
+    }
+
+    async updateAssign(data: Assignment) {
+        const { staffId, assetId, deptId, _id, ..._data } = data
+
+        const checkStaff = await this.staffMemberService.getOneById(staffId.toString())
+
+        if (checkStaff) {
+            const checkDept = await this.departmentService.getOneById(deptId.toString())
+            const checkAsset = await this.assetListService.getById(assetId.toString())
+
+            if (!(checkDept || checkAsset ||  _id)) {
+                await this.actionRecordRecord('Create Assignment', 'POST', data, 'FAILURE')
+
+                return {
+                    error: 'Not found department or asset data! Or this is not valid data!'
+                }
+            }
+
+            const assign = {
+                deptId,
+                staffId,
+                assetId,
+                ..._data
+            }
+
+            const res = await this.assignmentModel.updateOne({ _id, status: 1 }, assign)
+
+            if (res) {
+                await this.actionRecordRecord('Create Assignment', 'POST', data, 'Sussess')
+                return res
+            } else {
+                await this.actionRecordRecord('Create Assignment', 'POST', data, 'FAILURE')
+                return {
+                    error: 'Oooops! Something wrong, please try again!'
+                }
+            }
+
+        } else if ( deptId === null || assetId) {
+            await this.actionRecordRecord('Create Assignment', 'POST', data, 'FAILURE')
+            return {
+                error: 'Cannot without department or asset!'
+            }
+        } else {
+            await this.actionRecordRecord('Create Assignment', 'POST', data, 'FAILURE')
+            return {
+                error: 'Cannot without user!'
+            }
+        }
+    }
+
     async createAssign(data: CreateAssignment, user: JwtPayload) {
         const { staffId, assetId, deptId, ..._data } = data
 
