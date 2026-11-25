@@ -15,7 +15,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzSelectModule } from 'ng-zorro-antd/select'
-import { getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { deleteApiWithAuth, getApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import moment from 'moment'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule } from '@angular/material/icon'
@@ -173,6 +173,31 @@ export class StaffMemberDetailComponent implements OnInit {
 
     dateFormat(data: string) {
         return data ? moment(data).format('DD-MM-YYYY HH:mm') : null
+    }
+
+    removeDialog: boolean = false
+    handleRemoveId: string = ''
+    handleVoid(id: string) {
+        this.handleRemoveId = id
+        this.removeDialog = true
+    }
+
+    closeRemoveDialog() {
+        this.removeDialog = false
+    }
+
+    async handleRemove() {
+        const url = `/asset/assignment/remove/${this.handleRemoveId}`
+
+        const res: any = await deleteApiWithAuth(url)
+
+        if (res.void) {
+            this.message.info(res.message)
+            this.listAssignedAsset()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
     assignedAsset: any = []
