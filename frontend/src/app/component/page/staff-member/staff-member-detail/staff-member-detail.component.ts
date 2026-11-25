@@ -50,7 +50,7 @@ export class StaffMemberDetailComponent implements OnInit {
         private userStoreService: UserStoreService
     ) {
         this.rightSubscription = this.userStoreService.menuRole$.subscribe((data: any) => {
-            const answer = findMenuItem(data, 'Stock Take', 'stock-takes')
+            const answer = findMenuItem(data, 'Staff Member', 'staff-member')
             this.userRightInside = {
                 read: answer?.read ?? false,
                 write: answer.write ?? false,

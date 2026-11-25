@@ -1,231 +1,233 @@
 <div class="bg-white p-[1rem]">
-    <div>
-        <div class="flex gap-5 py-2">
-          <div class="text-[1.1rem] hover:text-[#ff9200] px-3 flex items-center justify-cente" (click)="backToList()">
-                <mat-icon cl aria-hidden="false" fontIcon="chevron_left"></mat-icon>
-                <span class="text-justify text-center">Return To Staff Member List</span>
-            </div>
-        </div>
-        <section
-            class="[&_.filter-menu_input]:[background:#faf8fd]! [&_.filter-menu_input]:text-[11px]! [background:#fff] flex flex-col overflow-hidden [&_label]:block [&_label]:text-[0.95rem] [&_span]:font-bold [&_label]:text-[#7a7a7a] [&_label]:[margin-bottom:7px] [&_input:not([type='checkbox']):not([type='file'])]:block [&_input:not([type='checkbox']):not([type='file'])]:w-[100%] [&_input:not([type='checkbox']):not([type='file'])]:[border:1px_solid_#c7c7c7] [&_input:not([type='checkbox']):not([type='file'])]:rounded-[6px] [&_input:not([type='checkbox']):not([type='file'])]:p-[10px_11px] [&_input:not([type='checkbox']):not([type='file'])]:[background:#fefeff] [&_input:not([type='checkbox']):not([type='file'])]:[outline:none] [&_input:not([type='checkbox']):not([type='file'])]:[margin-top:7px] [&_input:not([type='checkbox']):not([type='file'])]:text-[#2e2e2e] [&_input:not([type='checkbox']):not([type='file'])]:text-[12px] [&_textarea]:block [&_textarea]:w-[100%] [&_textarea]:[border:1px_solid_#d4d4d4] [&_textarea]:rounded-[6px] [&_textarea]:p-[10px_11px] [&_textarea]:[background:#fefeff] [&_textarea]:[outline:none] [&_textarea]:[margin-top:7px] [&_textarea]:text-[#2e2e2e] [&_textarea]:text-[12px] [&_textarea]:[resize:vertical] [&_select]:block [&_select]:w-[100%] [&_select]:[border:1px_solid_#e5dfec] [&_select]:rounded-[6px] [&_select]:p-[10px_11px] [&_select]:[background:#fefeff] [&_select]:[outline:none] [&_select]:[margin-top:7px] [&_select]:text-[#2e2e2e] [&_select]:text-[12px] [&_input:focus]:[border-color:#e3e3e3] [&_input:focus]:[box-shadow:0_0_0_3px_#63636312] [&_textarea:focus]:[border-color:#e3e3e3] [&_textarea:focus]:[box-shadow:0_0_0_3px_#63636312] [&_select:focus]:[border-color:#e3e3e3] [&_select:focus]:[box-shadow:0_0_0_3px_#63636312] [&_.check-row_.check-name]:[border:0] [&_.check-row_.check-name]:m-[0] [&_.check-row_select]:w-[75px] [&_.check-row_select]:m-[0] [&_.check-row_select]:p-[5px] [&_.check-row_select]:text-[10px] [&_.comment_select]:w-[75px] [&_.comment_select]:p-[3px] [&_.comment_select]:text-[10px] max-[760px]:max-h-[100dvh] max-[760px]:w-[100%] max-[760px]:h-[100dvh] max-[760px]:rounded-[0] max-[760px]:[&_label]:text-[14px] max-[760px]:[&_input:not([type='checkbox']):not([type='file'])]:text-[16px] max-[760px]:[&_input:not([type='checkbox']):not([type='file'])]:min-h-[46px] max-[760px]:[&_input:not([type='checkbox']):not([type='file'])]:p-[11px_12px] max-[760px]:[&_textarea]:text-[16px] max-[760px]:[&_textarea]:min-h-[46px] max-[760px]:[&_textarea]:p-[11px_12px] max-[760px]:[&_textarea]:leading-[1.7] max-[760px]:[&_select]:text-[16px] max-[760px]:[&_select]:min-h-[46px] max-[760px]:[&_select]:p-[11px_12px] max-[760px]:[&_.primary]:min-h-[44px] max-[760px]:[&_.primary]:text-[14px] max-[760px]:[&_.secondary]:min-h-[44px] max-[760px]:[&_.secondary]:text-[14px] max-[760px]:[&_.danger]:min-h-[44px] max-[760px]:[&_.danger]:text-[14px] max-[760px]:[&_.filter-menu_input]:text-[16px]! max-[760px]:[&_.check-row_.check-name]:[flex:1] max-[760px]:[&_.check-row_.check-name]:min-w-[100px] max-[760px]:[&_.check-row_.check-name]:w-[auto] max-[760px]:[&_.check-row_select]:w-[84px] max-[760px]:[&_.check-row_select]:text-[16px] max-[760px]:[&_.check-row_select]:min-h-[44px] max-[760px]:[&_.comment_select]:w-[90px] max-[760px]:[&_.comment_select]:min-h-[44px] max-[760px]:[&_.comment_select]:text-[16px]"
-        >
-            <div [class]="(superAdmin || manager) ? `grid xl:grid-cols-2` : ``">
-                <div>
-                    <div class="text-center text-[1.5rem] font-bold">Staff Member Detail</div>
-                    <div
-                        class="p-[24px_28px] overflow-y-auto [&_h3]:text-[1rem] [&_h3]:m-[0_0_5px] [&_h3_small]:[margin-left:8px] [&_h3_small]:text-[#aaa] [&_h3_small]:text-[11px] max-[760px]:p-[20px_16px] max-[760px]:min-h-[0] max-[760px]:[flex:1] max-[760px]:[overscroll-behavior-y:contain] max-[760px]:[-webkit-overflow-scrolling:touch] max-[760px]:[&_h3]:text-[17px] max-[760px]:[&_h3]:leading-[1.6] max-[760px]:[&_h3_small]:text-[13px]"
-                    >
-                        <div class="form-grid grid lg:grid-cols-2 gap-[0_12px]">
-                            <label>Staff Number 
-                                <input
-                                    class="[font:inherit]"
-                                    [(ngModel)]="editStaffForm.staffNumber"
-                                    placeholder="Staff Number"
-                                    disabled
-                                    length="150" 
-                                />
-                            </label>
-                            <label>Staff Name
-                                <span class="required text-[#c5939f]">*</span>
-                                <input
-                                    [(ngModel)]="editStaffForm.staffName"
-                                    placeholder="Staff Name"
-                                    maxlength="200" 
-                                />
-                            </label>
-                            <label>System User
-                                <span class="required text-[#c5939f]">*</span>
-                                <app-filter-list-api
-                                    label="System User"
-                                    [apiUrl]="'/sys/user/list'"
-                                    [requestBody]="userSearchForm"
-                                    [postApi]="loadUserLists"
-                                    [multiple]="false"
-                                    [searchDataKey]="['username', 'email']"
-                                    [(singleValue)]="editStaffForm.sysUserId"
-                                    (singleValueChange)="editStaffForm.sysUserId"
-                                />
-                            </label>
-                            <!--<label class="lg:col-span-2">Location
-                                <span class="required text-[#c5939f]">*</span>
-                                <app-filter-list-api
-                                    label="Location"
-                                    [apiUrl]="'/base/location/filter/list'"
-                                    [requestBody]="placeSearchForm"
-                                    [postApi]="loadPlaceLists"
-                                    [multiple]="false"
-                                    [searchDataKey]="['placeCode', 'placeName']"
-                                    [(singleValue)]="editStaffForm.placeId"
-                                    (singleValueChange)="editStaffForm.placeId"
-                                />
-                            </label>-->
-                            <label>Department
-                                <span class="required text-[#c5939f]">*</span>
-                                <app-filter-list-api
-                                    label="Department"
-                                    [apiUrl]="'/sys/department/filter/list'"
-                                    [requestBody]="deptSearchForm"
-                                    [postApi]="loadDeptLists"
-                                    [multiple]="false"
-                                    [searchDataKey]="['deptCode', 'deptName']"
-                                    [(singleValue)]="editStaffForm.deptId"
-                                    (singleValueChange)="editStaffForm.deptId"
-                                />
-                            </label>
-                        </div>
-                        <label>Remark
-                            <textarea
-                                class="[font:inherit]"
-                                [(ngModel)]="editStaffForm.remark"
-                                rows="3"
-                                placeholder="Additional details..."
-                            ></textarea>
-                        </label>
-                    </div>
-                    <div class="px-7 flex gap-5">
-                        <div (click)="getOne()" class="rounded-lg border-2 text-[#bf7b00] border-[#bf7b00] bg-[#fbd695] hover:bg-[#dabc87] p-1 w-[120px] text-center ">
-                            Reload
-                        </div>
-                        @if (superAdmin || manager) {
-                            <div (click)="updateStaffForm()" class="rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 w-[120px] text-center ">
-                                Update
-                            </div>
-                        }
-                    </div>
+    @if (userRightInside.read) {
+        <div>
+            <div class="flex gap-5 py-2">
+            <div class="text-[1.1rem] hover:text-[#ff9200] px-3 flex items-center justify-cente" (click)="backToList()">
+                    <mat-icon cl aria-hidden="false" fontIcon="chevron_left"></mat-icon>
+                    <span class="text-justify text-center">Return To Staff Member List</span>
                 </div>
-                @if (superAdmin || manager) {
+            </div>
+            <section
+                class="[&_.filter-menu_input]:[background:#faf8fd]! [&_.filter-menu_input]:text-[11px]! [background:#fff] flex flex-col overflow-hidden [&_label]:block [&_label]:text-[0.95rem] [&_span]:font-bold [&_label]:text-[#7a7a7a] [&_label]:[margin-bottom:7px] [&_input:not([type='checkbox']):not([type='file'])]:block [&_input:not([type='checkbox']):not([type='file'])]:w-[100%] [&_input:not([type='checkbox']):not([type='file'])]:[border:1px_solid_#c7c7c7] [&_input:not([type='checkbox']):not([type='file'])]:rounded-[6px] [&_input:not([type='checkbox']):not([type='file'])]:p-[10px_11px] [&_input:not([type='checkbox']):not([type='file'])]:[background:#fefeff] [&_input:not([type='checkbox']):not([type='file'])]:[outline:none] [&_input:not([type='checkbox']):not([type='file'])]:[margin-top:7px] [&_input:not([type='checkbox']):not([type='file'])]:text-[#2e2e2e] [&_input:not([type='checkbox']):not([type='file'])]:text-[12px] [&_textarea]:block [&_textarea]:w-[100%] [&_textarea]:[border:1px_solid_#d4d4d4] [&_textarea]:rounded-[6px] [&_textarea]:p-[10px_11px] [&_textarea]:[background:#fefeff] [&_textarea]:[outline:none] [&_textarea]:[margin-top:7px] [&_textarea]:text-[#2e2e2e] [&_textarea]:text-[12px] [&_textarea]:[resize:vertical] [&_select]:block [&_select]:w-[100%] [&_select]:[border:1px_solid_#e5dfec] [&_select]:rounded-[6px] [&_select]:p-[10px_11px] [&_select]:[background:#fefeff] [&_select]:[outline:none] [&_select]:[margin-top:7px] [&_select]:text-[#2e2e2e] [&_select]:text-[12px] [&_input:focus]:[border-color:#e3e3e3] [&_input:focus]:[box-shadow:0_0_0_3px_#63636312] [&_textarea:focus]:[border-color:#e3e3e3] [&_textarea:focus]:[box-shadow:0_0_0_3px_#63636312] [&_select:focus]:[border-color:#e3e3e3] [&_select:focus]:[box-shadow:0_0_0_3px_#63636312] [&_.check-row_.check-name]:[border:0] [&_.check-row_.check-name]:m-[0] [&_.check-row_select]:w-[75px] [&_.check-row_select]:m-[0] [&_.check-row_select]:p-[5px] [&_.check-row_select]:text-[10px] [&_.comment_select]:w-[75px] [&_.comment_select]:p-[3px] [&_.comment_select]:text-[10px] max-[760px]:max-h-[100dvh] max-[760px]:w-[100%] max-[760px]:h-[100dvh] max-[760px]:rounded-[0] max-[760px]:[&_label]:text-[14px] max-[760px]:[&_input:not([type='checkbox']):not([type='file'])]:text-[16px] max-[760px]:[&_input:not([type='checkbox']):not([type='file'])]:min-h-[46px] max-[760px]:[&_input:not([type='checkbox']):not([type='file'])]:p-[11px_12px] max-[760px]:[&_textarea]:text-[16px] max-[760px]:[&_textarea]:min-h-[46px] max-[760px]:[&_textarea]:p-[11px_12px] max-[760px]:[&_textarea]:leading-[1.7] max-[760px]:[&_select]:text-[16px] max-[760px]:[&_select]:min-h-[46px] max-[760px]:[&_select]:p-[11px_12px] max-[760px]:[&_.primary]:min-h-[44px] max-[760px]:[&_.primary]:text-[14px] max-[760px]:[&_.secondary]:min-h-[44px] max-[760px]:[&_.secondary]:text-[14px] max-[760px]:[&_.danger]:min-h-[44px] max-[760px]:[&_.danger]:text-[14px] max-[760px]:[&_.filter-menu_input]:text-[16px]! max-[760px]:[&_.check-row_.check-name]:[flex:1] max-[760px]:[&_.check-row_.check-name]:min-w-[100px] max-[760px]:[&_.check-row_.check-name]:w-[auto] max-[760px]:[&_.check-row_select]:w-[84px] max-[760px]:[&_.check-row_select]:text-[16px] max-[760px]:[&_.check-row_select]:min-h-[44px] max-[760px]:[&_.comment_select]:w-[90px] max-[760px]:[&_.comment_select]:min-h-[44px] max-[760px]:[&_.comment_select]:text-[16px]"
+            >
+                <div [class]="(superAdmin || manager) ? `grid xl:grid-cols-2` : ``">
                     <div>
-                        <div class="text-center text-[1.5rem] font-bold">Asset Assignment Form</div>
+                        <div class="text-center text-[1.5rem] font-bold">Staff Member Detail</div>
                         <div
                             class="p-[24px_28px] overflow-y-auto [&_h3]:text-[1rem] [&_h3]:m-[0_0_5px] [&_h3_small]:[margin-left:8px] [&_h3_small]:text-[#aaa] [&_h3_small]:text-[11px] max-[760px]:p-[20px_16px] max-[760px]:min-h-[0] max-[760px]:[flex:1] max-[760px]:[overscroll-behavior-y:contain] max-[760px]:[-webkit-overflow-scrolling:touch] max-[760px]:[&_h3]:text-[17px] max-[760px]:[&_h3]:leading-[1.6] max-[760px]:[&_h3_small]:text-[13px]"
                         >
-                            <div class="form-grid grid lg:grid-cols-3 gap-[0_12px]">
-                                <label>Asset Code
+                            <div class="form-grid grid lg:grid-cols-2 gap-[0_12px]">
+                                <label>Staff Number 
                                     <input
                                         class="[font:inherit]"
-                                        [(ngModel)]="sudmitAssetForm.assetCode"
-                                        placeholder="Enter Asset Code"
-                                        length="150" 
-                                        (ngModelChange)="assetCodeChanged($event)"
-                                    />
-                                </label>
-                                <label class="xl:col-span-2">Asset Name
-                                    <input
-                                        class="[font:inherit] bg-[#f2f2f2]"
-                                        [(ngModel)]="sudmitAssetForm.assetName"
-                                        placeholder="Enter Asset Name"
+                                        [(ngModel)]="editStaffForm.staffNumber"
+                                        placeholder="Staff Number"
                                         disabled
                                         length="150" 
                                     />
                                 </label>
-                                <label class="xl:col-span-3">Expiry Date
+                                <label>Staff Name
+                                    <span class="required text-[#c5939f]">*</span>
                                     <input
-                                        class="[font:inherit]"
-                                        type="date"
-                                        [(ngModel)]="sudmitAssetForm.expiryDate" 
+                                        [(ngModel)]="editStaffForm.staffName"
+                                        placeholder="Staff Name"
+                                        maxlength="200" 
                                     />
                                 </label>
-                                <label class="xl:col-span-3">Remark
-                                    <textarea
-                                        class="[font:inherit]"
-                                        [(ngModel)]="editStaffForm.remark"
-                                        rows="3"
-                                        placeholder="Additional details..."
-                                    ></textarea>
+                                <label>System User
+                                    <span class="required text-[#c5939f]">*</span>
+                                    <app-filter-list-api
+                                        label="System User"
+                                        [apiUrl]="'/sys/user/list'"
+                                        [requestBody]="userSearchForm"
+                                        [postApi]="loadUserLists"
+                                        [multiple]="false"
+                                        [searchDataKey]="['username', 'email']"
+                                        [(singleValue)]="editStaffForm.sysUserId"
+                                        (singleValueChange)="editStaffForm.sysUserId"
+                                    />
+                                </label>
+                                <!--<label class="lg:col-span-2">Location
+                                    <span class="required text-[#c5939f]">*</span>
+                                    <app-filter-list-api
+                                        label="Location"
+                                        [apiUrl]="'/base/location/filter/list'"
+                                        [requestBody]="placeSearchForm"
+                                        [postApi]="loadPlaceLists"
+                                        [multiple]="false"
+                                        [searchDataKey]="['placeCode', 'placeName']"
+                                        [(singleValue)]="editStaffForm.placeId"
+                                        (singleValueChange)="editStaffForm.placeId"
+                                    />
+                                </label>-->
+                                <label>Department
+                                    <span class="required text-[#c5939f]">*</span>
+                                    <app-filter-list-api
+                                        label="Department"
+                                        [apiUrl]="'/sys/department/filter/list'"
+                                        [requestBody]="deptSearchForm"
+                                        [postApi]="loadDeptLists"
+                                        [multiple]="false"
+                                        [searchDataKey]="['deptCode', 'deptName']"
+                                        [(singleValue)]="editStaffForm.deptId"
+                                        (singleValueChange)="editStaffForm.deptId"
+                                    />
                                 </label>
                             </div>
-                            <div class="flex gap-5 py-6">
-                                <div (click)="cleanAssetForm()" class="w-[120px] rounded-lg border-2 text-[#a6a6a6] border-[#a6a6a6] hover:border-[#696969] hover:text-[#a6a6a6] p-1 text-center ">
-                                    Clean
+                            <label>Remark
+                                <textarea
+                                    class="[font:inherit]"
+                                    [(ngModel)]="editStaffForm.remark"
+                                    rows="3"
+                                    placeholder="Additional details..."
+                                ></textarea>
+                            </label>
+                        </div>
+                        <div class="px-7 flex gap-5">
+                            <div (click)="getOne()" class="rounded-lg border-2 text-[#bf7b00] border-[#bf7b00] bg-[#fbd695] hover:bg-[#dabc87] p-1 w-[120px] text-center ">
+                                Reload
+                            </div>
+                            @if (superAdmin || manager) {
+                                <div (click)="updateStaffForm()" class="rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 w-[120px] text-center ">
+                                    Update
                                 </div>
-                                <div (click)="submitAssetAssign()" class="w-[120px] rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 text-center ">
-                                    Submit
+                            }
+                        </div>
+                    </div>
+                    @if (superAdmin || manager) {
+                        <div>
+                            <div class="text-center text-[1.5rem] font-bold">Asset Assignment Form</div>
+                            <div
+                                class="p-[24px_28px] overflow-y-auto [&_h3]:text-[1rem] [&_h3]:m-[0_0_5px] [&_h3_small]:[margin-left:8px] [&_h3_small]:text-[#aaa] [&_h3_small]:text-[11px] max-[760px]:p-[20px_16px] max-[760px]:min-h-[0] max-[760px]:[flex:1] max-[760px]:[overscroll-behavior-y:contain] max-[760px]:[-webkit-overflow-scrolling:touch] max-[760px]:[&_h3]:text-[17px] max-[760px]:[&_h3]:leading-[1.6] max-[760px]:[&_h3_small]:text-[13px]"
+                            >
+                                <div class="form-grid grid lg:grid-cols-3 gap-[0_12px]">
+                                    <label>Asset Code
+                                        <input
+                                            class="[font:inherit]"
+                                            [(ngModel)]="sudmitAssetForm.assetCode"
+                                            placeholder="Enter Asset Code"
+                                            length="150" 
+                                            (ngModelChange)="assetCodeChanged($event)"
+                                        />
+                                    </label>
+                                    <label class="xl:col-span-2">Asset Name
+                                        <input
+                                            class="[font:inherit] bg-[#f2f2f2]"
+                                            [(ngModel)]="sudmitAssetForm.assetName"
+                                            placeholder="Enter Asset Name"
+                                            disabled
+                                            length="150" 
+                                        />
+                                    </label>
+                                    <label class="xl:col-span-3">Expiry Date
+                                        <input
+                                            class="[font:inherit]"
+                                            type="date"
+                                            [(ngModel)]="sudmitAssetForm.expiryDate" 
+                                        />
+                                    </label>
+                                    <label class="xl:col-span-3">Remark
+                                        <textarea
+                                            class="[font:inherit]"
+                                            [(ngModel)]="editStaffForm.remark"
+                                            rows="3"
+                                            placeholder="Additional details..."
+                                        ></textarea>
+                                    </label>
+                                </div>
+                                <div class="flex gap-5 py-6">
+                                    <div (click)="cleanAssetForm()" class="w-[120px] rounded-lg border-2 text-[#a6a6a6] border-[#a6a6a6] hover:border-[#696969] hover:text-[#a6a6a6] p-1 text-center ">
+                                        Clean
+                                    </div>
+                                    <div (click)="submitAssetAssign()" class="w-[120px] rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 text-center ">
+                                        Submit
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        </section>
+                    }
+                </div>
+            </section>
 
-        <section>
-            <hr class="h-px my-1 bg-[#f2f2f2] border-[0.1em] border-[#f2f2f2]">
-        </section>
+            <section>
+                <hr class="h-px my-1 bg-[#f2f2f2] border-[0.1em] border-[#f2f2f2]">
+            </section>
 
-        <section class="px-7 py-3">
-            <div class="text-[1.5rem] font-bold">Assigned Asset Lists</div>
-            <div class="py-3">
-                 <nz-table
-                    [nzData]="assignedAsset"
-                    #dataTable
-                    nzFrontPagination="false"
-                >
-                    <thead>
-                        <tr>
-                            <th>Asset Code</th>
-                            <th>Asset Name</th>
-                            <th>Unit</th>
-                            <th>Purchase Date</th>
-                            <th>Assigned Date</th>
-                            <th>Receipt Date</th>
-                            <th>Expiry Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (data of assignedAsset; track data._id) {
+            <section class="px-7 py-3">
+                <div class="text-[1.5rem] font-bold">Assigned Asset Lists</div>
+                <div class="py-3">
+                    <nz-table
+                        [nzData]="assignedAsset"
+                        #dataTable
+                        nzFrontPagination="false"
+                    >
+                        <thead>
                             <tr>
-                                <td>{{data.assetlist.assetCode}}</td>
-                                <td>{{data.assetlist.assetName}}</td>
-                                <td>{{data.assetlist.unit}}</td>
-                                <td>{{ dateFormat(data.assetlist.purchaseDate) || '' }}</td>
-                                <td>{{ dateFormat(data.createdAt) || ''}}</td>
-                                <td>{{ dateFormat(data.receiptDate) || ''}}</td>
-                                <td>{{ dateFormat(data.expiryDate) || '' }}</td>
-                                <td>
-                                    <div class="flex gap-3">
-                                        @if (userRightInside.write) {
-                                            <div 
-                                                *ngIf="userRightInside.update"
-                                                (click)="updateRecord(data)" 
-                                                class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
-                                                Edit
-                                            </div>
-                                        }
-                                        @if (userRightInside.delete) {
-                                            <div 
-                                                (click)="handleVoid(data._id)"
-                                                class="w-[80px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
-                                                Delete
-                                            </div>
-                                        }
-                                    </div>
-                                </td>
+                                <th>Asset Code</th>
+                                <th>Asset Name</th>
+                                <th>Unit</th>
+                                <th>Purchase Date</th>
+                                <th>Assigned Date</th>
+                                <th>Receipt Date</th>
+                                <th>Expiry Date</th>
+                                <th>Action</th>
                             </tr>
-                        }
-                    </tbody>
-                </nz-table>
-                <nz-pagination 
-                    [nzPageIndex]="searchAssetListForm.page" 
-                    [nzTotal]="assignedAssetTotal" 
-                    nzShowSizeChanger 
-                    [nzPageSize]="searchAssetListForm.limit"
-                    (nzPageIndexChange)="searchAssetListForm.page = $event; listAssignedAsset()"
-                    (nzPageSizeChange)="searchAssetListForm.limit = $event; listAssignedAsset()"
-                ></nz-pagination>
-            </div>
-        </section>
-        
-    </div>
+                        </thead>
+                        <tbody>
+                            @for (data of assignedAsset; track data._id) {
+                                <tr>
+                                    <td>{{data.assetlist.assetCode}}</td>
+                                    <td>{{data.assetlist.assetName}}</td>
+                                    <td>{{data.assetlist.unit}}</td>
+                                    <td>{{ dateFormat(data.assetlist.purchaseDate) || '' }}</td>
+                                    <td>{{ dateFormat(data.createdAt) || ''}}</td>
+                                    <td>{{ dateFormat(data.receiptDate) || ''}}</td>
+                                    <td>{{ dateFormat(data.expiryDate) || '' }}</td>
+                                    <td>
+                                        <div class="flex gap-3">
+                                            @if (userRightInside.write) {
+                                                <div 
+                                                    *ngIf="userRightInside.update"
+                                                    (click)="updateRecord(data)" 
+                                                    class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                                    Edit
+                                                </div>
+                                            }
+                                            @if (userRightInside.delete) {
+                                                <div 
+                                                    (click)="handleVoid(data._id)"
+                                                    class="w-[80px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
+                                                    Delete
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </nz-table>
+                    <nz-pagination 
+                        [nzPageIndex]="searchAssetListForm.page" 
+                        [nzTotal]="assignedAssetTotal" 
+                        nzShowSizeChanger 
+                        [nzPageSize]="searchAssetListForm.limit"
+                        (nzPageIndexChange)="searchAssetListForm.page = $event; listAssignedAsset()"
+                        (nzPageSizeChange)="searchAssetListForm.limit = $event; listAssignedAsset()"
+                    ></nz-pagination>
+                </div>
+            </section>
+            
+        </div>
 
-    <nz-modal
-        [(nzVisible)]="removeDialog" 
-        nzTitle="Confirm Delete"
-        (nzOnCancel)="closeRemoveDialog()"
-        (nzOnOk)="handleRemove()"
-    >
-        <ng-container *nzModalContent>
-            Are you sure to confirm remove this record?
-        </ng-container>
-    </nz-modal>
+        <nz-modal
+            [(nzVisible)]="removeDialog" 
+            nzTitle="Confirm Delete"
+            (nzOnCancel)="closeRemoveDialog()"
+            (nzOnOk)="handleRemove()"
+        >
+            <ng-container *nzModalContent>
+                Are you sure to confirm remove this record?
+            </ng-container>
+        </nz-modal>
+    }
 </div>
