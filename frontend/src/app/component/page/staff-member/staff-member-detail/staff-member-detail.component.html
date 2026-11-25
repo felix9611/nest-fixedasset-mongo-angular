@@ -138,7 +138,7 @@
                                 <div (click)="cleanAssetForm()" class="w-[120px] rounded-lg border-2 text-[#a6a6a6] border-[#a6a6a6] hover:border-[#696969] hover:text-[#a6a6a6] p-1 text-center ">
                                     Clean
                                 </div>
-                                <div (click)="submitAssetAsign()" class="w-[120px] rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 text-center ">
+                                <div (click)="submitAssetAssign()" class="w-[120px] rounded-lg border-2 text-[#32c244] border-[#32c244] bg-[#a2ff80] hover:bg-[#91e274] p-1 text-center ">
                                     Submit
                                 </div>
                             </div>
@@ -184,6 +184,14 @@
                                 <td>{{ dateFormat(data.expiryDate) || '' }}</td>
                                 <td>
                                     <div class="flex gap-3">
+                                        @if (userRightInside.write) {
+                                            <div 
+                                                *ngIf="userRightInside.update"
+                                                (click)="updateRecord(data)" 
+                                                class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
+                                                Edit
+                                            </div>
+                                        }
                                         @if (userRightInside.delete) {
                                             <div 
                                                 (click)="handleVoid(data._id)"

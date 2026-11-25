@@ -142,16 +142,24 @@ export class StaffMemberDetailComponent implements OnInit {
         }
     }
 
-    async submitAssetAsign() {
-        const finalData: any = {
-            staffId: this.editStaffForm._id,
-            assetId: this.sudmitAssetForm.assetId,
-            deptId: this.sudmitAssetForm.deptId,
-            expiryDate: this.sudmitAssetForm.expiryDate,
-            remark: this.sudmitAssetForm.remark,
-        }
+    async submitAssetAssign() {
+        if (this.sudmitAssetForm._id) {
+           const data = await postApiWithAuth('/asset/assignment/update', this.sudmitAssetForm)
+           if (data.error) {
+                this.message.error(data.error)
+            } else {
+                this.message.info('Submit successful!')
+                this.listAssignedAsset()
+            }
+        } else {
+            const finalData: any = {
+                staffId: this.editStaffForm._id,
+                assetId: this.sudmitAssetForm.assetId,
+                deptId: this.sudmitAssetForm.deptId,
+                expiryDate: this.sudmitAssetForm.expiryDate,
+                remark: this.sudmitAssetForm.remark,
+            }
 
-        if (!this.sudmitAssetForm._id) {
             const data = await postApiWithAuth('/asset/assignment/create', finalData)
             if (data._id) {
                 this.message.info('Submit successful!')
@@ -198,6 +206,19 @@ export class StaffMemberDetailComponent implements OnInit {
         } else {
             this.message.error(res.error)
         }
+    }
+
+    async updateRecord(data: any) {
+        this.sudmitAssetForm.assetCode = data.assetlist.assetCode
+        this.sudmitAssetForm.assetName = data.assetlist.assetName
+
+        this.sudmitAssetForm._id = data._id
+        this.sudmitAssetForm.assetId  = data.assetId
+        this.sudmitAssetForm.staffId  = data.staffId
+        this.sudmitAssetForm.deptId  = data.deptId
+        this.sudmitAssetForm.remark = data.remark
+        this.sudmitAssetForm.expiryDate = data.expiryDate.split('T')[0]
+        this.sudmitAssetForm.receiptDate = data.receiptDate
     }
 
     assignedAsset: any = []
