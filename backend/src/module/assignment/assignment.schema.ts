@@ -19,6 +19,9 @@ export class Assignment extends BaseSchema {
 
     @Prop({ type: SchemaTypes.String})
     remark?: string
+
+    @Prop({ type: SchemaTypes.String})
+    assignByUser?: string
 }
 
 export const AssignmentSchema = SchemaFactory.createForClass(Assignment)
