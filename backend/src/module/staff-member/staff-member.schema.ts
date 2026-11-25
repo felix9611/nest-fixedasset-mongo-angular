@@ -8,8 +8,8 @@ export class StaffMember extends BaseSchema {
     @Prop({ type: Types.ObjectId, required: true, ref: 'Department' })
     deptId!: Types.ObjectId
     
-    @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
-    placeId!: Types.ObjectId
+    /* @Prop({ type: Types.ObjectId, required: true, ref: 'Location' })
+    placeId!: Types.ObjectId */
 
     @Prop({ type: Types.ObjectId, required: true, ref: 'Sysuser' })
     sysUserId!: Types.ObjectId

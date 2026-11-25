@@ -125,20 +125,16 @@ export class StaffMemberDetailComponent implements OnInit {
             if (data._id) {
 
                 if (!this.superAdmin) {
-                    if (this.manager && data.placeId !== this.editStaffForm.placeI) {
-                        this.message.error('Cannot assign for personnel at this location!')
-                    } else if (data.deptId !== this.editStaffForm.deptId) {
+                    if (data.deptId !== this.editStaffForm.deptId) {
                         this.message.error('Cannot assign for personnel at this department!')
                     } else {
                         this.sudmitAssetForm.assetId = data._id
                         this.sudmitAssetForm.assetName = data.assetName
-                        this.sudmitAssetForm.placeId = data.placeId
                         this.sudmitAssetForm.deptId = data.deptId
                     }
                 } else {
                     this.sudmitAssetForm.assetId = data._id
                     this.sudmitAssetForm.assetName = data.assetName
-                    this.sudmitAssetForm.placeId = data.placeId
                     this.sudmitAssetForm.deptId = data.deptId
                 }
             }
@@ -149,7 +145,6 @@ export class StaffMemberDetailComponent implements OnInit {
         const finalData: any = {
             staffId: this.editStaffForm._id,
             assetId: this.sudmitAssetForm.assetId,
-            placeId: this.sudmitAssetForm.assetId,
             deptId: this.sudmitAssetForm.deptId,
             expiryDate: this.sudmitAssetForm.expiryDate,
             remark: this.sudmitAssetForm.remark,

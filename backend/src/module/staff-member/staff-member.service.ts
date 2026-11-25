@@ -30,7 +30,7 @@ export class StaffMemberService {
     }
 
     async createStaff(data: CreateStaffMember) {
-        const { placeId, deptId, sysUserId, staffName, avatar, remark } = data
+        const { deptId, sysUserId, staffName, avatar, remark } = data
 
         const check = await this.staffMemberModel.findOne({ staffName, status: 1})
 
@@ -40,16 +40,16 @@ export class StaffMemberService {
             return {
                 error: 'This staff member already exist! Please check again!'
             }
-        } else if ( deptId === null || placeId === null) {
+        } else if ( deptId === null ) {
             await this.actionRecordRecord('Create Staff Member', 'POST', data, 'FAILURE')
             return {
                 error: 'The department id or location id must be filled!'
             }
         } else {
             const checkDept = await this.departmentService.getOneById(deptId.toString())
-            const checkLocation = await this.locationService.getOneById(placeId.toString())
+            // const checkLocation = await this.locationService.getOneById(placeId.toString())
 
-            if (!(checkDept || checkLocation)) {
+            if (!(checkDept)) {
                 await this.actionRecordRecord('Create Staff Member', 'POST', data, 'FAILURE')
 
                 return {
@@ -62,7 +62,6 @@ export class StaffMemberService {
                     const staffNumber = await this.createNewNumber()
 
                     const finalData = {
-                        placeId,
                         deptId,
                         sysUserId,
                         staffName,
@@ -125,15 +124,15 @@ export class StaffMemberService {
     }
 
     async updateStaff(data: StaffMember) {
-        const { _id, placeId, deptId, sysUserId, ..._data } = data
+        const { _id, deptId, sysUserId, ..._data } = data
 
         const checkStaff = await this.staffMemberModel.findOne({ _id, status: 1 })
 
         if (checkStaff) {
             const checkDept = await this.departmentService.getOneById(deptId.toString())
-            const checkLocation = await this.locationService.getOneById(placeId.toString())
+            // const checkLocation = await this.locationService.getOneById(placeId.toString())
 
-            if (!(checkDept || checkLocation)) {
+            if (!(checkDept)) {
                 await this.actionRecordRecord('Update Staff Member', 'POST', data, 'FAILURE')
 
                 return {
@@ -147,7 +146,6 @@ export class StaffMemberService {
 
                     const finalData = {
                         ..._data,
-                        placeId,
                         deptId,
                         sysUserId,
                         updatadAt: new Date(),
@@ -207,7 +205,7 @@ export class StaffMemberService {
             {
                 $match: filters
             },
-            {
+            /* {
                 $lookup: {
                     from: 'locations', // Ensure correct collection name
                     let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
@@ -223,7 +221,7 @@ export class StaffMemberService {
                     ],
                     as: 'location'
                 }
-            },
+            }, */
             {
                 $lookup: {
                     from: 'departments', // Ensure correct collection name
@@ -241,7 +239,7 @@ export class StaffMemberService {
                     as: 'department'
                 }
             },
-            { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
+          //  { $unwind: { path: '$location', preserveNullAndEmptyArrays: true } },
             { $unwind: { path: '$department', preserveNullAndEmptyArrays: true } },
             { 
                 $addFields: { 

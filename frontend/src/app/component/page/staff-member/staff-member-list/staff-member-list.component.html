@@ -8,7 +8,7 @@
                 <div class="w-[200px]">
                     <input class="h-full" nz-input type="text" name="name" placeholder="Staff Name" [(ngModel)]="searchForm.name" />
                 </div>
-                <div class="lg:w-[250px] h-full">
+                <!--<div class="lg:w-[250px] h-full">
                     <app-filter-list-small
                         label="Location"
                         [apiUrl]="'/base/location/filter/list'"
@@ -19,7 +19,7 @@
                         [(value)]="searchForm.placeIds"
                         (valueChange)="searchForm.placeIds"
                     />
-                </div>
+                </div>-->
                 <div class="lg:w-[250px] h-full">
                     <app-filter-list-small
                         label="Department"
@@ -52,7 +52,7 @@
                     <th>Staff Number</th>
                     <th>Staff Name</th>
                     <th>Department Name</th>
-                    <th>Location Name</th>
+                    <!--<th>Location Name</th>-->
                     <th>Created At</th>
                     <th>Updated At</th>
                     <th class="text-center">Action</th>
@@ -64,7 +64,7 @@
                         <td>{{data.staffNumber}}</td>
                         <td>{{data.staffName}}</td>
                         <td>{{data.department.deptName}}</td>
-                        <td>{{data.location.placeName}}</td>
+                        <!--<td>{{data.location.placeName}}</td>-->
                         <td>{{ dateFormat(data.createdAt) }}</td>
                         <td>{{ dateFormat(data.updatedAt) }}</td>
                         <td>
@@ -108,8 +108,8 @@
                         <input nz-input type="text" id="staffName" name="staffName" [(ngModel)]="editForm.staffName" />
                       </nz-form-control>
                     </nz-form-item>
-                    <nz-form-item>
-                      <nz-form-label [nzSpan]="6" nzFor="email">Location</nz-form-label>
+                   <!-- <nz-form-item>
+                    <nz-form-label [nzSpan]="6" nzFor="email">Location</nz-form-label>
                       <nz-form-control [nzSpan]="14">
                         <app-filter-list-small
                             label="Location"
@@ -122,7 +122,7 @@
                             (singleValueChange)="editForm.placeId"
                         />
                       </nz-form-control>
-                    </nz-form-item>
+                    </nz-form-item>-->
                     <nz-form-item>
                       <nz-form-label [nzSpan]="6" nzFor="email">Department</nz-form-label>
                       <nz-form-control [nzSpan]="14">
