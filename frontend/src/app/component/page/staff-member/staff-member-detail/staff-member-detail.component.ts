@@ -73,6 +73,15 @@ export class StaffMemberDetailComponent implements OnInit {
         this.routeTo.navigate([`staff-member`])
     }
 
+    async updateStaffForm() {
+        const res = await postApiWithAuth('/base/staff-member/update', this.editStaffForm)
+        if (res.error) {
+            this.message.error(res.error)
+        } else {
+            this.message.info('Updated!')
+        }
+    }
+
     // Department data
     deptTotal: number = 0
     depts: any = []

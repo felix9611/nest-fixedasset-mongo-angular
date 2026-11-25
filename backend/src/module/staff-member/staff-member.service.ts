@@ -130,8 +130,8 @@ export class StaffMemberService {
         const checkStaff = await this.staffMemberModel.findOne({ _id, status: 1 })
 
         if (checkStaff) {
-            const checkDept = await this.departmentService.getOneById(deptId.toHexString())
-            const checkLocation = await this.locationService.getOneById(placeId.toHexString())
+            const checkDept = await this.departmentService.getOneById(deptId.toString())
+            const checkLocation = await this.locationService.getOneById(placeId.toString())
 
             if (!(checkDept || checkLocation)) {
                 await this.actionRecordRecord('Update Staff Member', 'POST', data, 'FAILURE')
@@ -140,7 +140,7 @@ export class StaffMemberService {
                     error: 'The department id or location id must be filled!'
                 }
             } else {
-                const checkSysUser = await this.sysUserService.findOneUser(sysUserId.toHexString())
+                const checkSysUser = await this.sysUserService.getUserInfo(sysUserId.toString())
 
                 if (checkSysUser) {
                     const staffNumber = await this.createNewNumber()
