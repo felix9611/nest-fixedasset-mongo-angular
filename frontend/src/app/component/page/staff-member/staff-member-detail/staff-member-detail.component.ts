@@ -149,6 +149,15 @@ export class StaffMemberDetailComponent implements OnInit {
             expiryDate: this.sudmitAssetForm.expiryDate,
             remark: this.sudmitAssetForm.remark,
         }
+
+        if (!this.sudmitAssetForm._id) {
+            const data = await postApiWithAuth('/asset/assignment/create', finalData)
+            if (data._id) {
+                this.message.info('Submit successful!')
+            } else {
+                this.message.error(data.error)
+            }
+        }
     }
 
     cleanAssetForm() {
