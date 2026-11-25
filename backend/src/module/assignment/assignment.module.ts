@@ -25,6 +25,7 @@ import { SysMenu } from '../sys-menu/sys-menu.schame'
 import { SysRole, SysRoleSchema } from '../sys-role/role.schame'
 import { SysRoleService } from '../sys-role/role.service'
 import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
+import { AssignmentController } from './assignment.cotroller'
 
 @Module({
     imports: [
@@ -44,7 +45,9 @@ import { InvRecord, InvRecordSchema } from '../InvRecord/InvRecord.schema'
             { name: InvRecord.name, schema: InvRecordSchema }
         ])
     ],
-    controllers: [],
+    controllers: [
+        AssignmentController
+    ],
     providers: [
         ActionRecordService, 
         AssignmentService,
