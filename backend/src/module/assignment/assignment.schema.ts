@@ -17,6 +17,9 @@ export class Assignment extends BaseSchema {
     @Prop({ type: SchemaTypes.Date})
     expiryDate?: string
 
+    @Prop({ type: SchemaTypes.Date})
+    receiptDate?: string
+
     @Prop({ type: SchemaTypes.String})
     remark?: string
 
