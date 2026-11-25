@@ -73,7 +73,14 @@
                                     <div 
                                         (click)="openDetail(data._id)"
                                         class="w-[100px] hover:bg-[#90E975] bg-[#B7FFA1] border-1 border-[#3AB713] text-[#3AB713] text-center p-1 rounded-lg">
-                                        Detail
+                                            Detail
+                                    </div>
+                                }
+                                @if (userRightInside.delete) {
+                                    <div 
+                                        (click)="handleVoid(data._id)"
+                                        class="w-[80px] bg-[#FFA8A8] hover:bg-[#EC7272] border-1 border-[#CB0000] text-[#CB0000] text-center p-1 rounded-lg">
+                                            Delete
                                     </div>
                                 }
                             </div>
@@ -163,4 +170,14 @@
             </ng-container>
         </nz-modal>
     }
+    <nz-modal
+        [(nzVisible)]="removeDialog" 
+        nzTitle="Confirm Delete"
+        (nzOnCancel)="closeRemoveDialog()"
+        (nzOnOk)="handleRemove()"
+    >
+        <ng-container *nzModalContent>
+            Are you sure to confirm remove this record?
+        </ng-container>
+    </nz-modal>
 </div>

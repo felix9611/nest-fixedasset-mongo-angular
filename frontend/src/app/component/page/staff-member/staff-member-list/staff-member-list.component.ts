@@ -15,7 +15,7 @@ import { NzPaginationModule } from 'ng-zorro-antd/pagination'
 import { NzInputModule } from 'ng-zorro-antd/input'
 import { NzTableModule } from 'ng-zorro-antd/table'
 import { NzSelectModule } from 'ng-zorro-antd/select'
-import { postApiWithAuth } from '../../../../../tool/httpRequest-auth'
+import { deleteApiWithAuth, postApiWithAuth } from '../../../../../tool/httpRequest-auth'
 import moment from 'moment'
 import { StaffMemberDetailComponent } from '../staff-member-detail/staff-member-detail.component'
 
@@ -156,6 +156,31 @@ export class StaffMemberListComponent implements OnInit {
 
     openDetail(id: string) {
         this.routeTo.navigate([`/staff-member-detail`], { queryParams: { id } })
+    }
+
+    removeDialog: boolean = false
+    handleRemoveId: string = ''
+    handleVoid(id: string) {
+        this.handleRemoveId = id
+        this.removeDialog = true
+    }
+    
+    closeRemoveDialog() {
+        this.removeDialog = false
+    }
+    
+    async handleRemove() {
+        const url = `/base/staff-member/remove/${this.handleRemoveId}`
+    
+        const res: any = await deleteApiWithAuth(url)
+    
+        if (res.void) {
+            this.message.info(res.message)
+            this.loadStaffLists()
+            this.closeRemoveDialog()
+        } else {
+            this.message.error(res.error)
+        }
     }
 
     // Department data

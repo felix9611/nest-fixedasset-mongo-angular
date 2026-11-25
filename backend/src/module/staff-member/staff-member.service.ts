@@ -195,6 +195,7 @@ export class StaffMemberService {
         const skip = (page - 1) * limit
 
         const filters = {
+            status: 1,
             ...deptIds && deptIds.length > 0 ? { deptId: { $in: deptIds } } : {},
             ...placeIds && placeIds.length > 0 ? { placeId: { $in: placeIds } } : {},
             ...number ? { staffNumber: number } : {},
@@ -266,6 +267,7 @@ export class StaffMemberService {
         const check = await this.staffMemberModel.findOne({ _id })
 
         if (check?.status === 0) {
+            await this.actionRecordRecord('Void Staff Member', 'DELETE', {_id}, 'FAILURE')
             return {
                 error: 'This record has been voided!'
             }
@@ -274,11 +276,13 @@ export class StaffMemberService {
             const res = await this.staffMemberModel.updateOne({ _id}, updateData)
 
             if (res.acknowledged) {
+                await this.actionRecordRecord('Void Staff Member', 'DELETE', updateData, 'Sussess')
                 return {
                     void: true,
                     message: 'This record void just now!'
                 }
             } else {
+                await this.actionRecordRecord('Void Staff Member', 'DELETE', updateData, 'FAILURE')
                 return {
                     void: false,
                     message: 'Oooops! Something wrong, please try again!'

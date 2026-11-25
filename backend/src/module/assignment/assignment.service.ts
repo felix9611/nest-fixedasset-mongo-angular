@@ -35,6 +35,7 @@ export class AssignmentService {
         const check = await this.assignmentModel.findOne({ _id })
 
         if (check?.status === 0) {
+            await this.actionRecordRecord('Void Assignment', 'DELETE', { _id }, 'FAILURE')
             return {
                 error: 'This record has been voided!'
             }
@@ -43,11 +44,13 @@ export class AssignmentService {
             const res = await this.assignmentModel.updateOne({ _id}, updateData)
 
             if (res.acknowledged) {
+                await this.actionRecordRecord('Void Assignment', 'DELETE', updateData, 'Sussess')
                 return {
                     void: true,
                     message: 'This record void just now!'
                 }
             } else {
+                await this.actionRecordRecord('Void Assignment', 'DELETE', updateData, 'FAILURE')
                 return {
                     void: false,
                     message: 'Oooops! Something wrong, please try again!'
