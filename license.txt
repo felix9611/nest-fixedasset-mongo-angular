@@ -1,7 +1,7 @@
 NCPL（Non-Commercial Public License）
 This software is licensed under the Non-Commercial Public License (NCPL). The terms are as follows:
 
-- Free for personal and non-commercial use.
+- Permission is granted to use, copy, modify solely for personal and non-commercial purposes, subject to the terms of this license
 - For commercial purposes (including enterprise or organization internal use), a commercial license is required.
 - All copies and derivative versions must retain the original author's copyright and licensing statements.
 - Commercial use is prohibited without written commercial authorization.
