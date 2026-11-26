@@ -2,9 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { SysUserService } from '../sys-user/sysUser.service'
 import { JwtService } from '@nestjs/jwt'
 import { hashPassword, salt } from '../../tool/password-tools'
-import { jwtConstants } from './constants'
-import { JwtPayload } from './auth.dto'
+import { InvalidApiAddress } from './auth.dto'
 import { env } from 'process'
+import { isIP } from 'net'
 
 @Injectable()
 export class AuthService {
@@ -18,43 +18,52 @@ export class AuthService {
     password: string,
     ipAddress: string
   ): Promise<any> {
-    console.log(username)
-    const user = await this.usersService.findOneUserAllData(username)
+    const ip = typeof ipAddress === 'string' ? ipAddress.trim() : ''
 
-    if (!user) {
-      return {
-        msg: 'Username not found'
-      }
-    }
-
-    const passwordString = hashPassword(password, salt)
-
-    if (user?.password !== passwordString) {
-
+    if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip)) {
       await this.usersService.saveLoginRecord(username, ipAddress, 'Failed')
-
       return {
-        msg: 'Password not match!'
+        msg: 'Not Allow to login!'
       }
     } else {
-      const payload = { 
-        sub: user._id, 
-        username: user.username, 
-        departmentIds: user.deptIds, 
-        placeIds: user.placeIds, 
-        deptIds: user.deptIds,
-        roles: user.roles, 
-        superAdmin: user.superAdmin, 
-        manager: user.manager 
+        const user = await this.usersService.findOneUserAllData(username)
+
+      if (!user) {
+        return {
+          msg: 'Username not found'
+        }
       }
-      await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
-      return {
-        accessToken: await this.jwtService.signAsync(payload, {
-          secret: env.JWT_SECRET,
-          issuer: env.JWT_ISSUER
-        })
+
+      const passwordString = hashPassword(password, salt)
+
+      if (user?.password !== passwordString) {
+
+        await this.usersService.saveLoginRecord(username, ipAddress, 'Failed')
+
+        return {
+          msg: 'Password not match!'
+        }
+      } else {
+        const payload = { 
+          sub: user._id, 
+          username: user.username, 
+          departmentIds: user.deptIds, 
+          placeIds: user.placeIds, 
+          deptIds: user.deptIds,
+          roles: user.roles, 
+          superAdmin: user.superAdmin, 
+          manager: user.manager 
+        }
+        await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
+        return {
+          accessToken: await this.jwtService.signAsync(payload, {
+            secret: env.JWT_SECRET,
+            issuer: env.JWT_ISSUER
+          })
+        }
       }
-    }
+      }
+    
     
   }
 

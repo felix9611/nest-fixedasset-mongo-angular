@@ -8,9 +8,6 @@ export class LoginBody {
 
     @ApiProperty({ description: 'Password' })
     password!: string
-
-    @ApiProperty({ description: 'IP Address' })
-    ipAddress!: string
 }
 
 export class TokenBody {
@@ -71,3 +68,11 @@ export interface JwtPayload {
   manager: boolean
   deptIds: string[]
 }
+
+export const InvalidApiAddress = [
+  '0.0.0.0',
+  '127.0.0.1',
+  '1.1.1.1',
+  '::1',
+  '::'
+]
