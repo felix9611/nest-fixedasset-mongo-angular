@@ -1,5 +1,5 @@
 NCPL（Non-Commercial Public License）
-This software is licensed under the No-Cost Public License (NCPL). The terms are as follows:
+This software is licensed under the Non-Commercial Public License (NCPL). The terms are as follows:
 
 - Free for personal and non-commercial use.
 - For commercial purposes (including enterprise or organization internal use), a commercial license is required.
