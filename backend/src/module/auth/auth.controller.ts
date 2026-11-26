@@ -18,8 +18,10 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'If Login unsuccessful', type: ReturnMsg })
   @Public()
   @Post('login')
-  async signIn(@Body() signInDto: { username: string, password: string, ipAddress: string}) {
-    return await this.authService.signIn(signInDto.username, signInDto.password, signInDto.ipAddress)
+  async signIn(@Body() signInDto: { username: string, password: string, ipAddress: string}, @Req() req: any) {
+    const ipAddress = req.headers['cf-connecting-ip'] || signInDto.ipAddress
+    const rayId = process.env.PROD === 'YES' ? req.headers['cf-ray'] : ''
+    return await this.authService.signIn(signInDto.username, signInDto.password, ipAddress, rayId)
   }
 
   @ApiOperation({ summary: 'Verfiy Token'})
