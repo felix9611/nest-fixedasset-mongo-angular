@@ -20,7 +20,8 @@ export class AuthController {
   @Post('login')
   async signIn(@Body() signInDto: { username: string, password: string, ipAddress: string}, @Req() req: any) {
     const ipAddress = req.headers['cf-connecting-ip'] || signInDto.ipAddress
-    return await this.authService.signIn(signInDto.username, signInDto.password, ipAddress)
+    const rayId = process.env.PROD === 'YES' ? req.headers['cf-ray'] : ''
+    return await this.authService.signIn(signInDto.username, signInDto.password, ipAddress, rayId)
   }
 
   @ApiOperation({ summary: 'Verfiy Token'})

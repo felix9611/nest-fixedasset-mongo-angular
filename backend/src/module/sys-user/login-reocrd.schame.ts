@@ -17,7 +17,10 @@ export class LoginRecord {
     loginStatus!: string
 
     @Prop({ type: SchemaTypes.String })
-    ipAddress?: string
+    ipAddress!: string
+
+    @Prop({ type: SchemaTypes.String })
+    ray!: string
 }
 
 export const LoginRecordSchema = SchemaFactory.createForClass(LoginRecord)

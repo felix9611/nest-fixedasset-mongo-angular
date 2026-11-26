@@ -16,12 +16,13 @@ export class AuthService {
   async signIn(
     username: string,
     password: string,
-    ipAddress: string
+    ipAddress: string,
+    ray: string
   ): Promise<any> {
     const ip = typeof ipAddress === 'string' ? ipAddress.trim() : ''
 
     if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip)) {
-      await this.usersService.saveLoginRecord(username, ipAddress, 'Failed')
+      await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
       return {
         msg: 'Not Allow to login!'
       }
@@ -38,7 +39,7 @@ export class AuthService {
 
       if (user?.password !== passwordString) {
 
-        await this.usersService.saveLoginRecord(username, ipAddress, 'Failed')
+        await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
 
         return {
           msg: 'Password not match!'
@@ -54,7 +55,7 @@ export class AuthService {
           superAdmin: user.superAdmin, 
           manager: user.manager 
         }
-        await this.usersService.saveLoginRecord(username, ipAddress, 'Success')
+        await this.usersService.saveLoginRecord(username, ipAddress, 'Success', ray)
         return {
           accessToken: await this.jwtService.signAsync(payload, {
             secret: env.JWT_SECRET,
