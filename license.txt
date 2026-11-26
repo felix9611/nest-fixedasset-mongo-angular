@@ -19,3 +19,11 @@ About the Developer:
 I am a full-stack developer specializing in management solutions. I offer customized services, including report generation, system integration, and more. Companies are welcome to collaborate with me to tailor this tool to your specific needs!
 
 For any questions, feedback, or collaboration inquiries, feel free to reach out.
+
+Copyright (c) 2026 Felix9611
+All rights reserved except as expressly granted
+under this license.
+
+Third-party components remain subject to their
+respective licenses. This license applies only
+to software owned by the copyright holder.
