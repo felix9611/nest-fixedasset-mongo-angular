@@ -3,7 +3,7 @@
 <h1>Fixed Asset Management System</h1>
 <p><strong>Nest.js & Angular SSR | Cloud-based Web Application for Asset Management</strong></p>
 <p>NCPL（Non-Commercial Public License）</p>
-<p>Current version: V1.9 Main </p>
+<p>Current version: V2 Main or V1.9 branch </p>
 <p>Next version function: Unit test</p>
 <p>If you find this project helpful, please click ⭐ Star! This helps more people discover it.</p>
 
