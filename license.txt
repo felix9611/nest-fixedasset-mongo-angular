@@ -6,6 +6,10 @@ This software is licensed under the Non-Commercial Public License (NCPL). The te
 - All copies and derivative versions must retain the original author's copyright and licensing statements.
 - Commercial use is prohibited without written commercial authorization.
 - Violation of any licensing terms will result in the termination of the license.
+- These licensing restrictions apply to the software in whole or in part, including modified versions, derivative works, and incorporated source code.
+- No commercial redistribution, sublicensing, sale, or incorporation into commercial products or services is permitted without prior written authorization from the copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE AUTHOR SHALL NOT BE LIABLE FOR ANY DAMAGES OR LOSSES ARISING FROM THE USE OF THE SOFTWARE.
 
 To obtain a commercial license or customized services, please contact:
 
