@@ -71,7 +71,7 @@ export class AssetListComponent {
 
         this.userRightSubscription = this.userStoreService.user$.subscribe((data: any) => {
             this.superAdmin = data.superAdmin
-            if (!(data.superAdmin || data.admin)) {
+            if (!(data.superAdmin || data.manager)) {
                 this.searchForm.deptIds = data.deptIds
                 this.searchForm.placeIds = data.placeIds
                 this.loadAssetListLists()
@@ -114,25 +114,6 @@ export class AssetListComponent {
 
     ngOnInit() {
         this.loadAssetListLists()
-    }
-
-    typeLists: any[] = []
-    async loadTypeList() {
-        this.typeLists = await getApiWithAuth('/asset/type/getAll')
-    }
-
-    deptLists: any[] = []
-    async loadDeptList() {
-        if (this.superAdmin === true) {
-            this.deptLists = await getApiWithAuth('/sys/department/getAll')
-        }
-    }
-
-    placeLists: any[] = []
-    async loadLocationList() {
-        if (this.superAdmin === true) {
-            this.placeLists = await getApiWithAuth('/base/location/getAll')
-        }
     }
 
     async loadAssetListLists() {

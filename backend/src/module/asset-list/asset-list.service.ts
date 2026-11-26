@@ -243,17 +243,35 @@ export class AssetListService {
             },
             {
                 $lookup: {
-                  from: 'locations', // Ensure correct collection name
-                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
-                  as: 'location'
+                    from: 'locations', // Ensure correct collection name
+                    let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                placeCode: 1,
+                                placeName: 1 
+                            }
+                        }
+                    ],
+                    as: 'location'
                 }
             },
             {
                 $lookup: {
                     from: 'departments', // Ensure correct collection name
                     let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                deptCode: 1,
+                                deptName: 1 
+                            }
+                        }
+                    ],
                     as: 'department'
                 }
             },
@@ -261,7 +279,16 @@ export class AssetListService {
                 $lookup: {
                     from: 'assettypes', // Ensure correct collection name
                     let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                typeCode: 1,
+                                typeName: 1 
+                            }
+                        }
+                    ],
                     as: 'assettype'
                 }
             },
@@ -329,17 +356,35 @@ export class AssetListService {
             },
             {
                 $lookup: {
-                  from: 'locations', // Ensure correct collection name
-                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
-                  as: 'location'
+                    from: 'locations', // Ensure correct collection name
+                    let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                placeCode: 1,
+                                placeName: 1 
+                            }
+                        }
+                    ],
+                    as: 'location'
                 }
             },
             {
                 $lookup: {
                     from: 'departments', // Ensure correct collection name
                     let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                deptCode: 1,
+                                deptName: 1 
+                            }
+                        }
+                    ],
                     as: 'department'
                 }
             },
@@ -347,7 +392,16 @@ export class AssetListService {
                 $lookup: {
                     from: 'assettypes', // Ensure correct collection name
                     let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                typeCode: 1,
+                                typeName: 1 
+                            }
+                        }
+                    ],
                     as: 'assettype'
                 }
             },
@@ -385,17 +439,35 @@ export class AssetListService {
         return  await await this.assetListModel.aggregate([
             {
                 $lookup: {
-                  from: 'locations', // Ensure correct collection name
-                  let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
-                  pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } }],
-                  as: 'location'
+                    from: 'locations', // Ensure correct collection name
+                    let: { placeIdStr: { $toObjectId: '$placeId' } }, // Convert placeId to ObjectId
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$placeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                placeCode: 1,
+                                placeName: 1 
+                            }
+                        }
+                    ],
+                    as: 'location'
                 }
             },
             {
                 $lookup: {
                     from: 'departments', // Ensure correct collection name
                     let: { deptIdStr: { $toObjectId: '$deptId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$deptIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                deptCode: 1,
+                                deptName: 1 
+                            }
+                        }
+                    ],
                     as: 'department'
                 }
             },
@@ -403,7 +475,16 @@ export class AssetListService {
                 $lookup: {
                     from: 'assettypes', // Ensure correct collection name
                     let: { typeIdStr: { $toObjectId: '$typeId' } }, // Convert deptId to ObjectId
-                    pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } }],
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$typeIdStr'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                typeCode: 1,
+                                typeName: 1 
+                            }
+                        }
+                    ],
                     as: 'assettype'
                 }
             },

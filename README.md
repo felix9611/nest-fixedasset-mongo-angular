@@ -3,7 +3,7 @@
 <h1>Fixed Asset Management System</h1>
 <p><strong>Nest.js & Angular SSR | Cloud-based Web Application for Asset Management</strong></p>
 <p>NCPL（Non-Commercial Public License）</p>
-<p>Current version: V1.9 Main </p>
+<p>Current version: V2 Main or V1.9 branch </p>
 <p>Next version function: Unit test</p>
 <p>If you find this project helpful, please click ⭐ Star! This helps more people discover it.</p>
 
@@ -19,7 +19,7 @@
 <p>🔗 <strong><a href="https://fixedasset.felix9611.com/login" target="_blank">Online Demo Front from Cloudflare DNS Tunnel and my Raspberry Pi5 server</a></strong></p>
 
 <p><strong>Username:</strong> <code>Demo</code><br>
-<strong>Password:</strong> <code>888888</code></p>
+<strong>Password:</strong> <code>fixedasset</code></p>
 <p><em>Note: Backend and Frontend both hosted on self-hosted Raspberry Pi5 with Cloudflare</em></p>
 
 <h2>📸 Example Screenshots</h2>
