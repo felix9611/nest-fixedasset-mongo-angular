@@ -3,6 +3,9 @@ This software is licensed under the Non-Commercial Public License (NCPL). The te
 
 - Free for personal and non-commercial use.
 - For commercial purposes (including enterprise or organization internal use), a commercial license is required.
+-All copies and derivative versions must retain the original author's copyright and licensing statements.
+-Commercial use is prohibited without written commercial authorization.
+-Violation of any licensing terms will result in the termination of the license.
 
 To obtain a commercial license or customized services, please contact:
 
