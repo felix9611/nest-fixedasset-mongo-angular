@@ -25,6 +25,17 @@ export const postApiWithAuth = async (url: string, data: any) => {
         headers: requestHeaders,
         body: JSON.stringify(data)
     })
+
+    if (!rawResponse.ok) {
+        throw new Error(
+            `HTTP Error: ${rawResponse.status}`
+        )
+    }
+
+    if (rawResponse.status === 204) {
+        return null
+    }
+
     return rawResponse.json()
 }
 
@@ -42,6 +53,17 @@ export const getApiWithAuth = async (url: string) => {
         method: 'GET',
         headers: requestHeaders
     })
+
+    if (!rawResponse.ok) {
+        throw new Error(
+            `HTTP Error: ${rawResponse.status}`
+        )
+    }
+
+    if (rawResponse.status === 204) {
+        return null
+    }
+
     return rawResponse.json()
 }
 
@@ -59,6 +81,17 @@ export const deleteApiWithAuth = async (url: string) => {
         method: 'DELETE',
         headers: requestHeaders
     })
+
+    if (!rawResponse.ok) {
+        throw new Error(
+            `HTTP Error: ${rawResponse.status}`
+        )
+    }
+
+    if (rawResponse.status === 204) {
+        return null
+    }
+
     return rawResponse.json()
 }
 
@@ -77,5 +110,16 @@ export const putApiWithAuth = async (url: string, data: any) => {
         headers: requestHeaders,
         body: JSON.stringify(data)
     })
+
+    if (!rawResponse.ok) {
+        throw new Error(
+            `HTTP Error: ${rawResponse.status}`
+        )
+    }
+
+    if (rawResponse.status === 204) {
+        return null
+    }
+
     return rawResponse.json()
 }
