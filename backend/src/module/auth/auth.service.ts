@@ -19,48 +19,50 @@ export class AuthService {
     ipAddress: string,
     ray: string
   ): Promise<any> {
-    const ip = typeof ipAddress === 'string' ? ipAddress.trim() : ''
+    const ip = typeof ipAddress === 'string'? ipAddress.trim(): ''
 
-    if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip)) {
-      await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
-      throw new UnauthorizedException('Not allowed to login!')
-    } else {
-        const user = await this.usersService.findOneUserAllData(username)
+    // Validate IP address and Ray ID
+    if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip) || !ray?.trim()) {
+      await this.usersService.saveLoginRecord(username, ip, 'Failed', ray)
 
-      if (!user) {
-        throw new UnauthorizedException('Not allowed to login!')
-      }
-
-      const passwordString = hashPassword(password, salt)
-
-      if (user?.password !== passwordString) {
-
-        await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
-
-        if (!user) {
-          throw new UnauthorizedException('No this user!')
-        }
-
-      } else {
-        const payload = { 
-          sub: user._id, 
-          username: user.username, 
-          departmentIds: user.deptIds, 
-          placeIds: user.placeIds, 
-          deptIds: user.deptIds,
-          roles: user.roles, 
-          superAdmin: user.superAdmin, 
-          manager: user.manager 
-        }
-        await this.usersService.saveLoginRecord(username, ipAddress, 'Success', ray)
-        return {
-          accessToken: await this.jwtService.signAsync(payload, {
-            secret: env.JWT_SECRET,
-            issuer: env.JWT_ISSUER
-          })
-        }
-      }
+      throw new UnauthorizedException(
+        'Not allowed to login!'
+      )
     }
+
+    const user = await this.usersService.findOneUserAllData(username)
+
+    // Validate user and password
+    const passwordString = hashPassword(password, salt)
+
+    if (!user || user.password !== passwordString) {
+      await this.usersService.saveLoginRecord(username, ip, 'Failed', ray)
+
+      throw new UnauthorizedException('Not allowed to login!')
+    }
+
+    const payload = {
+      sub: user._id,
+      username: user.username,
+      departmentIds: user.deptIds,
+      placeIds: user.placeIds,
+      deptIds: user.deptIds,
+      roles: user.roles,
+      superAdmin: user.superAdmin,
+      manager: user.manager
+    }
+
+    const accessToken = await this.jwtService.signAsync(
+      payload,
+      {
+        secret: env.JWT_SECRET,
+        issuer: env.JWT_ISSUER
+      }
+    )
+
+    await this.usersService.saveLoginRecord(username, ip, 'Success', ray)
+
+    return { accessToken }
   }
 
   async verifyToken(token: string) {
