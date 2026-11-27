@@ -38,7 +38,7 @@ export class AuthService {
         await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
 
         if (!user) {
-          throw new UnauthorizedException('Password not match!')
+          throw new UnauthorizedException('No this user!')
         }
 
       } else {
