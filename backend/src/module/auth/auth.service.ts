@@ -23,16 +23,12 @@ export class AuthService {
 
     if (!ip || !isIP(ip) || InvalidApiAddress.includes(ip)) {
       await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
-      return {
-        msg: 'Not Allow to login!'
-      }
+      throw new UnauthorizedException('Not allowed to login!')
     } else {
         const user = await this.usersService.findOneUserAllData(username)
 
       if (!user) {
-        return {
-          msg: 'Username not found'
-        }
+        throw new UnauthorizedException('Not allowed to login!')
       }
 
       const passwordString = hashPassword(password, salt)
@@ -41,9 +37,10 @@ export class AuthService {
 
         await this.usersService.saveLoginRecord(username, ipAddress, 'Failed', ray)
 
-        return {
-          msg: 'Password not match!'
+        if (!user) {
+          throw new UnauthorizedException('Password not match!')
         }
+
       } else {
         const payload = { 
           sub: user._id, 
@@ -63,9 +60,7 @@ export class AuthService {
           })
         }
       }
-      }
-    
-    
+    }
   }
 
   async verifyToken(token: string) {
