@@ -16,12 +16,6 @@ export const postApi = async (url: string, data: any) => {
         body: JSON.stringify(data)
     })
 
-    if (!rawResponse.ok) {
-        throw new Error(
-            `HTTP Error: ${rawResponse.status}`
-        )
-    }
-
     if (rawResponse.status === 204) {
         return null
     }
@@ -39,12 +33,6 @@ export const getApi = async (url: string) => {
         }
     })
 
-    if (!rawResponse.ok) {
-        throw new Error(
-            `HTTP Error: ${rawResponse.status}`
-        )
-    }
-
     if (rawResponse.status === 204) {
         return null
     }
@@ -59,12 +47,6 @@ export const getApiFromOutside = async (url: string, headers?: any) => {
             'Content-Type': contentType
         } */
     })
-
-    if (!rawResponse.ok) {
-        throw new Error(
-            `HTTP Error: ${rawResponse.status}`
-        )
-    }
 
     if (rawResponse.status === 204) {
         return null
