@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit{
                         this.router.navigate(['/tasks'])
                     }   
                 }) */
-                this.router.navigate(['/'])
+                this.router.navigate(['/tasks'])
             }
         } else if (!res.accessToken) {
             this.message.error(res.message)
